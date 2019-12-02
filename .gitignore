@@ -438,3 +438,5 @@ $RECYCLE.BIN/
 /docs/GeoLite2-ASN-CSV_20191126.zip
 /docs/HybridAi.TestTask.vpp.bak_001d
 /docs/HybridAi.TestTask.vpp.bak_000f
+
+*.vpp*
