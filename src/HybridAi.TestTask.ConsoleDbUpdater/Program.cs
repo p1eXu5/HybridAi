@@ -1,6 +1,7 @@
 ﻿using HybridAi.TestTask.ConsoleDbUpdater.Extensions;
 using HybridAi.TestTask.ConsoleDbUpdater.Models;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater
@@ -9,7 +10,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
     {
         static async Task Main(string[] args)
         {
-            var chain = new ChainBuilder().AddArgumentFormatter().Build();
+            var chain = new ChainBuilder().AddDownloader()
+                                          .AddUnzipper()
+                                          
+                                          .Build();
 
             switch ( args.Length ) {
                 case 0:

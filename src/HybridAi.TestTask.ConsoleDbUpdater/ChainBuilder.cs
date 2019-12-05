@@ -10,16 +10,25 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
     {
         private object _locker = new object();
 
-        private List< Type > _chainTypes;
+        private List< object > _chainTypes;
 
         public IChainLink Result { get; private set; } = null;
 
-        private List< Type > _ChainTypes => _chainTypes ??= new List< Type >(10);
+        private List< object > _ChainTypes => _chainTypes ??= new List< object >(10);
 
         public void AddChainLink<T>( T chainLink ) where T : IChainLink
         {
             if (chainLink == null) throw new ArgumentNullException( nameof( chainLink ), @"Chain link cannot be null." ); ;
 
+            var type = typeof(T);
+            if ( !_checkConstructor(type) ) throw new ArgumentException( "Type has no properly constructor." );
+
+            var chain = _ChainTypes;
+            chain.Add( type );
+        }
+
+        public void AddChainLink<T>() where T : IChainLink
+        {
             var type = typeof(T);
             if ( !_checkConstructor(type) ) throw new ArgumentException( "Type has no properly constructor." );
 
@@ -33,7 +42,14 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
             var chainTypes = _ChainTypes;
             for ( int i = chainTypes.Count - 1; i >= 0; --i ) {
-                result = (IChainLink)Activator.CreateInstance( chainTypes[i], new object[] { result } );
+                switch(chainTypes[i]) {
+                    case Type type:
+                        result = (IChainLink)Activator.CreateInstance( type, new object[] { result } );
+                        continue;
+                    case IChainLink chainLink:
+                        result = chainLink.SetSuccessor( result );
+                        continue;
+                }
             }
 
             lock ( _locker ) {
