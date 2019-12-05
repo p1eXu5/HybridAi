@@ -7,6 +7,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public interface IChainLink
     {
-        Response Process( Request request );
+        Request Process( Request request );
     }
 }

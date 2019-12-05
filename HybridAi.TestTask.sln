@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HybridAi.TestTask.ConsoleDb
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E52FDE28-DACF-43C0-A5DC-A69C8B55C624}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridAi.TestTask.DataTests", "src\HybridAi.TestTask.DataTests\HybridAi.TestTask.DataTests.csproj", "{D639BF83-C846-4487-A6C0-1DE29D8A6C4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HybridAi.TestTask.DataTests", "src\HybridAi.TestTask.DataTests\HybridAi.TestTask.DataTests.csproj", "{D639BF83-C846-4487-A6C0-1DE29D8A6C4B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{1AB599EB-45BF-4E56-8E7B-CB692643B906}"
+	ProjectSection(SolutionItems) = preProject
+		docs\test-task.rtf = docs\test-task.rtf
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

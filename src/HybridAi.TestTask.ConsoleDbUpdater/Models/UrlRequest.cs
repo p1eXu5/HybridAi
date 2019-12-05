@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.Models
 {
-    public class Response : Request
+    public class UrlRequest : Request
     {
         
     }

@@ -14,7 +14,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             _successor = successor;
         }
 
-        public Response Process( Request request )
+        public Request Process( Request request )
         {
             return _successor?.Process( request );
         }
