@@ -14,5 +14,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Models
         {
             _url = url;
         }
+
+        public override IResponse< Request > Response => new Response< UrlRequest >( this );
     }
 }
