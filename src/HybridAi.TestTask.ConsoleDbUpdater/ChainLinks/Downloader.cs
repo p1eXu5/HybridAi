@@ -9,7 +9,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public class Downloader : ChainLink
     {
-        public Downloader( IChainLink< Request, Response > successor ) 
+        public Downloader( ChainLink successor ) 
             : base( successor )
         { }
     }

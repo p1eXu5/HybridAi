@@ -9,7 +9,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public class CsvHeaderChecker : ChainLink
     {
-        public CsvHeaderChecker( IChainLink< Request, Response > successor ) 
+        public CsvHeaderChecker( ChainLink successor ) 
             : base( successor )
         { }
     }

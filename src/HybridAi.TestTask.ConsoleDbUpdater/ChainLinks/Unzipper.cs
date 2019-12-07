@@ -10,7 +10,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
     public class Unzipper : ChainLink
 
     {
-        public Unzipper( IChainLink< Request, Response > successor ) 
+        public Unzipper( ChainLink successor ) 
             : base( successor )
         { }
     }

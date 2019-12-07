@@ -9,7 +9,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public class TempFileCreator : ChainLink
     {
-        public TempFileCreator( IChainLink< Request, Response > successor ) 
+        public TempFileCreator( ChainLink successor ) 
             : base( successor )
         { }
     }

@@ -40,10 +40,6 @@ namespace HybridAi.TestTask.Data.Models
         public bool IsInEuropeanUnion { get; set; }
 
 
-        public int EnCityId { get; set; }
-
-        public EnCity EnCity { get; set; }
-
         public ICollection< CityBlockIpv4 > CityBlockIpv4Collection { get; set; }
         public ICollection< CityBlockIpv6 > CityBlockIpv6Collection { get; set; }
     }

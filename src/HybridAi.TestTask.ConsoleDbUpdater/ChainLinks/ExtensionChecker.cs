@@ -9,7 +9,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public class ExtensionChecker : ChainLink
     {
-        public ExtensionChecker( IChainLink< Request, Response > successor ) 
+        public ExtensionChecker( ChainLink successor ) 
             : base( successor )
         { }
     }

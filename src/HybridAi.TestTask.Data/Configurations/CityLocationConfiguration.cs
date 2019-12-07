@@ -18,8 +18,6 @@ namespace HybridAi.TestTask.Data.Configurations
             builder.HasKey( c => c.GeonameId );
             builder.Property( c => c.GeonameId ).HasColumnType( "int4" );
 
-            builder.HasOne( c => c.EnCity ).WithMany( e => e.CityLocations ).HasForeignKey( c => c.EnCityId );
-
             builder.HasMany( c => c.CityBlockIpv4Collection ).WithOne( c => c.CityLocation );
             builder.HasMany( c => c.CityBlockIpv6Collection ).WithOne( c => c.CityLocation );
         }

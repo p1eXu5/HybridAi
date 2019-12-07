@@ -7,7 +7,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public class ArgumentFormatter : ChainLink
     {
-        public ArgumentFormatter( IChainLink< Request, Response > successor ) 
+        public ArgumentFormatter( ChainLink successor ) 
             : base( successor )
         { }
     }

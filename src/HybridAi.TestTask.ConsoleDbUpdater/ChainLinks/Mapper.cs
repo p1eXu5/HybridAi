@@ -9,7 +9,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public class Mapper : ChainLink
     {
-        public Mapper( IChainLink< Request, Response > successor ) 
+        public Mapper( ChainLink successor ) 
             : base( successor )
         { }
     }

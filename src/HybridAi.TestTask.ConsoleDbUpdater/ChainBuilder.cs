@@ -8,7 +8,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 {
     public class ChainBuilder : IDisposable
     {
-        private object _locker = new object();
+        private readonly object _locker = new object();
 
         private List< object > _chainTypes;
 
@@ -59,10 +59,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
             return result;
         }
 
-        public void Dispose()
+
+        public ChainBuilder Append( ChainBuilder builde )
         {
-            Reset();
+            throw new NotImplementedException();
         }
+
 
         public void Reset()
         {
@@ -74,6 +76,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                 }
             }
         }
+
+        public void Dispose()
+        {
+            Reset();
+        }
+
 
         private bool _checkConstructor( Type type )
         {
