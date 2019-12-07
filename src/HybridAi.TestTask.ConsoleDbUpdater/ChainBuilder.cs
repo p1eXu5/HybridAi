@@ -12,11 +12,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
         private List< object > _chainTypes;
 
-        public IChainLink Result { get; private set; } = null;
+        public ChainLink Result { get; private set; } = null;
 
         private List< object > _ChainTypes => _chainTypes ??= new List< object >(10);
 
-        public void AddChainLink<T>( T chainLink ) where T : IChainLink
+        public void AddChainLink<T>( T chainLink ) where T : ChainLink
         {
             if (chainLink == null) throw new ArgumentNullException( nameof( chainLink ), @"Chain link cannot be null." ); ;
 
@@ -27,7 +27,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
             chain.Add( type );
         }
 
-        public void AddChainLink<T>() where T : IChainLink
+        public void AddChainLink<T>() where T : ChainLink
         {
             var type = typeof(T);
             if ( !_checkConstructor(type) ) throw new ArgumentException( "Type has no properly constructor." );
@@ -36,17 +36,17 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
             chain.Add( type );
         }
 
-        public IChainLink Build()
+        public ChainLink Build()
         {
-            IChainLink result = null;
+            ChainLink result = null;
 
             var chainTypes = _ChainTypes;
             for ( int i = chainTypes.Count - 1; i >= 0; --i ) {
                 switch(chainTypes[i]) {
                     case Type type:
-                        result = (IChainLink)Activator.CreateInstance( type, new object[] { result } );
+                        result = (ChainLink)Activator.CreateInstance( type, new object[] { result } );
                         continue;
-                    case IChainLink chainLink:
+                    case ChainLink chainLink:
                         result = chainLink.SetSuccessor( result );
                         continue;
                 }
@@ -84,7 +84,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                 ParameterInfo[] parameters = ctor.GetParameters();
                 if ( parameters.Length != 1 ) continue;
 
-                res = parameters[0].ParameterType is IChainLink;
+                res = parameters[0].ParameterType is ChainLink;
             }
 
             return res;

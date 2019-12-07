@@ -7,12 +7,12 @@ namespace HybridAi.TestTask.Data.Models
 {
     public class City
     {
-        public int Id { get; set; }
-
-        [StringLength(64)]
+        [StringLength(64, MinimumLength = 1)]
+        [Required]
         public string ContinentName { get; set; }
 
-        [StringLength(128)]
+        [StringLength(128, MinimumLength = 1)]
+        [Required]
         public string CountryName { get; set; }
 
         [StringLength(128)]
@@ -21,11 +21,14 @@ namespace HybridAi.TestTask.Data.Models
         [StringLength(128)]
         public string Subdivision2Name { get; set; }
 
-        [StringLength(128)]
+        [StringLength(128, MinimumLength = 1)]
+        [Required]
         public string CityName { get; set; }
 
         public Int16 LocaleCodeId { get; set; }
 
         public LocaleCode LocaleCode { get; set; }
+
+        public ICollection< CityLocation > CityLocations { get; set; }
     }
 }

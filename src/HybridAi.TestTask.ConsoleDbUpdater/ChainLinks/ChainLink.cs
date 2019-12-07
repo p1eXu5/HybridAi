@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using HybridAi.TestTask.ConsoleDbUpdater.Models;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
-    public class ArgumentFormaterChainLink : IChainLink
+    public abstract class ChainLink : IChainLink< Request, Response >
     {
-        private readonly IChainLink _successor;
+        private readonly IChainLink<Request, Response> _successor;
 
-        public ArgumentFormaterChainLink( IChainLink successor )
+        protected ChainLink( IChainLink<Request, Response> successor )
         {
             _successor = successor;
         }
 
-        public Request Process( Request request )
+        public virtual Response Process( Request request )
         {
             return _successor?.Process( request );
         }

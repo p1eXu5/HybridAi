@@ -5,10 +5,10 @@ using HybridAi.TestTask.ConsoleDbUpdater.Models;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
-    public interface IChainLink< in TIn, out TOut >
-        where TIn : Request 
-        where TOut : Request
+    public class ArgumentFormatter : ChainLink
     {
-        TOut Process( TIn request );
+        public ArgumentFormatter( IChainLink< Request, Response > successor ) 
+            : base( successor )
+        { }
     }
 }

@@ -12,5 +12,40 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Extensions
         {
             return builder;
         }
+
+        public static ChainBuilder AddDownloader(this ChainBuilder builder)
+        {
+            return builder;
+        }
+
+        public static ChainBuilder AddUnzipper(this ChainBuilder builder)
+        {
+            return builder;
+        }
+
+        public static ChainBuilder AddExtensionChecker(this ChainBuilder builder)
+        {
+            return builder;
+        }
+
+        public static ChainBuilder AddCsvHeaderChecker(this ChainBuilder builder)
+        {
+            return builder;
+        }
+
+        public static ChainBuilder AddMapper(this ChainBuilder builder)
+        {
+            return builder;
+        }
+
+        public static ChainBuilder AddUpdater(this ChainBuilder builder)
+        {
+            return builder;
+        }
+
+        public static ChainBuilder AddTempFileCreator(this ChainBuilder builder)
+        {
+            return builder;
+        }
     }
 }

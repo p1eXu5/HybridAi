@@ -31,7 +31,9 @@ namespace HybridAi.TestTask.Data
         {
             modelBuilder.ApplyConfiguration( new CityBlockIpv4Configuration() )
                         .ApplyConfiguration( new CityBlockIpv6Configuration() )
-                        .ApplyConfiguration( new CityLocationConfiguraion() );
+                        .ApplyConfiguration( new CityLocationConfiguration() )
+                        .ApplyConfiguration( new EnCityConfiguration() )
+                        .ApplyConfiguration( new LocaleCodeConfiguration() );
         }
     }
 }

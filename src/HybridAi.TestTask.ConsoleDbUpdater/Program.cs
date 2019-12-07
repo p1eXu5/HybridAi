@@ -13,29 +13,37 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
         static async Task Main(string[] args)
         {
-            IChainLink chain = new ChainBuilder().AddDownloader()
-                                                 .AddUnzipper()
-                                                 .Build();
+            ChainBuilder remoteChainBuilder = new ChainBuilder().AddDownloader();
 
-            IChainLink updateChain = new ChainBuilder.AddExtensionChecker()
-                                                    .CsvHeaderChecker()
-                                                    .AddSegmenter()
-                                                    .AddMapper()
-                                                    .AddUpdater()
-                                                    .AddDbStorer();
+            ChainBuilder copierChainBuilder = new ChainBuilder().AddUnzipper()
+                                                         .AddTempFileCreator();
+
+            ChainBuilder updateChainBuilder = new ChainBuilder().AddExtensionChecker()
+                                                         .AddCsvHeaderChecker()
+                                                         .AddMapper()
+                                                         .AddUpdater();
+
+            ChainBuilder argumentChainBuilder = new ChainBuilder().AddArgumentFormatter()
+                                                                  .Append(copier)
+                                                                  .Append(updateChainBuilder);
+
+            IChainLink argumentChain = null;
 
             switch ( args.Length ) {
                 case 0:
-                    var response = chain.Process( new UrlRequest( DEFAULT_FILE_URL ) ) as FileCollectionResponse;
-                    Run();
+                    IChainLink defaultChain = remoteChainBuilder.Append( copierChainBuilder ).Append(updateChainBuilder).Build();
+                    defaultChain.Process( new UrlRequest( DEFAULT_FILE_URL ) );
                     break;
                 case 1:
+                    argumentChain = argumentChainBuilder.Build();
+                    argumentChain.Process( new ArgumentRequest( args[0] ) );
                     break;
                 default:
-                    var tasks = new Task<Response>[args.Length];
+                    argumentChain = argumentChainBuilder.Build();
+                    var tasks = new Task< Response >[args.Length];
                     for (int i = 0; i < args.Length; i++) {
-                        var file = args[i];
-                        tasks[i] = Task.Run( () => chain.Process( new ArgumentRequest( file ) ) );
+                        var arg = args[i];
+                        tasks[i] = Task.Run( () => argumentChain.Process( new ArgumentRequest( arg ) ) );
                     }
                     Response[] result = await Task.WhenAll( tasks );
                     break;
