@@ -9,7 +9,7 @@ using HybridAi.TestTask.ConsoleDbUpdater.Models;
 namespace HybridAi.TestTask.ConsoleDbUpdater
 {
     public interface IChainBuilder<out TOut> : IEnumerable< object >
-        where TOut : class, IChainLink< Request, Request >?
+        where TOut : class, IChainLink< Request, IResponse< Request > >?
     {
         TOut? Result { get; }
 

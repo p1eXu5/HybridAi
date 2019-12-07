@@ -27,11 +27,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                                                                   .Append(copierChainBuilder)
                                                                   .Append(updateChainBuilder);
 
-            IChainLink< Request, Request > argumentChain;
+            IChainLink< Request, IResponse< Request > > argumentChain;
 
             switch ( args.Length ) {
                 case 0:
-                    IChainLink< Request, Request> defaultChain = remoteChainBuilder.Append( copierChainBuilder ).Append(updateChainBuilder).Build();
+                    IChainLink< Request, IResponse< Request >> defaultChain = remoteChainBuilder.Append( copierChainBuilder ).Append(updateChainBuilder).Build();
                     defaultChain.Process( new UrlRequest( DEFAULT_FILE_URL ) );
                     break;
                 case 1:

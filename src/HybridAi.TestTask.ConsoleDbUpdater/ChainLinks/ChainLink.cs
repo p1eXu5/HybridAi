@@ -7,18 +7,18 @@ using HybridAi.TestTask.ConsoleDbUpdater.Models;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
-    public abstract class ChainLink : IChainLink< Request, Request >
+    public abstract class ChainLink : IChainLink< Request, IResponse< Request > >
     {
-        private IChainLink< Request, Request >? _successor;
+        private IChainLink< Request, IResponse< Request > >? _successor;
 
-        protected ChainLink( IChainLink< Request, Request >? successor )
+        protected ChainLink( IChainLink< Request, IResponse< Request > >? successor )
         {
             _successor = successor;
         }
 
-        public IChainLink< Request, Request >? Successor => _successor;
+        public IChainLink< Request, IResponse< Request > >? Successor => _successor;
 
-        public IChainLink< Request, Request > SetSuccessor( IChainLink< Request, Request >? successor )
+        public IChainLink< Request, IResponse< Request > > SetSuccessor( IChainLink< Request, IResponse< Request > >? successor )
         {
             if (successor == null) return this;
             _successor = successor;

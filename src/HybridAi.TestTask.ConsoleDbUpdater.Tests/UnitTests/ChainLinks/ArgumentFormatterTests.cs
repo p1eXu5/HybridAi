@@ -34,7 +34,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 		#region factory
 		// Insert factory methods here:
 
-        private IChainLink< Request, Request > _getArgumentFormatter()
+        private IChainLink< Request, IResponse< Request > > _getArgumentFormatter()
         {
 			return new ArgumentFormatter( null );
         }

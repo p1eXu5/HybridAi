@@ -11,7 +11,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Models
         T Request { get; }
     }
 
-    public class Response<T> : Request, IResponse< T >
+    public class Response
+    {
+
+    }
+
+    public class Response<T> : IResponse< T >
         where T : Request
     {
         public Response( T request )

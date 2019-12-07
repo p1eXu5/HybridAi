@@ -8,10 +8,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public interface IChainLink< in TIn, out TOut >
         where TIn : Request 
-        where TOut : Request
+        where TOut : IResponse<TIn>
     {
         IChainLink< TIn, TOut >? Successor { get; }
 
-        IResponse< TOut > Process( TIn request );
+        TOut Process( TIn request );
     }
 }
