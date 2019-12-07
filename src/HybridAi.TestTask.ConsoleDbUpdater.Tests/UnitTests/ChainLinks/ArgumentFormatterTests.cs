@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
+namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 {
 
 	[TestFixture]

@@ -8,7 +8,7 @@ using HybridAi.TestTask.ConsoleDbUpdater.ChainLinks;
 using HybridAi.TestTask.ConsoleDbUpdater.Models;
 using Moq;
 
-namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
+namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 {
 
 	[TestFixture]
