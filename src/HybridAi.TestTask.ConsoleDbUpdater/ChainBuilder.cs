@@ -11,10 +11,15 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
     public class ChainBuilder : IChainBuilder< IChainLink<Request, Response> >, IDisposable
     {
         private readonly object _locker = new object();
+        private IChainLink< Request, Response > _result;
 
         private List< object >? _chainTypes;
 
-        public IChainLink<Request, Response>? Result { get; private set; } = null;
+        public IChainLink< Request, Response > Result
+        {
+            get => _result ?? throw new InvalidOperationException(); 
+            private set => _result = value;
+        }
 
         private List< object > _ChainTypes => _chainTypes ??= new List< object >(10);
 
@@ -56,12 +61,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                     }
                 }
 
-                lock ( _locker ) {
-                    Result = result;
-                }
 
                 if (result != null)
                 {
+                    lock ( _locker ) {
+                        Result = result;
+                    }
+
                     return result;
                 }
             }
