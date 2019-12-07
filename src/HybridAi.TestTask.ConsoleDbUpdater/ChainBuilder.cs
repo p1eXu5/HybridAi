@@ -1,18 +1,20 @@
 ﻿using HybridAi.TestTask.ConsoleDbUpdater.ChainLinks;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using HybridAi.TestTask.ConsoleDbUpdater.Models;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater
 {
-    public class ChainBuilder : IDisposable
+    public class ChainBuilder : IChainBuilder< IChainLink<Request, Response> >, IDisposable
     {
         private readonly object _locker = new object();
 
-        private List< object > _chainTypes;
+        private List< object >? _chainTypes;
 
-        public ChainLink Result { get; private set; } = null;
+        public IChainLink<Request, Response>? Result { get; private set; } = null;
 
         private List< object > _ChainTypes => _chainTypes ??= new List< object >(10);
 
@@ -36,31 +38,39 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
             chain.Add( type );
         }
 
-        public ChainLink Build()
+        public IChainLink<Request, Response> Build()
         {
-            ChainLink result = null;
+            if (_chainTypes?.Any() == true)
+            {
+                IChainLink<Request, Response>? result = null;
 
-            var chainTypes = _ChainTypes;
-            for ( int i = chainTypes.Count - 1; i >= 0; --i ) {
-                switch(chainTypes[i]) {
-                    case Type type:
-                        result = (ChainLink)Activator.CreateInstance( type, new object[] { result } );
-                        continue;
-                    case ChainLink chainLink:
-                        result = chainLink.SetSuccessor( result );
-                        continue;
+                var chainTypes = _ChainTypes;
+                for ( int i = chainTypes.Count - 1; i >= 0; --i ) {
+                    switch(chainTypes[i]) {
+                        case Type type:
+                            result = (IChainLink<Request, Response>?)Activator.CreateInstance( type, new object[] { result } );
+                            continue;
+                        case ChainLink chainLink:
+                            result = chainLink.SetSuccessor( result );
+                            continue;
+                    }
+                }
+
+                lock ( _locker ) {
+                    Result = result;
+                }
+
+                if (result != null)
+                {
+                    return result;
                 }
             }
 
-            lock ( _locker ) {
-                Result = result;
-            }
-
-            return result;
+            throw new InvalidOperationException();
         }
 
 
-        public ChainBuilder Append( ChainBuilder builde )
+        public IChainBuilder< IChainLink<Request, Response> > Append( IEnumerable< object > chines )
         {
             throw new NotImplementedException();
         }
@@ -96,6 +106,16 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
             }
 
             return res;
+        }
+
+        public IEnumerator< object > GetEnumerator()
+        {
+            return _ChainTypes.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

@@ -9,21 +9,19 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public abstract class ChainLink : IChainLink< Request, Response >
     {
-        private ChainLink _successor;
+        private IChainLink< Request, Response >? _successor;
 
-        protected ChainLink( ChainLink successor )
+        protected ChainLink( IChainLink< Request, Response >? successor )
         {
             _successor = successor;
         }
 
-        public virtual Response Process( Request request )
-        {
-            return _successor?.Process( request );
-        }
+        public IChainLink< Request, Response >? Successor => _successor;
 
-        public ChainLink SetSuccessor( ChainLink successor )
+        public IChainLink< Request, Response > SetSuccessor( IChainLink< Request, Response >? successor )
         {
-            _successor = successor ?? throw new ArgumentNullException(nameof(successor), @"Successor cannot be null.");
+            if (successor == null) return this;
+            _successor = successor;
 
             return _successor;
         }
