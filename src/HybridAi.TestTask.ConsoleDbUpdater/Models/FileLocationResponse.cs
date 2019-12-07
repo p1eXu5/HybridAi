@@ -8,6 +8,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Models
 {
     public class FileLocationResponse : Response
     {
-        
+        public FileLocationResponse( string path )
+        {
+            Path = path;
+        }
+
+        public string Path { get; }
     }
 }

@@ -8,14 +8,14 @@ using HybridAi.TestTask.ConsoleDbUpdater.Models;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater
 {
-    public class ChainBuilder : IChainBuilder< IChainLink<Request, Response> >, IDisposable
+    public class ChainBuilder : IChainBuilder< IChainLink<Request, Request> >, IDisposable
     {
         private readonly object _locker = new object();
-        private IChainLink< Request, Response > _result;
+        private IChainLink< Request, Request > _result;
 
         private List< object >? _chainTypes;
 
-        public IChainLink< Request, Response > Result
+        public IChainLink< Request, Request > Result
         {
             get => _result ?? throw new InvalidOperationException(); 
             private set => _result = value;
@@ -43,11 +43,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
             chain.Add( type );
         }
 
-        public IChainLink<Request, Response> Build()
+        public IChainLink<Request, Request> Build()
         {
             if (_chainTypes?.Any() == true)
             {
-                IChainLink<Request, Response>? result = null;
+                IChainLink<Request, Request>? result = null;
 
                 var chainTypes = _ChainTypes;
                 for ( int i = chainTypes.Count - 1; i >= 0; --i ) {
@@ -76,7 +76,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
         }
 
 
-        public IChainBuilder< IChainLink<Request, Response> > Append( IEnumerable< object > chines )
+        public IChainBuilder< IChainLink<Request, Request> > Append( IEnumerable< object > chines )
         {
             throw new NotImplementedException();
         }

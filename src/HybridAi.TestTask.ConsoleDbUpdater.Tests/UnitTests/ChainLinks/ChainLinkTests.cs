@@ -12,7 +12,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 {
 
 	[TestFixture]
-	public class IChainLinkTests
+	public class ChainLinkTests
     {
         private Mock< IChainLink< Request, Response > >? _mockSuccessor;
 
@@ -45,12 +45,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 		#region factory
 		// Insert factory methods here:
 
-        private IChainLink< Request, Response > _getChainLink()
+        private ChainLink _getChainLink()
         {
             return new FakeChainLink( null );
         }
 
-        private IChainLink< Request, Response > _getMockedChainLink()
+        private ChainLink _getMockedChainLink()
         {
             _mockSuccessor = new Mock<IChainLink<Request,Response>>();
 
