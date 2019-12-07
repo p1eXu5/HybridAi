@@ -11,7 +11,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
     public class ChainBuilder : IChainBuilder< IChainLink<Request, Request> >, IDisposable
     {
         private readonly object _locker = new object();
-        private IChainLink< Request, Request > _result;
+        private IChainLink< Request, Request >? _result;
 
         private List< object >? _chainTypes;
 
@@ -53,7 +53,9 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                 for ( int i = chainTypes.Count - 1; i >= 0; --i ) {
                     switch(chainTypes[i]) {
                         case Type type:
+#pragma warning disable CS8601 // Possible null reference assignment.
                             result = (IChainLink<Request, Response>?)Activator.CreateInstance( type, new object[] { result } );
+#pragma warning restore CS8601 // Possible null reference assignment.
                             continue;
                         case ChainLink chainLink:
                             result = chainLink.SetSuccessor( result );
@@ -86,9 +88,9 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
         {
             if ( _chainTypes?.Any() == true ) _chainTypes.Clear();
             
-            if ( Result != null ) {
+            if ( _result != null ) {
                 lock ( _locker ) {
-                     Result = null;
+                    _result = null;
                 }
             }
         }

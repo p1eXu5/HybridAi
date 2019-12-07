@@ -39,7 +39,9 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var response = chain.Process( new Request() );
 
             // Assert:
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             _mockSuccessor.Verify( s => s.Process( It.IsAny<Request>() ), Times.Once );
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
 		#region factory
