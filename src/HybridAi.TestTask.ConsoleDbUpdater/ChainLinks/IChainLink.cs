@@ -8,7 +8,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public interface IChainLink< in TIn, out TOut >
         where TIn : Request 
-        where TOut : Request
+        where TOut : Response
     {
         IChainLink< TIn, TOut >? Successor { get; }
 
@@ -23,7 +23,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
 
-            throw new InvalidOperationException();
+            return (TOut)new Response();
         }
     }
 }
