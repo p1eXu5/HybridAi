@@ -14,7 +14,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             : base( successor )
         { }
 
-        public override Request Process( Request request )
+        public override IResponse< Request > Process( Request request )
         {
             if (request is ArgumentRequest arg)
             {
@@ -27,7 +27,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                     return base.Process( new UrlRequest( a ) );
                 }
 
-                return base.Process( new FileLocationResponse( a ) );
+                return base.Process( new FileLocationRequest( a ) );
             }
             
             return base.Process( request );

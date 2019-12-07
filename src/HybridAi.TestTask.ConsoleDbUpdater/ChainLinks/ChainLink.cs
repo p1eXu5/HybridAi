@@ -26,7 +26,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             return _successor;
         }
 
-        public virtual Request Process( Request request )
+        public virtual IResponse< Request > Process( Request request )
         {
             var successor = Successor;
 
@@ -37,7 +37,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
 
-            return request;
+            return request.Response;
         }
     }
 }

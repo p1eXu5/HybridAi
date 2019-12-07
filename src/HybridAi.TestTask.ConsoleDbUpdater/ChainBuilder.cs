@@ -54,7 +54,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                     switch(chainTypes[i]) {
                         case Type type:
 #pragma warning disable CS8601 // Possible null reference assignment.
-                            result = (IChainLink<Request, Response>?)Activator.CreateInstance( type, new object[] { result } );
+                            result = (IChainLink<Request, Request>?)Activator.CreateInstance( type, new object[] { result } );
 #pragma warning restore CS8601 // Possible null reference assignment.
                             continue;
                         case ChainLink chainLink:

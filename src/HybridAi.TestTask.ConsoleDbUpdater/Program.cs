@@ -40,12 +40,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                     break;
                 default:
                     argumentChain = argumentChainBuilder.Build();
-                    var tasks = new Task< Request >[args.Length];
+                    var tasks = new Task< IResponse< Request > >[args.Length];
                     for (int i = 0; i < args.Length; i++) {
                         var arg = args[i];
                         tasks[i] = Task.Run( () => argumentChain.Process( new ArgumentRequest( arg ) ) );
                     }
-                    Request[] result = await Task.WhenAll( tasks );
+                    IResponse< Request >[] result = await Task.WhenAll( tasks );
                     break;
             }
 

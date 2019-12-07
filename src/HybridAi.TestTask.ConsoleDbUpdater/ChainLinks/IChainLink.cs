@@ -12,6 +12,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
     {
         IChainLink< TIn, TOut >? Successor { get; }
 
-        TOut Process( TIn request );
+        IResponse< TOut > Process( TIn request );
     }
 }

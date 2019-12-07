@@ -18,7 +18,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 		[TestCase( @"a\a-a.a" )]
 		[TestCase( @"a:\a\a.a" )]
 		[TestCase( @"a:\a\a" )]
-		public void Process_PathInRequest_ReturnsFileLocationResponse( string path )
+		public void Process_PathInRequest_ReturnsResponseWithFileLocationRequest( string path )
 		{
 			// Arrange:
             var formatter = _getArgumentFormatter();
@@ -28,7 +28,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var response = formatter.Process( argumentRequest );
 
             // Assert:
-			Assert.IsTrue( response is FileLocationResponse );
+			Assert.IsTrue( response is IResponse< FileLocationRequest > );
         }
 
 		#region factory

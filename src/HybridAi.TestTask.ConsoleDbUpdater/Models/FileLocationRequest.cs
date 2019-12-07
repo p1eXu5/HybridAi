@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.Models
 {
-    public class FileLocationResponse : Response
+    public class FileLocationRequest : Request
     {
-        public FileLocationResponse( string path )
+        public FileLocationRequest( string path )
         {
             Path = path;
         }
 
         public string Path { get; }
+
+        public override IResponse< Request > Response => new Response< FileLocationRequest >( this );
     }
 }

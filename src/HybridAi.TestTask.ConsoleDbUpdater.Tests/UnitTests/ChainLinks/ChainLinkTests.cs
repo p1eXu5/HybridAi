@@ -14,7 +14,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 	[TestFixture]
 	public class ChainLinkTests
     {
-        private Mock< IChainLink< Request, Response > >? _mockSuccessor;
+        private Mock< IChainLink< Request, Request > >? _mockSuccessor;
 
         [Test]
         public void Process_SuccessorIsNull_ReturnsNotNullResponse()
@@ -54,7 +54,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
         private ChainLink _getMockedChainLink()
         {
-            _mockSuccessor = new Mock<IChainLink<Request,Response>>();
+            _mockSuccessor = new Mock<IChainLink<Request,Request>>();
 
             return new FakeChainLink( _mockSuccessor.Object );
         }
@@ -65,7 +65,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
         private class FakeChainLink : ChainLink
         {
-            public FakeChainLink( IChainLink< Request, Response >? successor ) 
+            public FakeChainLink( IChainLink< Request, Request >? successor ) 
                 : base( successor )
             {
             }
