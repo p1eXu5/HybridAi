@@ -18,6 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{1AB599EB-45BF-4E56-8E7B-CB692643B906}"
 	ProjectSection(SolutionItems) = preProject
 		docs\HybridAi.TestTask.vpp = docs\HybridAi.TestTask.vpp
+		README.md = README.md
 		docs\test-task.rtf = docs\test-task.rtf
 	EndProjectSection
 EndProject
