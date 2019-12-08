@@ -4,6 +4,8 @@ using HybridAi.TestTask.ConsoleDbUpdater.Models;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using HybridAi.TestTask.ConsoleDbUpdater.ModelMappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater
 {
@@ -13,6 +15,9 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
         static async Task Main(string[] args)
         {
+            ModelMapperFactory.Instance.Register< CityBlockMapper >( CityBlockMapper.CityBlockHeader );
+            ModelMapperFactory.Instance.Register< CityLocationMapper >( CityLocationMapper.CityLocationHeader );
+
             ChainBuilder remoteChainBuilder = new ChainBuilder().AddDownloader()
                                                                 .AddUnzipper();
 
