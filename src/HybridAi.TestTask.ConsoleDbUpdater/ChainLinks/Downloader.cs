@@ -45,7 +45,16 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                 using var client = new HttpClient();
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
-                HttpResponseMessage response = await client.GetAsync( url );
+
+                HttpResponseMessage? response = null;
+
+                try {
+                    response = await client.GetAsync( url );
+                }
+                catch ( Exception ex ) {
+                    LoggerFactory.Instance.Log( ex.Message );
+                    return null;
+                }
 
                 if (response.IsSuccessStatusCode)
                 {
