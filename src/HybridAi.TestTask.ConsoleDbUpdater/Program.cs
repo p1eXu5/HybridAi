@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater
 {
-    class Program
+    public class Program
     {
-        private const string DEFAULT_FILE_URL = @"https://geolite.maxmind.com/download/geoip/database/GeoLite2-City-CSV.zip";
+        public const string DEFAULT_FILE_URL = @"https://geolite.maxmind.com/download/geoip/database/GeoLite2-City-CSV.zip";
 
         static async Task Main(string[] args)
         {
             ChainBuilder remoteChainBuilder = new ChainBuilder().AddDownloader();
 
             ChainBuilder copierChainBuilder = new ChainBuilder().AddUnzipper()
-                                                         .AddTempFileCreator();
+                                                                .AddTempFileCreator();
 
             ChainBuilder updateChainBuilder = new ChainBuilder().AddExtensionChecker()
-                                                         .AddCsvHeaderChecker()
-                                                         .AddMapper()
-                                                         .AddUpdater();
+                                                                .AddCsvHeaderChecker()
+                                                                .AddMapper()
+                                                                .AddUpdater();
 
             var argumentChainBuilder = new ChainBuilder().AddArgumentFormatter()
                                                                   .Append(copierChainBuilder)
