@@ -63,5 +63,10 @@ namespace HybridAi.TestTask.Data.Models
         public JaCity JaCity { get; set; }
         public PtBrCity PtBrCity { get; set; }
         public ZhCnCity ZhCnCity { get; set; }
+
+        public override int GetHashCode()
+        {
+            return GeonameId.GetHashCode();
+        }
     }
 }

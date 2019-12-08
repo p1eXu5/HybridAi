@@ -38,5 +38,10 @@ namespace HybridAi.TestTask.Data.Models
         public LocaleCode LocaleCode { get; set; }
 
         public ICollection< CityLocation > CityLocations { get; set; }
+
+        public override int GetHashCode()
+        {
+            return ContinentName.GetHashCode() + 13 * CountryName.GetHashCode() + 27 * CityName.GetHashCode();
+        }
     }
 }
