@@ -1,0 +1,10 @@
+geoname_id,locale_code,continent_code,continent_name,country_iso_code,country_name,subdivision_1_iso_code,subdivision_1_name,subdivision_2_iso_code,subdivision_2_name,city_name,metro_code,time_zone,is_in_european_union
+18918,en,EU,Europe,CY,Cyprus,4,Ammochostos,,,Protaras,,Asia/Famagusta,1
+49518,en,AF,Africa,RW,Rwanda,,,,,,,Africa/Kigali,0
+49747,en,AF,Africa,SO,Somalia,BK,Bakool,,,Oddur,,Africa/Mogadishu,0
+51537,en,AF,Africa,SO,Somalia,,,,,,,Africa/Mogadishu,0
+53654,en,AF,Africa,SO,Somalia,BN,Banaadir,,,Mogadishu,,Africa/Mogadishu,0
+54225,en,AF,Africa,SO,Somalia,SH,Lower Shabeelle,,,Merca,,Africa/Mogadishu,0
+55671,en,AF,Africa,SO,Somalia,JH,Lower Juba,,,Kismayo,,Africa/Mogadishu,0
+56335,en,AF,Africa,SO,Somalia,SD,Middle Shabele,,,Giohar,,Africa/Mogadishu,0
+57289,en,AF,Africa,SO,Somalia,WO,Woqooyi Galbeed,,,Hargeisa,,Africa/Mogadishu,0

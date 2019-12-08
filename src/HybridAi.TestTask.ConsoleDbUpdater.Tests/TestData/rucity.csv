@@ -1,0 +1,10 @@
+geoname_id,locale_code,continent_code,continent_name,country_iso_code,country_name,subdivision_1_iso_code,subdivision_1_name,subdivision_2_iso_code,subdivision_2_name,city_name,metro_code,time_zone,is_in_european_union
+18918,ru,EU,Европа,CY,Кипр,4,,,,Протарас,,Asia/Famagusta,1
+49518,ru,AF,Африка,RW,Руанда,,,,,,,Africa/Kigali,0
+49747,ru,AF,Африка,SO,Сомали,BK,,,,,,Africa/Mogadishu,0
+51537,ru,AF,Африка,SO,Сомали,,,,,,,Africa/Mogadishu,0
+53654,ru,AF,Африка,SO,Сомали,BN,,,,Могадишо,,Africa/Mogadishu,0
+54225,ru,AF,Африка,SO,Сомали,SH,,,,,,Africa/Mogadishu,0
+55671,ru,AF,Африка,SO,Сомали,JH,,,,,,Africa/Mogadishu,0
+56335,ru,AF,Африка,SO,Сомали,SD,,,,,,Africa/Mogadishu,0
+57289,ru,AF,Африка,SO,Сомали,WO,,,,Харгейсе,,Africa/Mogadishu,0
