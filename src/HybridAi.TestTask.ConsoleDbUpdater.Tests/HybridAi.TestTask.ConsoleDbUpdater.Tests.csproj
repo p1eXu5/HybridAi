@@ -18,4 +18,16 @@
     <ProjectReference Include="..\HybridAi.TestTask.ConsoleDbUpdater\HybridAi.TestTask.ConsoleDbUpdater.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestData\empty.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\notempty.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
