@@ -16,11 +16,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
     [TestFixture]
 	public class MapperTests
     {
-        #nullable disable
-        private readonly string _ipv4csv
-            = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "TestData\\ipv4.csv" );
-        #nullable restore
-
 		[Test]
 		public void Process__NotFolderRequest_SuccessorIsNull__ReturnsResponseWithSameRequest()
 		{
@@ -36,23 +31,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 		}
 
 
-        [Test]
-        public void Process__FolderRequestContainsCityBlockIpv4File_SuccessorIsNull__ReturnsResponseWithCityBlockIpv4Models()
-        {
-            // Arrange:
-            var mapper = _getMapper();
-            FolderRequest request = _getFolderRequest( _ipv4csv );
-
-            // Action:
-            var response = mapper.Process( request );
-
-            // Assert:
-            Assert.IsTrue( response is Response< ModelRequest< CityBlock > > );
-        }
-
-
-
-		#region factory
+        #region factory
 		// Insert factory methods here:
 
         private Mapper _getMapper()
@@ -60,10 +39,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             return new Mapper( null );
         }
 
-        private FolderRequest _getFolderRequest( params string[] files )
-        {
-            return new FolderRequest( files );
-        }
 
 		#endregion
 	}
