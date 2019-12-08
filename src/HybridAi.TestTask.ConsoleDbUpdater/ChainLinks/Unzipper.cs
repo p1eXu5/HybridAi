@@ -10,8 +10,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
     public class Unzipper : ChainLink
 
     {
-        public Unzipper( ChainLink successor ) 
+        public Unzipper( ChainLink? successor ) 
             : base( successor )
         { }
+
+        public override IResponse< Request > Process( Request request )
+        {
+            return base.Process( request );
+        }
     }
 }
