@@ -14,6 +14,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 	[TestFixture]
 	public class UnzipperTests
 	{
+        [ OneTimeSetUp ]
+        public void SetupLogger()
+        {
+            LoggerFactory.Instance.Logger = new TestLogger();
+        }
+
+
 		[Test]
 		public void Process__NotFileLocationRequest_SuccessorIsNull__ReturnsResponseWithSameRequest()
 		{
@@ -41,11 +48,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
             // Assert:
             Assert.IsTrue( ReferenceEquals( response.Request, request ) );
-            Assert.IsFalse( response is Response< FolderRequest > );
         }
 
         [Test]
-        public void Process__FileLocationRequestWithNotEmptyZipFile_SuccessorIsNull__ReturnsResponseWithFolderRequest()
+        public void Process__FileLocationRequestWithEmptyZipFile_SuccessorIsNull__ReturnsResponseWithFileLocationRequest()
         {
             // Arrange:
             var chain = _getUnzipper();
@@ -55,8 +61,35 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var response = chain.Process( request );
 
             // Assert:
-            Assert.IsFalse( ReferenceEquals( response.Request, request ) );
-            Assert.IsTrue( response is Response< FolderRequest > );
+            Assert.IsTrue( response is Response< FileLocationRequest > );
+        }
+
+        [Test]
+        public void Process__FileLocationRequestWithNotEmptyZipFile_SuccessorIsNull__ReturnsResponseWithFolderRequest()
+        {
+            // Arrange:
+            var chain = _getUnzipper();
+            var request = _getNotEmptyFileLocationRequest();
+
+            // Action:
+            var response = chain.Process( request );
+
+            // Assert:
+            Assert.IsTrue( response is Response< FolderRequest >, ((TestLogger)LoggerFactory.Instance.Logger).Messages );
+        }
+
+        [Test]
+        public void Process__FileLocationRequestWithNotEmptyZipFile_SuccessorIsNull__ReturnsResponseWithFolderRequestWithFilledFiles()
+        {
+            // Arrange:
+            var chain = _getUnzipper();
+            var request = _getNotEmptyFileLocationRequest();
+
+            // Action:
+            var folderRequest = (FolderRequest)chain.Process( request ).Request;
+
+            // Assert:
+            Assert.IsTrue( folderRequest.Files.Any(), ((TestLogger)LoggerFactory.Instance.Logger).Messages );
         }
 
 
@@ -94,6 +127,21 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         }
 
 		#endregion
+
+        private class TestLogger : ILogger
+        {
+            private List< string > _messages = new List< string >();
+
+            public void WriteLine( string message )
+            {
+                _messages.Add( message );
+            }
+
+            public string Messages
+            {
+                get { return _messages.Aggregate( "\n", ( s1, s2 ) => { return $"{s1}\n{s2}"; } ); }
+            }
+        }
 	}
 
 }
