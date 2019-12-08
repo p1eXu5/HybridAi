@@ -8,7 +8,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Models
     {
         public static Request EmptyRequest => new Request();
 
-        public virtual IResponse< Request > Response => new Response< Request >( EmptyRequest );
+        public virtual IResponse< Request > Response => new Response< Request >( this );
 
     }
 }
