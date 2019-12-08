@@ -13,7 +13,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 		[TestCase( @"a\a-a.a" )]
 		[TestCase( @"a:\a\a.a" )]
 		[TestCase( @"a:\a\a" )]
-		public void Process__PathInRequest_SuccessorIsNotSet__ReturnsResponseWithFileLocationRequest( string path )
+		public void Process__PathInRequest_SuccessorIsNull__ReturnsResponseWithFileLocationRequest( string path )
 		{
 			// Arrange:
             var formatter = _getArgumentFormatter();
@@ -31,7 +31,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         [TestCase( "https://" )]
         [TestCase( @"http://a/a-a.a" )]
         [TestCase( @"https://aa/a.a?sd" )]
-        public void Process__PathInRequest_SuccessorIsNotSet__ReturnsResponseWithUrlRequest( string path )
+        public void Process__PathInRequest_SuccessorIsNull__ReturnsResponseWithUrlRequest( string path )
         {
             // Arrange:
             var formatter = _getArgumentFormatter();
