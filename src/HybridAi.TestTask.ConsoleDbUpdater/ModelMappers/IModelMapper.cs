@@ -8,7 +8,7 @@ using HybridAi.TestTask.Data.Models;
 namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
 {
     public interface IModelMapper< out TCollection >
-        where TCollection : HashSet< IEntity >?
+        where TCollection : List< IEntity >?
     {
         string[] Header { get; }
 

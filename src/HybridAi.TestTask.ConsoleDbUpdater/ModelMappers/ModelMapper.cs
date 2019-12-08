@@ -6,13 +6,13 @@ using HybridAi.TestTask.Data.Models;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
 {
-    public abstract class ModelMapper : IModelMapper< HashSet<IEntity>? >
+    public abstract class ModelMapper : IModelMapper< List<IEntity>? >
     {
         protected readonly char[] _Splitters = new[] { ',', ';' };
 
         public abstract string[] Header { get; }
 
-        public HashSet<IEntity>? Result { get; private set; }
+        public List<IEntity>? Result { get; private set; }
 
         public async Task BuildModelCollectionAsync(string fileName, int offset = 0)
         {
@@ -27,7 +27,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
 
             if ( offset >= lines.Length ) return;
 
-            var result = new HashSet< IEntity >( lines.Length );
+            var result = new List< IEntity >( lines.Length );
 
             Parallel.For( offset, lines.Length - 1, ( i, s ) => {
                 IEntity? entity = _map( lines[i] );

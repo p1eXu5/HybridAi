@@ -9,11 +9,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Models
 {
     public class ImportedModelsRequest : Request
     {
-        public ImportedModelsRequest( ICollection< IEntity >[] modelCollections )
+        public ImportedModelsRequest( List< IEntity >[] modelCollections )
         {
             ModelCollections = modelCollections;
         }
 
-        public ICollection< IEntity >[] ModelCollections { get; }
+        public List< IEntity >[] ModelCollections { get; }
+
+        public override IResponse< Request > Response => new Response< ImportedModelsRequest >( this );
     }
 }
