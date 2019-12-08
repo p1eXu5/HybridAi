@@ -59,8 +59,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             Assert.IsTrue( response is Response< FolderRequest > );
         }
 
+
 		#region factory
 		// Insert factory methods here:
+
         private Unzipper _getUnzipper()
         {
             return new Unzipper( null );
