@@ -9,13 +9,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Models
 {
     public class FolderRequest : Request
     {
-        public FolderRequest( IEnumerable< FileInfo > fileInfos )
+        public FolderRequest( IEnumerable< string > fileInfos )
         {
-            FileInfos = fileInfos.ToArray();
+            Files = fileInfos.ToArray();
         }
 
 
-        public FileInfo[] FileInfos { get; }
+        public string[] Files { get; }
 
         public override IResponse< Request > Response => new Response< FolderRequest >( this );
     }
