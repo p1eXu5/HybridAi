@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HybridAi.TestTask.Data.Configurations
 {
-    public class CityBlockIpv4Configuration : IEntityTypeConfiguration< CityBlockIpv4 >
+    public class CityBlockIpv4Configuration : IEntityTypeConfiguration< CityBlock >
     {
-        public void Configure( EntityTypeBuilder< CityBlockIpv4 > builder )
+        public void Configure( EntityTypeBuilder< CityBlock > builder )
         {
             builder.ToTable( "CityBlocksIpv4", "dbo" );
 

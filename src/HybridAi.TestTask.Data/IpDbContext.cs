@@ -16,7 +16,7 @@ namespace HybridAi.TestTask.Data
             :base( options )
         { }
 
-        public DbSet< CityBlockIpv4 > CityBlockIpv4Collection { get; set; }
+        public DbSet< CityBlock > CityBlockIpv4Collection { get; set; }
         public DbSet< CityBlockIpv6 > CityBlockIpv6Collection { get; set; }
         public DbSet< CityLocation > CityLocations { get; set; }
 
