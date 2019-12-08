@@ -1,18 +1,18 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HybridAi.TestTask.ConsoleDbUpdater.ChainLinks;
 using HybridAi.TestTask.ConsoleDbUpdater.Models;
+using HybridAi.TestTask.ConsoleDbUpdater.Tests.TestHelpers;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 {
 
 	[TestFixture]
-	public class UnzipperTests
+	public partial class UnzipperTests
 	{
         [ OneTimeSetUp ]
         public void SetupLogger()
@@ -75,7 +75,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var response = chain.Process( request );
 
             // Assert:
-            Assert.IsTrue( response is Response< FolderRequest >, ((TestLogger)LoggerFactory.Instance.Logger).Messages );
+            Assert.IsTrue( response is Response< FolderRequest >, (( TestLogger )LoggerFactory.Instance.Logger).Messages );
         }
 
         [Test]
@@ -127,21 +127,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         }
 
 		#endregion
-
-        private class TestLogger : ILogger
-        {
-            private List< string > _messages = new List< string >();
-
-            public void WriteLine( string message )
-            {
-                _messages.Add( message );
-            }
-
-            public string Messages
-            {
-                get { return _messages.Aggregate( "\n", ( s1, s2 ) => { return $"{s1}\n{s2}"; } ); }
-            }
-        }
-	}
+    }
 
 }
