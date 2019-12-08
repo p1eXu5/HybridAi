@@ -18,11 +18,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
         public override IResponse< Request > Process( Request request )
         {
-            if ( Successor != null && request is FolderRequest folderRequest ) 
+            if ( request is FolderRequest folderRequest ) 
             {
                 var task = Task.Run( async () => 
                 {
-                    Task< ICollection< IEntity >? >[] tasks =
+                    Task< List< IEntity >? >[] tasks =
                         folderRequest.Files.Select( f => Task.Run( async () => await _map( f ) ) ).ToArray();
                     
                     return await Task.WhenAll( tasks );
@@ -35,13 +35,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                 }
 
 
-                return base.Process( new ImportedModelsRequest( _consolidate( result ) ) );
+                return base.Process( new ImportedModelsRequest( result ) );
             }
 
             return base.Process( request );
         }
 
-        private async Task< ICollection< IEntity >? > _map( string fileName )
+        private async Task< List< IEntity >? > _map( string fileName )
         {
             string? line = null;
             int n = 0;
@@ -50,18 +50,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                 ++n;
             } while ( String.IsNullOrWhiteSpace( line ) );
 
-            IModelMapper< HashSet< IEntity > >? mm = ModelMapperFactory.Instance.TryFindModelMapper( line );
+            IModelMapper< List< IEntity > >? mm = ModelMapperFactory.Instance.TryFindModelMapper( line );
 
             if ( mm != null ) {
                 await mm.BuildModelCollectionAsync( fileName, n );
             }
 
             return mm?.Result;
-        }
-
-        private ICollection< IEntity >[] _consolidate( ICollection< IEntity >[] collections )
-        {
-            throw new NotImplementedException();
         }
     }
 }
