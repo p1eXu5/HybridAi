@@ -8,6 +8,7 @@ namespace HybridAi.TestTask.Data.Models
 {
     public class ZhCnCity : City
     {
-        
+        public ZhCnCity( string continentName, string countryName, string cityName ) : base( continentName, countryName, cityName )
+        { }
     }
 }

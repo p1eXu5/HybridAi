@@ -8,6 +8,7 @@ namespace HybridAi.TestTask.Data.Models
 {
     public class EsCity : City
     {
-        
+        public EsCity( string continentName, string countryName, string cityName ) : base( continentName, countryName, cityName )
+        { }
     }
 }
