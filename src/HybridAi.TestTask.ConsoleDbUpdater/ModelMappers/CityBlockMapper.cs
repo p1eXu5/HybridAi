@@ -9,7 +9,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
     public class CityBlockMapper : ModelMapper
     {
         // ReSharper disable StringLiteralTypo
-        public override string[] Header { get; } = new[] {
+        public static string[] CityBlockHeader { get; } = new[] {
             "network",
             "geoname_id",
             "registered_country_geoname_id",
@@ -22,6 +22,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
             "accuracy_radius"
         };
         // ReSharper restore StringLiteralTypo
+
+        public override string[] Header => CityBlockMapper.CityBlockHeader;
 
         protected override IEntity? _map( string line )
         {

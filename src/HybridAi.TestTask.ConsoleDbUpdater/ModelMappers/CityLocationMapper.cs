@@ -9,8 +9,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
 {
     public class CityLocationMapper : ModelMapper
     {
-        // ReSharper disable StringLiteralTypo
-        public override string[] Header { get; } = new[] {
+        public static string[] CityLocationHeader { get; } = new[] {
             "geoname_id", // 0
             "locale_code", // 1
             "continent_code", // 2
@@ -26,6 +25,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
             "time_zone", // 12
             "is_in_european_union", // 13
         };
+
+        // ReSharper disable StringLiteralTypo
+        public override string[] Header => CityLocationMapper.CityLocationHeader;
+
         // ReSharper restore StringLiteralTypo
 
         private delegate ref City CityGetter( CityLocation cityLocation );
