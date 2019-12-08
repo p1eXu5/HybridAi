@@ -14,7 +14,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 	public class MapperTests
 	{
 		[Test]
-		public void Process__NotFileLocationRequest_SuccessorIsNull__ReturnsResponseWithSameRequest()
+		public void Process__NotFolderRequest_SuccessorIsNull__ReturnsResponseWithSameRequest()
 		{
             // Arrange:
             var mapper = _getMapper();
