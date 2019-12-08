@@ -13,7 +13,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
         static async Task Main(string[] args)
         {
-            ChainBuilder remoteChainBuilder = new ChainBuilder().AddDownloader();
+            ChainBuilder remoteChainBuilder = new ChainBuilder().AddDownloader()
+                                                                .AddUnzipper();
 
             ChainBuilder copierChainBuilder = new ChainBuilder().AddUnzipper()
                                                                 .AddTempFileCreator();
@@ -31,7 +32,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
             switch ( args.Length ) {
                 case 0:
-                    IChainLink< Request, IResponse< Request >> defaultChain = remoteChainBuilder.Append( copierChainBuilder ).Append(updateChainBuilder).Build();
+                    IChainLink< Request, IResponse< Request >> defaultChain 
+                        = remoteChainBuilder.AddUnzipper().Build();
                     defaultChain.Process( new UrlRequest( DEFAULT_FILE_URL ) );
                     break;
                 case 1:
@@ -39,6 +41,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                     argumentChain.Process( new ArgumentRequest( args[0] ) );
                     break;
                 default:
+                    throw new NotImplementedException( "Multiple files is not maintained yet." );
                     argumentChain = argumentChainBuilder.Build();
                     var tasks = new Task< IResponse< Request > >[args.Length];
                     for (int i = 0; i < args.Length; i++) {
