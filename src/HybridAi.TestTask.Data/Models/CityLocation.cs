@@ -17,7 +17,21 @@ namespace HybridAi.TestTask.Data.Models
 
         public int GeonameId { get; }
 
+        [StringLength(8)]
+        [Required]
+        public string ContinentCode { get; set; }
 
+        [StringLength(8)]
+        [Required]
+        public string CountryIsoCode { get; set; }
+
+        [StringLength(4)]
+        public string Subdivision1IsoCode { get; set; }
+
+        
+
+        [StringLength(4)]
+        public string? Subdivision2IsoCode { get; set; }
 
         
 

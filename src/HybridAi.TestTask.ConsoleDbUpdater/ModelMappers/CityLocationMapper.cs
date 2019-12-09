@@ -45,7 +45,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
                 cityLocation = new CityLocation( Int32.Parse(values[0]) ) {
                     MetroCode = String.IsNullOrWhiteSpace( values[11] ) ? null : values[11],
                     TimeZone = values[12],
-                    IsInEuropeanUnion = Int32.Parse( values[13] ) == 1
+                    IsInEuropeanUnion = Int32.Parse( values[13] ) == 1,
+                    ContinentCode = values[2],
+                    CountryIsoCode = values[4],
+                    Subdivision1IsoCode = String.IsNullOrWhiteSpace( values[6] ) ? null : values[6],
+                    Subdivision2IsoCode = String.IsNullOrWhiteSpace( values[8] ) ? null : values[8],
                 };
             }
             catch ( Exception ex ) {
@@ -84,6 +88,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
             T? city = _createCity< T >( values, cityLocation );
             if ( city != null ) {
                 city.LocaleCode = new LocaleCode(  values[1] );
+
                 action( city );
                 return cityLocation;
             }
@@ -105,12 +110,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
 
                 if ( obj is T city ) 
                 {
-                    city.ContinentCode = values[2];
-                    city.CountryIsoCode = values[4];
+                    
                     city.CountryName = values[5];
-                    city.Subdivision1IsoCode = String.IsNullOrWhiteSpace( values[6] ) ? null : values[6];
+                    
                     city.Subdivision1Name = String.IsNullOrWhiteSpace( values[7] ) ? null : values[7];
-                    city.Subdivision2IsoCode = String.IsNullOrWhiteSpace( values[8] ) ? null : values[8];
                     city.Subdivision2Name = String.IsNullOrWhiteSpace( values[9] ) ? null : values[9];
                     city.CityName = values[10];
                     city.CityLocation = cityLocation;

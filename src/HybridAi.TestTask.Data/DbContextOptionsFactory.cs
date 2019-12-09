@@ -24,6 +24,14 @@ namespace HybridAi.TestTask.Data
 
         public string ConnectionString { get; set; }
 
+        private DbContextOptions< IpDbContext > _dbContextOptions;
+
+        public DbContextOptions< IpDbContext > DbContextOptions
+        {
+            get => _dbContextOptions ?? GetDbContextOptions();
+            set => _dbContextOptions = value;
+        }
+
         public DbContextOptions< IpDbContext > GetDbContextOptions()
         {
             var connectionString = ConnectionString;
