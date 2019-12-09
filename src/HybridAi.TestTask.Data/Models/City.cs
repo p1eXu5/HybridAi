@@ -7,11 +7,10 @@ namespace HybridAi.TestTask.Data.Models
 {
     public class City : IEntity
     {
-        public City( string continentName, string countryName, string cityName )
+        public City( string continentName, string countryName )
         {
             ContinentName = continentName;
             CountryName = countryName;
-            CityName = cityName;
         }
 
         [StringLength(64, MinimumLength = 1)]
@@ -29,8 +28,7 @@ namespace HybridAi.TestTask.Data.Models
         public string Subdivision2Name { get; set; }
 
         [StringLength(128, MinimumLength = 1)]
-        [Required]
-        public string CityName { get; }
+        public string CityName { get; set; }
 
 
         public Int16 LocaleCodeId { get; set; }

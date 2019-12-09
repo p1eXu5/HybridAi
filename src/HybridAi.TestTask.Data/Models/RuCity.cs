@@ -9,7 +9,7 @@ namespace HybridAi.TestTask.Data.Models
     public class RuCity : City
 
     {
-        public RuCity( string continentName, string countryName, string cityName ) : base( continentName, countryName, cityName )
+        public RuCity( string continentName, string countryName ) : base( continentName, countryName )
         { }
     }
 }

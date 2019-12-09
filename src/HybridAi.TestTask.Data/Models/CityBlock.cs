@@ -15,7 +15,7 @@ namespace HybridAi.TestTask.Data.Models
         [StringLength(15)]
         public string Network { get; }
 
-        public int RegistredCountryGeonameId { get; set; }
+        public int? RegistredCountryGeonameId { get; set; }
         public int? RepresentedCountryGeonameId { get; set; }
         public bool IsAnonymousProxy { get; set; }
         public bool IsSatelliteProvider { get; set; }
@@ -29,6 +29,11 @@ namespace HybridAi.TestTask.Data.Models
         public int CityLocationGeonameId { get; set; }
 
         public CityLocation CityLocation { get; set; }
+
+        public override string ToString()
+        {
+            return $"{this.Network}";
+        }
 
         public override int GetHashCode()
         {
