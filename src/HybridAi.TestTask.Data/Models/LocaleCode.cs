@@ -7,14 +7,21 @@ using System.Threading.Tasks;
 
 namespace HybridAi.TestTask.Data.Models
 {
+#nullable enable
+
     public class LocaleCode
     {
-        public Int16 Id { get; set; }
+        public LocaleCode( string name )
+        {
+            Name = name;
+        }
 
         [StringLength(8, MinimumLength = 1)]
         [Required]
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public ICollection< EnCity > EnCities { get; set; }
+        public ICollection< EnCity >? EnCities { get; set; }
     }
+
+#nullable restore
 }
