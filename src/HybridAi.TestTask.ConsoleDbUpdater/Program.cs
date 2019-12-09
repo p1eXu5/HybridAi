@@ -2,6 +2,7 @@
 using HybridAi.TestTask.ConsoleDbUpdater.Extensions;
 using HybridAi.TestTask.ConsoleDbUpdater.Models;
 using System;
+using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
 using HybridAi.TestTask.ConsoleDbUpdater.ModelMappers;

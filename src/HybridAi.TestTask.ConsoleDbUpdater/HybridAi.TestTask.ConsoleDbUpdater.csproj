@@ -11,4 +11,10 @@
     <ProjectReference Include="..\HybridAi.TestTask.Data\HybridAi.TestTask.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="App.config">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

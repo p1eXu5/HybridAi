@@ -23,7 +23,7 @@ namespace HybridAi.TestTask.Data
         protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )
         {
             if ( !optionsBuilder.IsConfigured ) {
-                optionsBuilder.UseNpgsql( "Host=localhost;Database=TestIpDb;Username=testuser;Password=123;IntegratedSecurity=true" );
+                optionsBuilder.UseNpgsql( DbContextOptionsFactory.DEFAULT_CONNECTION_STRING );
             }
         }
 
