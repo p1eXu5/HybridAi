@@ -10,8 +10,11 @@ namespace HybridAi.TestTask.Data.Configurations
         {
             builder.ToTable( "RuCities", "dbo" );
 
-            builder.HasKey(e => new { e.ContinentName, e.CountryName, e.CityName });
-            builder.HasOne(e => e.LocaleCode).WithMany(l => l.RuCities).HasForeignKey(e => e.LocaleCodeId);
+            builder.HasKey( c => c.GeonameId );
+            builder.Property( c => c.GeonameId ).HasColumnType( "int" ).IsRequired();
+
+            builder.HasOne( c => c.CityLocation ).WithOne( cl => cl.RuCity ).HasForeignKey< CityLocation >( c => c.GeonameId );
+            builder.HasOne(c => c.LocaleCode).WithMany(l => l.RuCities).HasForeignKey(c => c.LocaleCodeName);
         }
     }
 }

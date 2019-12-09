@@ -21,6 +21,13 @@ namespace HybridAi.TestTask.Data.Models
         public string Name { get; }
 
         public ICollection< EnCity >? EnCities { get; set; }
+        public ICollection< DeCity >? DeCities { get; set; }
+        public ICollection< FrCity >? FrCities { get; set; }
+        public ICollection< EsCity >? EsCities { get; set; }
+        public ICollection< RuCity >? RuCities { get; set; }
+        public ICollection< JaCity >? JaCities { get; set; }
+        public ICollection< PtBrCity>? PtBrCities { get; set; }
+        public ICollection< ZhCnCity>? ZhCnCities { get; set; }
     }
 
 #nullable restore

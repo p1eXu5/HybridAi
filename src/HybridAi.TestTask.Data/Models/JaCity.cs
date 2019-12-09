@@ -9,7 +9,7 @@ namespace HybridAi.TestTask.Data.Models
     public class JaCity : City
     {
 #nullable enable
-        public JaCity( string continentName, string countryName, string? cityName ) : base( continentName, countryName, cityName )
+        public JaCity( int geonameId ) : base( geonameId )
         { }
 #nullable restore
     }

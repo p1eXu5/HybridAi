@@ -14,6 +14,7 @@ namespace HybridAi.TestTask.Data.Models
             GeonameId = geonameId;
         }
 
+#nullable restore
 
         public int GeonameId { get; }
 
@@ -51,15 +52,16 @@ namespace HybridAi.TestTask.Data.Models
         public string Subdivision2Name { get; set; }
 
         [StringLength(128, MinimumLength = 1)]
-        public string CityName { get; }
+        public string CityName { get; set; }
 
+        public string LocaleCodeName { get; set; }
         public LocaleCode LocaleCode { get; set; }
 
         public CityLocation CityLocation { get; set; }
 
         public override int GetHashCode()
         {
-            return 27 * ContinentName.GetHashCode() + 13 * CountryName.GetHashCode() + CityName?.GetHashCode() ?? 7;
+            return GeonameId.GetHashCode();
         }
     }
 }

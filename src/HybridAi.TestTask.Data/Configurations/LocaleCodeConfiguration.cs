@@ -13,21 +13,21 @@ namespace HybridAi.TestTask.Data.Configurations
     {
         public virtual void Configure(EntityTypeBuilder< LocaleCode > builder)
         {
-            builder.HasKey(e => e.Id);
-            builder.Property( e => e.Id ).ValueGeneratedOnAdd();
+            builder.HasKey(e => e.Name);
+            builder.Property( e => e.Name ).HasColumnType( "varchar(8)" ).IsRequired();
 
             builder.HasMany( l => l.EnCities );
 
             builder.HasData( new[]
             {
-                new LocaleCode { Id = 1, Name = "en" }, 
-                new LocaleCode { Id = 2, Name = "de" }, 
-                new LocaleCode { Id = 3, Name = "fr" }, 
-                new LocaleCode { Id = 4, Name = "es" }, 
-                new LocaleCode { Id = 5, Name = "ru" }, 
-                new LocaleCode { Id = 6, Name = "ja" }, 
-                new LocaleCode { Id = 7, Name = "zh-CN" }, 
-                new LocaleCode { Id = 8, Name = "pt-BR" }, 
+                new LocaleCode("en" ), 
+                new LocaleCode("de" ), 
+                new LocaleCode("fr" ), 
+                new LocaleCode("es" ), 
+                new LocaleCode("ru" ), 
+                new LocaleCode("ja" ), 
+                new LocaleCode("zh-CN" ), 
+                new LocaleCode("pt-BR" ), 
             } );
         }
     }
