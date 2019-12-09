@@ -16,7 +16,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
     [TestFixture]
 	public class MapperTests
     {
-        #nullable disable
+        #region fields
+
+#nullable disable
+
         private readonly string _ipv4csv
             = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "TestData\\ipv4.csv" );
 
@@ -25,6 +28,9 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
 
         private readonly string _encitycsv
             = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "TestData\\encity.csv" );
+
+        private readonly string _encity1csv
+            = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "TestData\\encity1.csv" );
 
         private readonly string _rucitycsv
             = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "TestData\\rucity.csv" );
@@ -35,9 +41,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
         private readonly string _wrongcsv
             = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "TestData\\test.csv" );
 
-        #nullable restore
+#nullable restore
 
-        [ OneTimeSetUp ]
+        #endregion
+
+
+        [OneTimeSetUp ]
         public void SetupLogger()
         {
             LoggerFactory.Instance.Logger = new TestLogger();
@@ -66,7 +75,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
         {
             // Arrange:
             var mapper = _getMapper();
-            FolderRequest request = _getFolderRequest( _ipv4csv, _ipv4csv, _encitycsv, _rucitycsv );
+            FolderRequest request = _getFolderRequest( _ipv4csv, _ipv6csv, _encitycsv, _rucitycsv );
 
             // Action:
             var response = mapper.Process( request );
@@ -75,6 +84,85 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
             Assert.IsTrue( response is Response< ImportedModelsRequest > );
         }
 
+        [Test]
+        public void Process__FolderRequestContainsSupportedFiles_SuccessorIsNull__ReturnsExpectedCollectionCount()
+        {
+            // Arrange:
+            var mapper = _getMapper();
+            FolderRequest request = _getFolderRequest( _ipv4csv, _ipv6csv, _encitycsv, _rucitycsv );
+
+            // Action:
+            var collections = ((Response< ImportedModelsRequest >)mapper.Process( request )).Request.ModelCollections;
+
+            // Assert:
+            Assert.AreEqual( 4, collections.Length );
+        }
+
+        [Test]
+        public void Process__FolderRequestContainsCityBlockIpv4Files_SuccessorIsNull__ReturnsExpectedCityBlockIpv4Count()
+        {
+            // Arrange:
+            var mapper = _getMapper();
+            FolderRequest request = _getFolderRequest( _ipv4csv, _ipv6csv, _encitycsv, _rucitycsv );
+
+            // Action:
+            var collections = ((Response< ImportedModelsRequest >)mapper.Process( request )).Request.ModelCollections;
+            var ipv4Collections = collections.Where( c => c[0] is CityBlockIpv4 ).ToArray();
+            // Assert:
+            Assert.AreEqual( 6, ipv4Collections.Sum( ipv4 => ipv4.Count ) );
+        }
+
+        [Test]
+        public void Process__FolderRequestContainsCityBlockIpv6Files_SuccessorIsNull__ReturnsExpectedCityBlockIpv6Count()
+        {
+            // Arrange:
+            var mapper = _getMapper();
+            FolderRequest request = _getFolderRequest( _ipv4csv, _ipv6csv, _encitycsv, _rucitycsv );
+
+            // Action:
+            var collections = ((Response< ImportedModelsRequest >)mapper.Process( request )).Request.ModelCollections;
+            var ipv6Collections = collections.Where( c => c[0] is CityBlockIpv6 ).ToArray();
+            // Assert:
+            Assert.AreEqual( 7, ipv6Collections.Sum( ipv6 => ipv6.Count ) );
+        }
+
+        [Test]
+        public void Process__FolderRequestContainsEnCityFiles_SuccessorIsNull__ReturnsExpectedEnCityCount()
+        {
+            // Arrange:
+            var mapper = _getMapper();
+            FolderRequest request = _getFolderRequest( _encitycsv );
+
+            // Action:
+            var collections = ((Response< ImportedModelsRequest >)mapper.Process( request )).Request.ModelCollections;
+            var cityLocationCollections = collections.Where( c => c[0] is CityLocation ).ToArray();
+            // Assert:
+            Assert.AreEqual( 9, cityLocationCollections.Select( c => c.Select( e => ((CityLocation)e).EnCity) )
+                                                       .Aggregate( new List<City>(), (a, c) => { 
+                                                           a.AddRange(c);
+                                                           return a;
+                                                       } )
+                                                       .Count, ((TestLogger)LoggerFactory.Instance.Logger).Messages );
+        }
+
+        [Test]
+        public void Process__FolderRequestContainsRuCityFiles_SuccessorIsNull__ReturnsExpectedRuCityCount()
+        {
+            // Arrange:
+            var mapper = _getMapper();
+            FolderRequest request = _getFolderRequest( _rucitycsv );
+
+            // Action:
+            var collections = ((Response< ImportedModelsRequest >)mapper.Process( request )).Request.ModelCollections;
+            var cityLocationCollections = collections.Where( c => c[0] is CityLocation ).ToArray();
+            // Assert:
+            Assert.AreEqual( 9, cityLocationCollections.Select( c => c.Select( e => ((CityLocation)e).RuCity) )
+                                                       .Aggregate( new List<City>(), (a, c) => { 
+                                                           a.AddRange(c);
+                                                           return a;
+                                                       } )
+                                                       .Count, ((TestLogger)LoggerFactory.Instance.Logger).Messages );
+        }
 
 
 		#region factory

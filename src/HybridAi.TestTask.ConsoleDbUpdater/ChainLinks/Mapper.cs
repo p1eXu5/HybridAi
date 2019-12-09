@@ -24,11 +24,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                 {
                     Task< List< IEntity >? >[] tasks =
                         folderRequest.Files.Select( f => Task.Run( async () => await _map( f ) ) ).ToArray();
-                    
-                    return await Task.WhenAll( tasks );
+
+                    return await Task.WhenAll< List< IEntity >? >( tasks );
                 } );
 
-                var result = task.Result.Where( hs => hs != null ).ToArray();
+                var result = task.Result.Where( hs => hs?.Any() == true ).ToArray();
 
                 if ( result.Any() == false ) {
                     return base.Process( request );
@@ -46,7 +46,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             string? line = null;
             int n = 0;
             do {
-                line = File.ReadLines( fileName ).Skip( n ).First();
+                try {
+                    line = File.ReadLines( fileName ).Skip( n ).First();
+                }
+                catch( Exception ex ) {
+                    LoggerFactory.Instance.Log( ex.Message );
+                    return null;
+                }
                 ++n;
             } while ( String.IsNullOrWhiteSpace( line ) );
 

@@ -42,7 +42,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
             CityLocation cityLocation = null;
 
             try {
-                cityLocation = new CityLocation( Int16.Parse(values[0]) ) {
+                cityLocation = new CityLocation( Int32.Parse(values[0]) ) {
                     ContinentCode = values[2],
                     CountryIsoCode = values[4],
                     Subdivision1IsoCode = String.IsNullOrWhiteSpace( values[6] ) ? null : values[6],
@@ -85,7 +85,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
         private CityLocation? _loadCity< T >( string[] values, ref CityLocation cityLocation, Action< T > action )
             where T : City
         {
-            T city = _createCity< T >( values );
+            T? city = _createCity< T >( values );
             if ( city != null ) {
                 city.CityLocations = new[] { cityLocation };
                 city.LocaleCode = new LocaleCode { Name = values[1] };
@@ -96,23 +96,26 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
             return null;
         }
 
-        private T _createCity< T >( string[] values )
-            where T : City?
+        private T? _createCity< T >( string[] values )
+            where T : City
         {
             if ( String.IsNullOrWhiteSpace( values[2] )
-                 || String.IsNullOrWhiteSpace( values[5] )
-                 || String.IsNullOrWhiteSpace( values[10] ) ) {
+                 || String.IsNullOrWhiteSpace( values[5] ) ) {
                 return null;
             }
 
             try {
 
-                T city = ( T )Activator.CreateInstance( typeof( T ), new[] { values[2], values[5], values[10] } );
+                var obj = Activator.CreateInstance( typeof( T ), new[] { values[2], values[5] } );
 
-                city.Subdivision1Name = String.IsNullOrWhiteSpace( values[7] ) ? null : values[7];
-                city.Subdivision2Name = String.IsNullOrWhiteSpace( values[9] ) ? null : values[9];
+                if ( obj is T city ) 
+                {
+                    city.Subdivision1Name = String.IsNullOrWhiteSpace( values[7] ) ? null : values[7];
+                    city.Subdivision2Name = String.IsNullOrWhiteSpace( values[9] ) ? null : values[9];
 
-                return city;
+                    return city;
+                } 
+
             }
             catch ( Exception ex ) {
                 LoggerFactory.Instance.Log( ex.Message );

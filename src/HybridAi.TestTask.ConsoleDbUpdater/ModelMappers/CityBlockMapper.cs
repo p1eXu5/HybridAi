@@ -38,24 +38,27 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
             }
         }
 
-        private T _createCityBlock< T >( string[] values )
-            where T : CityBlock?
+        private T? _createCityBlock< T >( string[] values )
+            where T : CityBlock
         {
             try {
-                T block = ( T )Activator.CreateInstance( typeof( T ), new[] { values[0] } );
+                var obj = Activator.CreateInstance( typeof( T ), new[] { values[0] } );
 
-                block.CityLocationGeonameId = int.Parse( values[1] );
-                block.RegistredCountryGeonameId = int.Parse( values[2] );
-                // no data in the example file
-                block.RepresentedCountryGeonameId = null;
-                block.IsAnonymousProxy = int.Parse( values[4] ) == 1;
-                block.IsSatelliteProvider = int.Parse( values[5] ) == 1;
-                block.PostalCode = String.IsNullOrWhiteSpace( values[6] ) ? null : values[6];
-                block.Latitude = double.Parse( values[7] );
-                block.Longitude = double.Parse( values[8] );
-                block.AccuracyRadius = short.Parse( values[9] );
+                if ( obj is T block ) 
+                {
+                    block.CityLocationGeonameId = int.Parse( values[1] );
+                    block.RegistredCountryGeonameId = String.IsNullOrWhiteSpace( values[2] ) ? (int?)null : int.Parse( values[2] );
+                    // no data in the example file
+                    block.RepresentedCountryGeonameId = null;
+                    block.IsAnonymousProxy = int.Parse( values[4] ) == 1;
+                    block.IsSatelliteProvider = int.Parse( values[5] ) == 1;
+                    block.PostalCode = String.IsNullOrWhiteSpace( values[6] ) ? null : values[6];
+                    block.Latitude = double.Parse( values[7] );
+                    block.Longitude = double.Parse( values[8] );
+                    block.AccuracyRadius = short.Parse( values[9] );
 
-                return block;
+                    return block;
+                }
             }
             catch ( Exception ex ) {
                 LoggerFactory.Instance.Log( ex.Message );

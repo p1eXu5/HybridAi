@@ -29,7 +29,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
 
             var result = new List< IEntity >( lines.Length );
 
-            Parallel.For( offset, lines.Length - 1, ( i, s ) => {
+            Parallel.For( offset, lines.Length, ( i, s ) => {
                 IEntity? entity = _map( lines[i] );
                 if ( entity != null ) {
                     result.Add( entity );
