@@ -101,7 +101,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
 
             try {
 
-                var obj = Activator.CreateInstance( typeof( T ), new[] { cityLocation.GeonameId } );
+                var obj = Activator.CreateInstance( typeof( T ), new object[] { cityLocation.GeonameId } );
 
                 if ( obj is T city ) 
                 {
