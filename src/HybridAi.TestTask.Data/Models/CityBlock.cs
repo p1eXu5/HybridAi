@@ -7,14 +7,6 @@ namespace HybridAi.TestTask.Data.Models
 {
     public class CityBlock : IEntity
     {
-        public CityBlock( string network )
-        {
-            Network = network;
-        }
-
-        [StringLength(15)]
-        public string Network { get; }
-
         public int? RegistredCountryGeonameId { get; set; }
         public int? RepresentedCountryGeonameId { get; set; }
         public bool IsAnonymousProxy { get; set; }
@@ -29,15 +21,5 @@ namespace HybridAi.TestTask.Data.Models
         public int CityLocationGeonameId { get; set; }
 
         public CityLocation CityLocation { get; set; }
-
-        public override string ToString()
-        {
-            return $"{this.Network}";
-        }
-
-        public override int GetHashCode()
-        {
-            return Network.GetHashCode();
-        }
     }
 }

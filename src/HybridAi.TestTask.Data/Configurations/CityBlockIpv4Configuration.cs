@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HybridAi.TestTask.Data.Configurations
 {
-    public class CityBlockIpv4Configuration : IEntityTypeConfiguration< CityBlock >
+    public class CityBlockIpv4Configuration : IEntityTypeConfiguration< CityBlockIpv4 >
     {
-        public void Configure( EntityTypeBuilder< CityBlock > builder )
+        public void Configure( EntityTypeBuilder< CityBlockIpv4 > builder )
         {
-            builder.ToTable( "CityBlocksIpv4", "dbo" );
+            builder.ToTable( "CityBlocksIpv4s", "dbo" );
 
             builder.HasKey( c => c.Network );
             builder.Property( c => c.Network ).HasColumnType( "varchar(15)" );

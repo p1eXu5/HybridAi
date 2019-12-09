@@ -33,7 +33,7 @@ namespace HybridAi.TestTask.Data.Models
         public bool IsInEuropeanUnion { get; set; }
 
 
-        public ICollection< CityBlock > CityBlockIpv4Collection { get; set; }
+        public ICollection< CityBlockIpv4 > CityBlockIpv4Collection { get; set; }
         public ICollection< CityBlockIpv6 > CityBlockIpv6Collection { get; set; }
 
         public RuCity RuCity { get; set; }

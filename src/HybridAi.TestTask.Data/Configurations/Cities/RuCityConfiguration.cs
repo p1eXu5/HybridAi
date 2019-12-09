@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace HybridAi.TestTask.Data.Configurations
+namespace HybridAi.TestTask.Data.Configurations.Cities
 {
     public class RuCityConfiguration : IEntityTypeConfiguration< RuCity >
     {

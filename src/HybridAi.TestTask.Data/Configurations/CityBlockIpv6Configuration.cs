@@ -13,7 +13,7 @@ namespace HybridAi.TestTask.Data.Configurations
     {
         public void Configure( EntityTypeBuilder< CityBlockIpv6 > builder )
         {
-            builder.ToTable( "CityBlocksIpv6", "dbo" );
+            builder.ToTable( "CityBlocksIpv6s", "dbo" );
 
             builder.HasKey( c => c.Network );
             builder.Property( c => c.Network ).HasColumnType( "varchar(39)" );
