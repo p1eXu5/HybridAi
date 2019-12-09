@@ -28,10 +28,6 @@ namespace HybridAi.TestTask.Data.Migrations
                 {
                     GeonameId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ContinentCode = table.Column<string>(maxLength: 8, nullable: false),
-                    CountryIsoCode = table.Column<string>(maxLength: 8, nullable: false),
-                    Subdivision1IsoCode = table.Column<string>(maxLength: 4, nullable: true),
-                    Subdivision2IsoCode = table.Column<string>(maxLength: 4, nullable: true),
                     ContinentName = table.Column<string>(maxLength: 64, nullable: true),
                     CountryName = table.Column<string>(maxLength: 128, nullable: true),
                     Subdivision1Name = table.Column<string>(maxLength: 128, nullable: true),
@@ -57,10 +53,6 @@ namespace HybridAi.TestTask.Data.Migrations
                 {
                     GeonameId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ContinentCode = table.Column<string>(maxLength: 8, nullable: false),
-                    CountryIsoCode = table.Column<string>(maxLength: 8, nullable: false),
-                    Subdivision1IsoCode = table.Column<string>(maxLength: 4, nullable: true),
-                    Subdivision2IsoCode = table.Column<string>(maxLength: 4, nullable: true),
                     ContinentName = table.Column<string>(maxLength: 64, nullable: true),
                     CountryName = table.Column<string>(maxLength: 128, nullable: true),
                     Subdivision1Name = table.Column<string>(maxLength: 128, nullable: true),
@@ -86,10 +78,6 @@ namespace HybridAi.TestTask.Data.Migrations
                 {
                     GeonameId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ContinentCode = table.Column<string>(maxLength: 8, nullable: false),
-                    CountryIsoCode = table.Column<string>(maxLength: 8, nullable: false),
-                    Subdivision1IsoCode = table.Column<string>(maxLength: 4, nullable: true),
-                    Subdivision2IsoCode = table.Column<string>(maxLength: 4, nullable: true),
                     ContinentName = table.Column<string>(maxLength: 64, nullable: true),
                     CountryName = table.Column<string>(maxLength: 128, nullable: true),
                     Subdivision1Name = table.Column<string>(maxLength: 128, nullable: true),
@@ -115,10 +103,6 @@ namespace HybridAi.TestTask.Data.Migrations
                 {
                     GeonameId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ContinentCode = table.Column<string>(maxLength: 8, nullable: false),
-                    CountryIsoCode = table.Column<string>(maxLength: 8, nullable: false),
-                    Subdivision1IsoCode = table.Column<string>(maxLength: 4, nullable: true),
-                    Subdivision2IsoCode = table.Column<string>(maxLength: 4, nullable: true),
                     ContinentName = table.Column<string>(maxLength: 64, nullable: true),
                     CountryName = table.Column<string>(maxLength: 128, nullable: true),
                     Subdivision1Name = table.Column<string>(maxLength: 128, nullable: true),
@@ -144,10 +128,6 @@ namespace HybridAi.TestTask.Data.Migrations
                 {
                     GeonameId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ContinentCode = table.Column<string>(maxLength: 8, nullable: false),
-                    CountryIsoCode = table.Column<string>(maxLength: 8, nullable: false),
-                    Subdivision1IsoCode = table.Column<string>(maxLength: 4, nullable: true),
-                    Subdivision2IsoCode = table.Column<string>(maxLength: 4, nullable: true),
                     ContinentName = table.Column<string>(maxLength: 64, nullable: true),
                     CountryName = table.Column<string>(maxLength: 128, nullable: true),
                     Subdivision1Name = table.Column<string>(maxLength: 128, nullable: true),
@@ -173,10 +153,6 @@ namespace HybridAi.TestTask.Data.Migrations
                 {
                     GeonameId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ContinentCode = table.Column<string>(maxLength: 8, nullable: false),
-                    CountryIsoCode = table.Column<string>(maxLength: 8, nullable: false),
-                    Subdivision1IsoCode = table.Column<string>(maxLength: 4, nullable: true),
-                    Subdivision2IsoCode = table.Column<string>(maxLength: 4, nullable: true),
                     ContinentName = table.Column<string>(maxLength: 64, nullable: true),
                     CountryName = table.Column<string>(maxLength: 128, nullable: true),
                     Subdivision1Name = table.Column<string>(maxLength: 128, nullable: true),
@@ -202,10 +178,6 @@ namespace HybridAi.TestTask.Data.Migrations
                 {
                     GeonameId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ContinentCode = table.Column<string>(maxLength: 8, nullable: false),
-                    CountryIsoCode = table.Column<string>(maxLength: 8, nullable: false),
-                    Subdivision1IsoCode = table.Column<string>(maxLength: 4, nullable: true),
-                    Subdivision2IsoCode = table.Column<string>(maxLength: 4, nullable: true),
                     ContinentName = table.Column<string>(maxLength: 64, nullable: true),
                     CountryName = table.Column<string>(maxLength: 128, nullable: true),
                     Subdivision1Name = table.Column<string>(maxLength: 128, nullable: true),
@@ -231,10 +203,6 @@ namespace HybridAi.TestTask.Data.Migrations
                 {
                     GeonameId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ContinentCode = table.Column<string>(maxLength: 8, nullable: false),
-                    CountryIsoCode = table.Column<string>(maxLength: 8, nullable: false),
-                    Subdivision1IsoCode = table.Column<string>(maxLength: 4, nullable: true),
-                    Subdivision2IsoCode = table.Column<string>(maxLength: 4, nullable: true),
                     ContinentName = table.Column<string>(maxLength: 64, nullable: true),
                     CountryName = table.Column<string>(maxLength: 128, nullable: true),
                     Subdivision1Name = table.Column<string>(maxLength: 128, nullable: true),
@@ -259,6 +227,10 @@ namespace HybridAi.TestTask.Data.Migrations
                 columns: table => new
                 {
                     GeonameId = table.Column<int>(type: "int4", nullable: false),
+                    ContinentCode = table.Column<string>(maxLength: 8, nullable: false),
+                    CountryIsoCode = table.Column<string>(maxLength: 8, nullable: false),
+                    Subdivision1IsoCode = table.Column<string>(maxLength: 4, nullable: true),
+                    Subdivision2IsoCode = table.Column<string>(maxLength: 4, nullable: true),
                     MetroCode = table.Column<string>(maxLength: 4, nullable: true),
                     TimeZone = table.Column<string>(maxLength: 128, nullable: false),
                     IsInEuropeanUnion = table.Column<bool>(nullable: false)
