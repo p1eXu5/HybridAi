@@ -24,5 +24,16 @@ namespace HybridAi.TestTask.DataTests.IntegrationTests
             Assert.That( factory.ConnectionString.Length, Is.GreaterThan( 10 ) );
             Assert.AreEqual( DbContextOptionsFactory.DEFAULT_CONNECTION_STRING, factory.ConnectionString );
         }
+
+        [ Test ]
+        public void ctor_HasNoAppCfg_ReturnsNotNullDbOptions()
+        {
+            // Arrange:
+            // Action:
+            var factory = DbContextOptionsFactory.Instance;
+
+            // Assert:
+            Assert.NotNull( factory.GetDbContextOptions() );
+        }
     }
 }
