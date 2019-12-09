@@ -8,7 +8,9 @@ namespace HybridAi.TestTask.Data.Models
 {
     public class PtBrCity : City
     {
-        public PtBrCity( string continentName, string countryName ) : base( continentName, countryName )
+#nullable enable
+        public PtBrCity( string continentName, string countryName, string? cityName ) : base( continentName, countryName, cityName )
         { }
+#nullable restore
     }
 }

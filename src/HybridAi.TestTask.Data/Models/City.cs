@@ -7,10 +7,12 @@ namespace HybridAi.TestTask.Data.Models
 {
     public class City : IEntity
     {
-        public City( string continentName, string countryName )
+#nullable enable
+        public City( string continentName, string countryName, string? cityName )
         {
             ContinentName = continentName;
             CountryName = countryName;
+            CityName = cityName;
         }
 
         [StringLength(64, MinimumLength = 1)]
@@ -22,14 +24,14 @@ namespace HybridAi.TestTask.Data.Models
         public string CountryName { get; }
 
         [StringLength(128)]
-        public string Subdivision1Name { get; set; }
+        public string? Subdivision1Name { get; set; }
 
         [StringLength(128)]
-        public string Subdivision2Name { get; set; }
+        public string? Subdivision2Name { get; set; }
 
         [StringLength(128, MinimumLength = 1)]
-        public string CityName { get; set; }
-
+        public string? CityName { get; }
+#nullable restore
 
         public Int16 LocaleCodeId { get; set; }
 
@@ -39,7 +41,7 @@ namespace HybridAi.TestTask.Data.Models
 
         public override int GetHashCode()
         {
-            return ContinentName.GetHashCode() + 13 * CountryName.GetHashCode() + 27 * CityName.GetHashCode();
+            return 27 * ContinentName.GetHashCode() + 13 * CountryName.GetHashCode() + CityName?.GetHashCode() ?? 7;
         }
     }
 }
