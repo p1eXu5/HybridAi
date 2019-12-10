@@ -18,6 +18,8 @@ namespace HybridAi.TestTask.Data.Configurations
             builder.HasKey( c => c.Network );
             builder.Property( c => c.Network ).HasColumnType( "varchar(39)" );
 
+            builder.HasIndex( c => c.CityLocationGeonameId );
+
             builder.HasOne( c => c.CityLocation ).WithMany().HasForeignKey( c => c.CityLocationGeonameId );
         }
     }
