@@ -4,16 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HybridAi.TestTask.ConsoleDbUpdater.Models;
+using HybridAi.TestTask.Data;
 using HybridAi.TestTask.Data.Comparers;
 using HybridAi.TestTask.Data.Models;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
-    public class Updater : ChainLink
+    public class Updater : ChainLink, IDisposable
     {
+        private IpDbContext? _dbContext;
+
         public Updater( ChainLink? successor ) 
             : base( successor )
         { }
+
+        public IpDbContext DbContext
+        {
+            get {
+                if ( _dbContext == null ) {
+                    var options = DbContextOptionsFactory.Instance.DbContextOptions;
+                    _dbContext = new IpDbContext( options );
+                }
+
+                return _dbContext;
+            }
+        }
+
 
         public override IResponse<Request> Process( Request request )
         {
@@ -88,5 +104,48 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             throw new NotImplementedException();
         }
+
+        private List< CityBlock > _getDbCityBlocks( int minGeonameId, int maxGeonameId )
+        {
+            var ctx = DbContext;
+
+            return ctx.GetCityBlocks();
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose( bool disposing )
+        {
+            if (!disposedValue) {
+                if (disposing) {
+                    // TODO: dispose managed state (managed objects).
+                    _dbContext?.Dispose();
+                    _dbContext = null;
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~Updater()
+        // {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose( true );
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }
