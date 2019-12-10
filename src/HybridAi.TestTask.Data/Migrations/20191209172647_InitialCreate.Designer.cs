@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HybridAi.TestTask.Data.Migrations
 {
     [DbContext(typeof(IpDbContext))]
-    [Migration("20191209184631_InitialCreate")]
+    [Migration("20191209172647_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,28 +108,10 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.Property<int>("GeonameId")
                         .HasColumnType("int4");
 
-                    b.Property<string>("ContinentCode")
-                        .IsRequired()
-                        .HasColumnType("character varying(8)")
-                        .HasMaxLength(8);
-
-                    b.Property<string>("CountryIsoCode")
-                        .IsRequired()
-                        .HasColumnType("character varying(8)")
-                        .HasMaxLength(8);
-
                     b.Property<bool>("IsInEuropeanUnion")
                         .HasColumnType("boolean");
 
                     b.Property<string>("MetroCode")
-                        .HasColumnType("character varying(4)")
-                        .HasMaxLength(4);
-
-                    b.Property<string>("Subdivision1IsoCode")
-                        .HasColumnType("character varying(4)")
-                        .HasMaxLength(4);
-
-                    b.Property<string>("Subdivision2IsoCode")
                         .HasColumnType("character varying(4)")
                         .HasMaxLength(4);
 
@@ -154,9 +136,19 @@ namespace HybridAi.TestTask.Data.Migrations
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
 
+                    b.Property<string>("ContinentCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
+
                     b.Property<string>("ContinentName")
                         .HasColumnType("character varying(64)")
                         .HasMaxLength(64);
+
+                    b.Property<string>("CountryIsoCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
 
                     b.Property<string>("CountryName")
                         .HasColumnType("character varying(128)")
@@ -165,9 +157,17 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.Property<string>("LocaleCodeName")
                         .HasColumnType("varchar(8)");
 
+                    b.Property<string>("Subdivision1IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
+
                     b.Property<string>("Subdivision1Name")
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
+
+                    b.Property<string>("Subdivision2IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
 
                     b.Property<string>("Subdivision2Name")
                         .HasColumnType("character varying(128)")
@@ -191,9 +191,19 @@ namespace HybridAi.TestTask.Data.Migrations
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
 
+                    b.Property<string>("ContinentCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
+
                     b.Property<string>("ContinentName")
                         .HasColumnType("character varying(64)")
                         .HasMaxLength(64);
+
+                    b.Property<string>("CountryIsoCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
 
                     b.Property<string>("CountryName")
                         .HasColumnType("character varying(128)")
@@ -202,9 +212,17 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.Property<string>("LocaleCodeName")
                         .HasColumnType("varchar(8)");
 
+                    b.Property<string>("Subdivision1IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
+
                     b.Property<string>("Subdivision1Name")
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
+
+                    b.Property<string>("Subdivision2IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
 
                     b.Property<string>("Subdivision2Name")
                         .HasColumnType("character varying(128)")
@@ -228,9 +246,19 @@ namespace HybridAi.TestTask.Data.Migrations
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
 
+                    b.Property<string>("ContinentCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
+
                     b.Property<string>("ContinentName")
                         .HasColumnType("character varying(64)")
                         .HasMaxLength(64);
+
+                    b.Property<string>("CountryIsoCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
 
                     b.Property<string>("CountryName")
                         .HasColumnType("character varying(128)")
@@ -239,9 +267,17 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.Property<string>("LocaleCodeName")
                         .HasColumnType("varchar(8)");
 
+                    b.Property<string>("Subdivision1IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
+
                     b.Property<string>("Subdivision1Name")
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
+
+                    b.Property<string>("Subdivision2IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
 
                     b.Property<string>("Subdivision2Name")
                         .HasColumnType("character varying(128)")
@@ -265,9 +301,19 @@ namespace HybridAi.TestTask.Data.Migrations
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
 
+                    b.Property<string>("ContinentCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
+
                     b.Property<string>("ContinentName")
                         .HasColumnType("character varying(64)")
                         .HasMaxLength(64);
+
+                    b.Property<string>("CountryIsoCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
 
                     b.Property<string>("CountryName")
                         .HasColumnType("character varying(128)")
@@ -276,9 +322,17 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.Property<string>("LocaleCodeName")
                         .HasColumnType("varchar(8)");
 
+                    b.Property<string>("Subdivision1IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
+
                     b.Property<string>("Subdivision1Name")
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
+
+                    b.Property<string>("Subdivision2IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
 
                     b.Property<string>("Subdivision2Name")
                         .HasColumnType("character varying(128)")
@@ -302,9 +356,19 @@ namespace HybridAi.TestTask.Data.Migrations
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
 
+                    b.Property<string>("ContinentCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
+
                     b.Property<string>("ContinentName")
                         .HasColumnType("character varying(64)")
                         .HasMaxLength(64);
+
+                    b.Property<string>("CountryIsoCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
 
                     b.Property<string>("CountryName")
                         .HasColumnType("character varying(128)")
@@ -313,9 +377,17 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.Property<string>("LocaleCodeName")
                         .HasColumnType("varchar(8)");
 
+                    b.Property<string>("Subdivision1IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
+
                     b.Property<string>("Subdivision1Name")
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
+
+                    b.Property<string>("Subdivision2IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
 
                     b.Property<string>("Subdivision2Name")
                         .HasColumnType("character varying(128)")
@@ -384,9 +456,19 @@ namespace HybridAi.TestTask.Data.Migrations
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
 
+                    b.Property<string>("ContinentCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
+
                     b.Property<string>("ContinentName")
                         .HasColumnType("character varying(64)")
                         .HasMaxLength(64);
+
+                    b.Property<string>("CountryIsoCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
 
                     b.Property<string>("CountryName")
                         .HasColumnType("character varying(128)")
@@ -395,9 +477,17 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.Property<string>("LocaleCodeName")
                         .HasColumnType("varchar(8)");
 
+                    b.Property<string>("Subdivision1IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
+
                     b.Property<string>("Subdivision1Name")
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
+
+                    b.Property<string>("Subdivision2IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
 
                     b.Property<string>("Subdivision2Name")
                         .HasColumnType("character varying(128)")
@@ -421,9 +511,19 @@ namespace HybridAi.TestTask.Data.Migrations
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
 
+                    b.Property<string>("ContinentCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
+
                     b.Property<string>("ContinentName")
                         .HasColumnType("character varying(64)")
                         .HasMaxLength(64);
+
+                    b.Property<string>("CountryIsoCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
 
                     b.Property<string>("CountryName")
                         .HasColumnType("character varying(128)")
@@ -432,9 +532,17 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.Property<string>("LocaleCodeName")
                         .HasColumnType("varchar(8)");
 
+                    b.Property<string>("Subdivision1IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
+
                     b.Property<string>("Subdivision1Name")
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
+
+                    b.Property<string>("Subdivision2IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
 
                     b.Property<string>("Subdivision2Name")
                         .HasColumnType("character varying(128)")
@@ -458,9 +566,19 @@ namespace HybridAi.TestTask.Data.Migrations
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
 
+                    b.Property<string>("ContinentCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
+
                     b.Property<string>("ContinentName")
                         .HasColumnType("character varying(64)")
                         .HasMaxLength(64);
+
+                    b.Property<string>("CountryIsoCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(8)")
+                        .HasMaxLength(8);
 
                     b.Property<string>("CountryName")
                         .HasColumnType("character varying(128)")
@@ -469,9 +587,17 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.Property<string>("LocaleCodeName")
                         .HasColumnType("varchar(8)");
 
+                    b.Property<string>("Subdivision1IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
+
                     b.Property<string>("Subdivision1Name")
                         .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
+
+                    b.Property<string>("Subdivision2IsoCode")
+                        .HasColumnType("character varying(4)")
+                        .HasMaxLength(4);
 
                     b.Property<string>("Subdivision2Name")
                         .HasColumnType("character varying(128)")
