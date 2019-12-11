@@ -92,7 +92,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
             FolderRequest request = _getFolderRequest( _ipv4csv, _ipv6csv, _encitycsv, _rucitycsv );
 
             // Action:
-            var collections = ((Response< ImportedModelsRequest >)mapper.Process( request )).Request.ModelCollections;
+            var collections = ((ImportedModelsRequest)mapper.Process( request ).Request).ModelCollections;
 
             // Assert:
             Assert.AreEqual( 4, collections.Length );
@@ -106,7 +106,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
             FolderRequest request = _getFolderRequest( _ipv4csv, _ipv6csv, _encitycsv, _rucitycsv );
 
             // Action:
-            var collections = ((Response< ImportedModelsRequest >)mapper.Process( request )).Request.ModelCollections;
+            var collections = ((ImportedModelsRequest)mapper.Process( request ).Request).ModelCollections;
             var ipv4Collections = collections.Where( c => c[0] is CityBlockIpv4 ).ToArray();
             // Assert:
             Assert.AreEqual( 6, ipv4Collections.Sum( ipv4 => ipv4.Count ) );
@@ -120,7 +120,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
             FolderRequest request = _getFolderRequest( _ipv4csv, _ipv6csv, _encitycsv, _rucitycsv );
 
             // Action:
-            var collections = ((Response< ImportedModelsRequest >)mapper.Process( request )).Request.ModelCollections;
+            var collections = ((ImportedModelsRequest)mapper.Process( request ).Request).ModelCollections;
             var ipv6Collections = collections.Where( c => c[0] is CityBlockIpv6 ).ToArray();
             // Assert:
             Assert.AreEqual( 7, ipv6Collections.Sum( ipv6 => ipv6.Count ) );
@@ -134,7 +134,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
             FolderRequest request = _getFolderRequest( _encitycsv );
 
             // Action:
-            var collections = ((Response< ImportedModelsRequest >)mapper.Process( request )).Request.ModelCollections;
+            var collections = ((ImportedModelsRequest)mapper.Process( request ).Request).ModelCollections;
             var cityLocationCollections = collections.Where( c => c[0] is CityLocation ).ToArray();
             // Assert:
             Assert.AreEqual( 9, cityLocationCollections.Select( c => c.Select( e => ((CityLocation)e).EnCity) )
@@ -153,15 +153,19 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
             FolderRequest request = _getFolderRequest( _rucitycsv );
 
             // Action:
-            var collections = ((Response< ImportedModelsRequest >)mapper.Process( request )).Request.ModelCollections;
+            var collections = ((ImportedModelsRequest)mapper.Process( request ).Request).ModelCollections;
             var cityLocationCollections = collections.Where( c => c[0] is CityLocation ).ToArray();
+            
             // Assert:
-            Assert.AreEqual( 9, cityLocationCollections.Select( c => c.Select( e => ((CityLocation)e).RuCity) )
-                                                       .Aggregate( new List<City>(), (a, c) => { 
-                                                           a.AddRange(c);
-                                                           return a;
-                                                       } )
-                                                       .Count, ((TestLogger)LoggerFactory.Instance.Logger).Messages );
+            var cities = cityLocationCollections.Select( c => c.Select( e => ((CityLocation)e).RuCity) )
+                                                .Aggregate( 
+                                                    new List<City>(), 
+                                                    (a, c) => { 
+                                                        a.AddRange(c);
+                                                        return a;
+                                                    } );
+
+            Assert.AreEqual( 9, cities.Count, ((TestLogger)LoggerFactory.Instance.Logger).Messages );
         }
 
 
