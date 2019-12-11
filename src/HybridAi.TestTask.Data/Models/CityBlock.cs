@@ -7,7 +7,6 @@ namespace HybridAi.TestTask.Data.Models
 {
     public class CityBlock : IEntity
     {
-
         public int? RegistredCountryGeonameId { get; set; }
         public int? RepresentedCountryGeonameId { get; set; }
         public bool IsAnonymousProxy { get; set; }

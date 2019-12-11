@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HybridAi.TestTask.ConsoleDbUpdater.Extensions;
 using HybridAi.TestTask.ConsoleDbUpdater.Models;
 using HybridAi.TestTask.Data;
-using HybridAi.TestTask.Data.Comparers;
+using HybridAi.TestTask.Data.Comparators;
 using HybridAi.TestTask.Data.Models;
 using HybridAi.TestTask.Data.Services.UpdaterService;
 
@@ -13,91 +14,118 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public class Updater : ChainLink, IDisposable
     {
-        private IpDbContext? _dbContext;
-        private readonly (int,int) _fail = (1, 1);
+        #region fields
 
-        public Updater( ChainLink? successor ) 
-            : base( successor )
+        private IpDbContext? _dbContext;
+        private readonly (int, int) _fail = (1, 1);
+
+        #endregion
+
+
+        #region ctor
+
+        public Updater(ChainLink? successor)
+            : base(successor)
         { }
+
+        #endregion
+
+
+        #region properties
 
         public IpDbContext DbContext
         {
-            get {
-                if ( _dbContext == null ) {
+            get
+            {
+                if (_dbContext == null)
+                {
                     var options = DbContextOptionsFactory.Instance.DbContextOptions;
-                    _dbContext = new IpDbContext( options );
+                    _dbContext = new IpDbContext(options);
                 }
 
                 return _dbContext;
             }
         }
 
+        #endregion
 
-        public override IResponse<Request> Process( Request request )
+
+        #region methods
+
+        public override IResponse<Request> Process(Request request)
         {
 
-            if ( request is ImportedModelsRequest modelsRequest ) 
+            if (request is ImportedModelsRequest modelsRequest)
             {
 
                 var colls = modelsRequest.ModelCollections;
-                
-                if ( colls!.Any() 
-                    || colls.All( c => !c.Any() ) ) {
-                    return new DoneRequest( "Imported model collections are empty." ).Response;
-                }
 
-                List< Type > types = colls.Aggregate( 
-                    new List< Type >(), (a, b) => { a.Add(b.First().GetType() );
-                    return a;} );
-
-                if ( types.Any( t => typeof( CityBlock ).IsAssignableFrom( t ) ) )
+                if (colls!.Any()
+                    || colls.All(c => !c.Any()))
                 {
-                    if ( _composeBlocks( colls, out int newCount, out int updCount ) ) {
-                        return new DoneRequest( $"There are {newCount} new records and {updCount} updated records." ).Response;
-                    }
-                    else {
-                        return new FailRequest( $"There are {newCount} new records and {updCount} updated records." ).Response;
-                    }
+                    return new DoneRequest("Imported model collections are empty.").Response;
                 }
-                else {
-                    if ( _updateCity( colls, out int newCount, out int updCount ) ) {
-                        return new DoneRequest( $"There are {newCount} new records and {updCount} updated records." ).Response;
+
+                List<Type> types = colls.Aggregate(
+                    new List<Type>(), (a, b) =>
+                    {
+                        a.Add(b.First().GetType());
+                        return a;
+                    });
+
+                if (types.Any(t => typeof(CityBlock).IsAssignableFrom(t)))
+                {
+                    if (_composeBlocks(colls, out int newCount, out int updCount))
+                    {
+                        return new DoneRequest($"There are {newCount} new records and {updCount} updated records.").Response;
+                    }
+
+                    return new FailRequest($"There are {newCount} new records and {updCount} updated records.").Response;
+
+                }
+                else
+                {
+                    if (_updateCity(colls, out int newCount, out int updCount))
+                    {
+                        return new DoneRequest($"There are {newCount} new records and {updCount} updated records.").Response;
                     }
                 }
             }
 
-            return base.Process( request );
+            return base.Process(request);
         }
 
-        private bool _composeBlocks( List< IEntity >[] colls, out int newCount, out int updCount )
+
+        private bool _composeBlocks(List<IEntity>[] colls, out int newCount, out int updCount)
         {
-            List< CityBlock > blocks = _getTypedAggregateCollection< IEntity, CityBlock >( colls );
-            blocks.Sort( new CityBlockComparer() );
+            List< CityBlock > blocks = _getTypedAggregateCollection< IEntity, CityBlock >(colls);
+            blocks.Sort(new CityBlockComparer());
 
-            List< City > cities = _getTypedAggregateCollection< IEntity, City >( colls );
+            List< CityLocation > cityLocations = _getTypedAggregateCollection< IEntity, CityLocation >(colls);
 
-            if ( !cities.Any() ) {
-                (newCount, updCount) = _updateBlocks( blocks );
-                return (newCount, updCount) == _fail; 
+            if (!cityLocations.Any())
+            {
+                (newCount, updCount) = _updateBlocks(blocks);
+                return (newCount, updCount) == _fail;
             }
 
-            cities.Sort( new CityComparer() );
+            cityLocations.Sort( new CityLocationComparer() );
 
-            List< CityBlock > dbBblocks = _getDbCityBlocks( blocks.First().CityLocationGeonameId, blocks.Last().CityLocationGeonameId );
+            List<CityBlock> dbBblocks = _getDbCityBlocks(blocks.First().CityLocationGeonameId, blocks.Last().CityLocationGeonameId);
 
-            int blkInd = 0, cityInd = 0;
+            int blkInd = 0, clkInd = 0;
 
-            while( blkInd < blocks.Count && cityInd < cities.Count ) 
+            while (blkInd < blocks.Count && clkInd < cityLocations.Count)
             {
-                int geoId = blocks[ blkInd ].CityLocationGeonameId;
+                int geoId = blocks[blkInd].CityLocationGeonameId;
 
-                while( blocks[ blkInd ].CityLocationGeonameId == geoId )
+                while (blocks[blkInd].CityLocationGeonameId == geoId)
                 {
-                    --cityInd;
-                    while( cities[ cityInd ].GeonameId == geoId )
+                    --clkInd;
+                    while (cityLocations[clkInd].GeonameId == geoId)
                     {
-                        ++cityInd;
-                        blocks[ blkInd ].CopyCity( cities[ cityInd ] );
+                        ++clkInd;
+                        blocks[blkInd].CopyCityLocationCity( cityLocations[ clkInd ] );
                     }
                     ++blkInd;
                 }
@@ -106,38 +134,41 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             throw new NotImplementedException();
         }
 
-
-        private List< T2 > _getTypedAggregateCollection< T1, T2 >( List< T1 >[] coll )
+        private List<T2> _getTypedAggregateCollection<T1, T2>(List<T1>[] coll)
             where T1 : IEntity
             where T2 : IEntity
         {
-            return coll.Where( c => typeof( T2 ).IsAssignableFrom( c.First().GetType() ) )
-                              .Aggregate( 
-                                  new List< T2 >(),
-                                  (agr, item) => { 
-                                      agr.AddRange( item.Cast< T2 >() ); 
-                                      return agr; 
-                                  } );
+            return coll.Where(c => c.First() is T2)
+                              .Aggregate(
+                                  new List<T2>(),
+                                  (agr, item) =>
+                                  {
+                                      agr.AddRange(item.Cast<T2>());
+                                      return agr;
+                                  });
         }
 
-        private (int newCount, int updCount) _updateBlocks( List< CityBlock > colls )
+        private (int newCount, int updCount) _updateBlocks(List<CityBlock> colls)
         {
 
             throw new NotImplementedException();
         }
 
-        private bool _updateCity( List< IEntity >[] colls, out int newCount, out int updCount )
+        private bool _updateCity(List<IEntity>[] colls, out int newCount, out int updCount)
         {
 
             throw new NotImplementedException();
         }
 
-        private List< CityBlock > _getDbCityBlocks( int minGeonameId, int maxGeonameId )
+        private List<CityBlock> _getDbCityBlocks(int minGeonameId, int maxGeonameId)
         {
             var ctx = DbContext;
 
             return ctx.GetCityBlocks(minGeonameId, maxGeonameId);
         }
+
+        #endregion
+
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

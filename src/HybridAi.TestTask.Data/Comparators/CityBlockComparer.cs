@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HybridAi.TestTask.Data.Comparers
+namespace HybridAi.TestTask.Data.Comparators
 {
     public class CityBlockComparer : IComparer<CityBlock>
     {

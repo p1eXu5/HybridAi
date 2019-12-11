@@ -1,16 +1,16 @@
-﻿using HybridAi.TestTask.Data.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HybridAi.TestTask.Data.Models;
 
-namespace HybridAi.TestTask.Data.Comparers
+namespace HybridAi.TestTask.Data.Comparators
 {
-    public class CityComparer : IComparer< City >
+    public class CityLocationComparer : IComparer< CityLocation >
     {
-        public int Compare( [AllowNull] City x, [AllowNull] City y )
+        public int Compare( [AllowNull] CityLocation x, [AllowNull] CityLocation y )
         {
             if (x == null)
             {

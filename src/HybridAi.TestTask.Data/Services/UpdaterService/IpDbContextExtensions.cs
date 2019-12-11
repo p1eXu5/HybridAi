@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using HybridAi.TestTask.Data.Comparers;
+using HybridAi.TestTask.Data.Comparators;
 
 namespace HybridAi.TestTask.Data.Services.UpdaterService
 {
