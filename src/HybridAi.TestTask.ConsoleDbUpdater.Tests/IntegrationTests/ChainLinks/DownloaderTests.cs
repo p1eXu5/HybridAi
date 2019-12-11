@@ -30,10 +30,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
             var urlRequest = new UrlRequest( url );
 
             // Action:
-            var response = (IResponse< FileLocationRequest >)downloader.Process( urlRequest );
+            var response = downloader.Process( urlRequest );
 
             // Assert:
-            Assert.IsTrue( File.Exists( response.Request.Path ) );
+            Assert.IsTrue( File.Exists( ((FileLocationRequest)response.Request).Path ) );
         }
 
 		#region factory

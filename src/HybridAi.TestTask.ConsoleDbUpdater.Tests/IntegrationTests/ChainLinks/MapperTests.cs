@@ -66,7 +66,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
             var response = mapper.Process( request );
 
             // Assert:
-            Assert.IsTrue( response is Response< FolderRequest > );
+            Assert.IsTrue( response is Response< Request > );
             Assert.IsTrue( ReferenceEquals( response.Request, request ) );
         }
 
@@ -81,7 +81,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
             var response = mapper.Process( request );
 
             // Assert:
-            Assert.IsTrue( response is Response< ImportedModelsRequest > );
+            Assert.IsTrue( response.Request is ImportedModelsRequest );
         }
 
         [Test]

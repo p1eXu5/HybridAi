@@ -120,7 +120,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                                   } );
         }
 
-        private bool _updateBlocks( List< IEntity >[] colls )
+        private (int newCount, int updCount) _updateBlocks( List< CityBlock > colls )
         {
 
             throw new NotImplementedException();

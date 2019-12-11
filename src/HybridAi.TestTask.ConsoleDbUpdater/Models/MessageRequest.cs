@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.Models
 {
-    public class FolderRequest : Request
+    public class MessageRequest : Request
     {
-        public FolderRequest( IEnumerable< string > fileInfos )
+        public MessageRequest( string message )
         {
-            Files = fileInfos.ToArray();
+            Message = message;
         }
 
-
-        public string[] Files { get; }
+        public string Message { get; }
     }
 }

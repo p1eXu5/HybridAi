@@ -14,7 +14,5 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Models
         }
 
         public string Path { get; }
-
-        public override IResponse< Request > Response => new Response< FileLocationRequest >( this );
     }
 }

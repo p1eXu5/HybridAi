@@ -13,7 +13,5 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Models
         }
 
         public string Message { get; }
-
-        public override IResponse<Request> Response => new Response< DoneRequest >( this );
     }
 }

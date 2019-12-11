@@ -15,7 +15,5 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Models
         }
 
         public List< IEntity >[] ModelCollections { get; }
-
-        public override IResponse< Request > Response => new Response< ImportedModelsRequest >( this );
     }
 }
