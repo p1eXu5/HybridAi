@@ -7,12 +7,14 @@ using HybridAi.TestTask.ConsoleDbUpdater.Models;
 using HybridAi.TestTask.Data;
 using HybridAi.TestTask.Data.Comparers;
 using HybridAi.TestTask.Data.Models;
+using HybridAi.TestTask.Data.Services.UpdaterService;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public class Updater : ChainLink, IDisposable
     {
         private IpDbContext? _dbContext;
+        private readonly (int,int) _fail = (1, 1);
 
         public Updater( ChainLink? successor ) 
             : base( successor )
@@ -48,15 +50,17 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                     new List< Type >(), (a, b) => { a.Add(b.First().GetType() );
                     return a;} );
 
-                if ( types.Any( t => typeof( City ).IsAssignableFrom( t ) ) 
-                     && types.Any( t => typeof( CityBlock ).IsAssignableFrom( t ) ) )
+                if ( types.Any( t => typeof( CityBlock ).IsAssignableFrom( t ) ) )
                 {
-                    if ( _tryUpdateWhole( colls, out int newCount, out int updCount ) ) {
+                    if ( _composeBlocks( colls, out int newCount, out int updCount ) ) {
                         return new DoneRequest( $"There are {newCount} new records and {updCount} updated records." ).Response;
+                    }
+                    else {
+                        return new FailRequest( $"There are {newCount} new records and {updCount} updated records." ).Response;
                     }
                 }
                 else {
-                    if ( _tryUpdatePartial( colls, out int newCount, out int updCount ) ) {
+                    if ( _updateCity( colls, out int newCount, out int updCount ) ) {
                         return new DoneRequest( $"There are {newCount} new records and {updCount} updated records." ).Response;
                     }
                 }
@@ -65,19 +69,37 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             return base.Process( request );
         }
 
-        private bool _tryUpdateWhole( List< IEntity >[] colls, out int newCount, out int updCount )
+        private bool _composeBlocks( List< IEntity >[] colls, out int newCount, out int updCount )
         {
             List< CityBlock > blocks = _getTypedAggregateCollection< IEntity, CityBlock >( colls );
             blocks.Sort( new CityBlockComparer() );
 
             List< City > cities = _getTypedAggregateCollection< IEntity, City >( colls );
+
+            if ( !cities.Any() ) {
+                (newCount, updCount) = _updateBlocks( blocks );
+                return (newCount, updCount) == _fail; 
+            }
+
             cities.Sort( new CityComparer() );
 
             List< CityBlock > dbBblocks = _getDbCityBlocks( blocks.First().CityLocationGeonameId, blocks.Last().CityLocationGeonameId );
 
-            for( int i = 0; i < blocks.Count; ++i ) {
-                for( int j = 0; j < cities.Count; ++j ) {
+            int blkInd = 0, cityInd = 0;
 
+            while( blkInd < blocks.Count && cityInd < cities.Count ) 
+            {
+                int geoId = blocks[ blkInd ].CityLocationGeonameId;
+
+                while( blocks[ blkInd ].CityLocationGeonameId == geoId )
+                {
+                    --cityInd;
+                    while( cities[ cityInd ].GeonameId == geoId )
+                    {
+                        ++cityInd;
+                        blocks[ blkInd ].CopyCity( cities[ cityInd ] );
+                    }
+                    ++blkInd;
                 }
             }
 
@@ -98,8 +120,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                                   } );
         }
 
+        private bool _updateBlocks( List< IEntity >[] colls )
+        {
 
-        private bool _tryUpdatePartial( List< IEntity >[] colls, out int newCount, out int updCount )
+            throw new NotImplementedException();
+        }
+
+        private bool _updateCity( List< IEntity >[] colls, out int newCount, out int updCount )
         {
 
             throw new NotImplementedException();
@@ -109,7 +136,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         {
             var ctx = DbContext;
 
-            return ctx.GetCityBlocks();
+            return ctx.GetCityBlocks(minGeonameId, maxGeonameId);
         }
 
         #region IDisposable Support
