@@ -33,7 +33,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.Extensions
         }
 
         [Test]
-		public void CopyCityLocationCity_CityLocationIsNotNull_CityIsNull__CopyCity()
+		public void CopyCityLocationCity__CityLocationIsNotNull_CityIsNull__CopyCity()
 		{
 			// Arrange:
             var containedCity = new EnCity( 1 ) { CityName = "Test City" };
