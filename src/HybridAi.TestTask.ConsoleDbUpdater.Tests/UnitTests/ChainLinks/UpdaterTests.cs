@@ -22,19 +22,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             LoggerFactory.Instance.Logger = new TestLogger();
         }
 
-        [Test]
-		public void Process__NotImportedModelsRequest_SuccessorIsNull__ReturnsResponseWithSameRequest()
-		{
-            // Arrange:
-            Updater mapper = _getUpdater();
-            var request = Request.EmptyRequest;
 
-            // Action:
-            var response = mapper.Process( request );
-
-            // Assert:
-            Assert.IsTrue( ReferenceEquals( response.Request, request ) );
-		}
+        #region ctor tests
 
         [Test]
         public void ctor__ImportedModelsRequestIsEmpty_SuccessorIsNull__ReturnsResponseWithDoneRequest()
@@ -44,11 +33,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var request = _getEmptyImportedModelsRequest();
 
             // Action:
-            var response = mapper.Process( request );
+            var response = mapper.Process(request);
 
             // Assert:
-            Assert.IsFalse( ReferenceEquals( response.Request, request ) );
-            Assert.IsTrue( response is Response< DoneRequest > );
+            Assert.IsFalse(ReferenceEquals(response.Request, request));
+            Assert.IsTrue(response is Response<DoneRequest>);
         }
 
         [Test]
@@ -59,33 +48,267 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var request = _getEmptyImportedModelsRequest();
 
             // Action:
-            var message = ((IResponse< DoneRequest >) mapper.Process( request )).Request.Message;
+            var message = ((IResponse<DoneRequest>)mapper.Process(request)).Request.Message;
 
             // Assert:
-            StringAssert.Contains( "Imported model collections are empty.", message );
+            StringAssert.Contains("Imported model collections are empty.", message);
         }
 
-        [ Test ]
-        public void Process__RequestContainsCityBlockIpv6Data_DbIsEmpty__CanAddDataToDatabase()
+        #endregion
+
+
+        #region Process tests
+
+        [Test]
+        public void Process__NotImportedModelsRequest_SuccessorIsNull__ReturnsResponseWithSameRequest()
         {
             // Arrange:
-            var updater = _getUpdater();
-            //var request = _getImportedModelsRequestWithIpv6();
+            Updater mapper = _getUpdater();
+            var request = Request.EmptyRequest;
 
             // Action:
-            //updater.Process( request );
-            //updater.Dispose();
+            var response = mapper.Process(request);
 
             // Assert:
-            using var ctx = new IpDbContext( DbContextOptionsFactory.Instance.DbContextOptions );
-            var ipv6 = ctx.CityBlockIpv6Collection.ToArray();
-
-            Assert.That( ipv6, Is.Not.Empty );
+            Assert.IsTrue(ReferenceEquals(response.Request, request));
         }
+
+
+
+        [Test]
+        [Ignore("Not implemented.")]
+        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__AddsDataToDatabase()
+        {
+            // Arrange:
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            (ImportedModelsRequest request, _) = _getCityBlocksAndCityLocations();
+
+            // Action:
+            using (var updater = _getUpdater())
+            {
+
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions());
+
+        }
+
+        [Test]
+        [Ignore("Not implemented.")]
+        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__ReturnsDoneWithNewCount()
+        {
+            // Arrange:
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            (ImportedModelsRequest request, _) = _getCityBlocksAndCityLocations();
+
+            // Action:
+            using (var updater = _getUpdater())
+            {
+
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions());
+        }
+
+        [Test]
+        [Ignore("Not implemented.")]
+        public void Process__ImportedModelsAreCityBlocksOnly_DbIsEmpty__AddsDataToDatabase()
+        {
+            // Arrange:
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            (ImportedModelsRequest request, _) = _getCityBlocks();
+
+            // Action:
+            using (var updater = _getUpdater())
+            {
+
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions());
+
+        }
+
+        [Test]
+        [Ignore("Not implemented.")]
+        public void Process__ImportedModelsAreCityLocations_DbIsEmpty__AddsDataToDatabase()
+        {
+            // Arrange:
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            (ImportedModelsRequest request, _) = _getCityBlocks();
+
+            // Action:
+            using (var updater = _getUpdater())
+            {
+
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions());
+
+        }
+
+
+
+        [Test]
+        [Ignore("Not implemented.")]
+        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbHasData__UpdatesDataToDatabase()
+        {
+            // Arrange:
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            (ImportedModelsRequest request, ForDbSeedRecords dbRecords) = _getCityBlocksAndCityLocations();
+
+            // Action:
+            using (var updater = _getUpdater())
+            {
+
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions());
+
+        }
+
+        [Test]
+        [Ignore("Not implemented.")]
+        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__ReturnsDoneWithUpdateCount()
+        {
+            // Arrange:
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            (ImportedModelsRequest request, ForDbSeedRecords dbRecords) = _getCityBlocksAndCityLocations();
+
+            // Action:
+            using (var updater = _getUpdater())
+            {
+
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions());
+        }
+
+        [Test]
+        [Ignore("Not implemented.")]
+        public void Process__ImportedModelsAreCityBlocksOnly_DbHasData__UpdatesDataToDatabase()
+        {
+            // Arrange:
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            (ImportedModelsRequest request, ForDbSeedRecords dbRecords) = _getCityBlocks();
+
+            // Action:
+            using (var updater = _getUpdater())
+            {
+
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions());
+
+        }
+
+        [Test]
+        [Ignore("Not implemented.")]
+        public void Process__ImportedModelsAreCityLocations_DbHasData__UpdatesDataToDatabase()
+        {
+            // Arrange:
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            (ImportedModelsRequest request, ForDbSeedRecords dbRecords) = _getCityBlocks();
+
+            // Action:
+            using (var updater = _getUpdater())
+            {
+
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions());
+
+        }
+
+
+
+        [Test]
+        [Ignore("Not implemented.")]
+        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbHasSomeData__AddsAndUpdatesDataToDatabase()
+        {
+            // Arrange:
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            (ImportedModelsRequest request, ForDbSeedRecords dbRecords) = _getCityBlocksAndCityLocations();
+
+            // Action:
+            using (var updater = _getUpdater())
+            {
+
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions());
+
+        }
+
+        [Test]
+        [Ignore("Not implemented.")]
+        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__ReturnsDoneWithNewCountAndUpdateCount()
+        {
+            // Arrange:
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            (ImportedModelsRequest request, ForDbSeedRecords dbRecords) = _getCityBlocksAndCityLocations();
+
+            // Action:
+            using (var updater = _getUpdater())
+            {
+
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions());
+        }
+
+        [Test]
+        [Ignore("Not implemented.")]
+        public void Process__ImportedModelsAreCityBlocksOnly_DbHasSomeData__AddsAndUpdatesDataToDatabase()
+        {
+            // Arrange:
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            (ImportedModelsRequest request, ForDbSeedRecords dbRecords) = _getCityBlocks();
+
+            // Action:
+            using (var updater = _getUpdater())
+            {
+
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions());
+
+        }
+
+        [Test]
+        [Ignore("Not implemented.")]
+        public void Process__ImportedModelsAreCityLocations_DbHasSomeData__AddsAndUpdatesDataToDatabase()
+        {
+            // Arrange:
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            (ImportedModelsRequest request, ForDbSeedRecords dbRecords) = _getCityLocations();
+
+            // Action:
+            using (var updater = _getUpdater())
+            {
+
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions());
+
+        }
+
+        #endregion
 
 
         #region factory
-		// Insert factory methods here:
+        // Insert factory methods here:
 
         private Updater _getUpdater()
         {
@@ -108,6 +331,33 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             return options;
         }
 
-		#endregion
+        private (ImportedModelsRequest request, ForDbSeedRecords dbRecords ) _getCityBlocksAndCityLocations()
+        {
+            throw new NotImplementedException();
+        }
+
+        private (ImportedModelsRequest request, ForDbSeedRecords dbRecords ) _getCityBlocks()
+        {
+            throw new NotImplementedException();
+        }
+
+        private (ImportedModelsRequest request, ForDbSeedRecords dbRecords ) _getCityLocations()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+
+        #region test types
+
+        private struct ForDbSeedRecords
+        {
+            public IEnumerable< CityBlockIpv4 > CityBlockIpv4s;
+            public IEnumerable< CityBlockIpv6 > CityBlockIpv6s;
+            public IEnumerable< CityLocation > CityLocations;
+        }
+
+        #endregion
     }
 }
