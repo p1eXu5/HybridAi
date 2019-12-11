@@ -18,6 +18,7 @@ namespace HybridAi.TestTask.Data.Models
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public short AccuracyRadius { get; set; }
+
         public int CityLocationGeonameId { get; set; }
 
         public CityLocation CityLocation { get; set; }

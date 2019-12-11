@@ -62,5 +62,30 @@ namespace HybridAi.TestTask.Data.Services.UpdaterService
 
             return ip;
         }
+
+        public static IQueryable< CityBlockIpv4 > GetIpv4Blocks( this IpDbContext context )
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IQueryable< CityBlockIpv6 > GetIpv6Blocks( this IpDbContext context )
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IQueryable< CityLocation > GetCityLocations( this IpDbContext context )
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IQueryable< EnCity > GetEnCities( this IpDbContext context )
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IQueryable< EsCity > GetEsCities( this IpDbContext context )
+        {
+            throw new NotImplementedException();
+        }
     }
 }
