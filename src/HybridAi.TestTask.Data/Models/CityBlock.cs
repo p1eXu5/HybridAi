@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HybridAi.TestTask.Data.Models
 {
-    public class CityBlock : IEntity
+    public class CityBlock : IEntity, IEquatable< CityBlock >
     {
         public int? RegistredCountryGeonameId { get; set; }
         public int? RepresentedCountryGeonameId { get; set; }
@@ -22,6 +22,13 @@ namespace HybridAi.TestTask.Data.Models
         public int CityLocationGeonameId { get; set; }
 
         public CityLocation CityLocation { get; set; }
+
+        public bool Equals( CityBlock other )
+        {
+            if ( other == null ) return false;
+
+            return GetNetwork().Equals( other.GetNetwork() );
+        }
 
         public override string ToString()
         {

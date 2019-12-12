@@ -24,5 +24,18 @@ namespace HybridAi.TestTask.DataTests.UnitTests.Models
             // Assert:
             Assert.AreEqual( cb4Network, network );
         }
+
+        [ Test ]
+        public void class_ByDefault_CannotMakeDublicatesInHashSet()
+        {
+            var cb1 = new CityBlockIpv4( "1.1.1.1" );
+            var cb2 = new CityBlockIpv4( "1.1.1.1" );
+
+            var set = new HashSet< CityBlockIpv4 >();
+            set.Add( cb1 );
+            Assert.IsFalse(set.Add( cb2 ) );
+
+            Assert.AreEqual( 1, set.Count );
+        }
     }
 }

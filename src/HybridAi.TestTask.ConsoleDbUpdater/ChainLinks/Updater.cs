@@ -211,9 +211,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             } //);
 
-            var set = new HashSet< CityBlock >( arr );
-            set.SymmetricExceptWith( impBlocks );
+            var set = new HashSet< CityBlock >( impBlocks );
+            set.ExceptWith( arr );
             impBlocks = set.ToList();
+
+            // TODO check LocaleCodes
 
             return updCount;
         }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HybridAi.TestTask.Data.Models
 {
-    public class CityBlockIpv4 : CityBlock
+    public class CityBlockIpv4 : CityBlock, IEquatable< CityBlockIpv4 >
     {
         public CityBlockIpv4( string network )
         {
@@ -23,6 +23,13 @@ namespace HybridAi.TestTask.Data.Models
         public override string ToString()
         {
             return $"{this.Network}; {base.ToString()}";
+        }
+
+        public bool Equals( CityBlockIpv4 other )
+        {
+            if ( other == null ) return false;
+
+            return Network.Equals( other.Network );
         }
 
         public override int GetHashCode()

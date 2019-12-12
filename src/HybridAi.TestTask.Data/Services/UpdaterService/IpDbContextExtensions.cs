@@ -13,8 +13,9 @@ namespace HybridAi.TestTask.Data.Services.UpdaterService
         public static List< CityBlock > GetCityBlocks( this IpDbContext context, int minGeonameId, int maxGeonameId )
         {
             List< CityBlock > ip = ( from i in context.CityBlockIpv4Collection
-                         where i.CityLocationGeonameId >= minGeonameId
-                                && i.CityLocationGeonameId <= maxGeonameId
+                         where (i.CityLocationGeonameId >= minGeonameId
+                                && i.CityLocationGeonameId <= maxGeonameId)
+                               || i.CityLocationGeonameId == 0
                          orderby i.CityLocationGeonameId
                          select i).Include( b => b.CityLocation)
                                   .ThenInclude( c => c.EnCity)
@@ -36,8 +37,9 @@ namespace HybridAi.TestTask.Data.Services.UpdaterService
             ip.AddRange(
                 
                 ( from i in context.CityBlockIpv6Collection
-                        where i.CityLocationGeonameId >= minGeonameId
-                            && i.CityLocationGeonameId <= maxGeonameId
+                        where (i.CityLocationGeonameId >= minGeonameId
+                               && i.CityLocationGeonameId <= maxGeonameId)
+                              || i.CityLocationGeonameId == 0
                         orderby i.CityLocationGeonameId
                         select i).Include( b => b.CityLocation)
                                 .ThenInclude( c => c.EnCity)
