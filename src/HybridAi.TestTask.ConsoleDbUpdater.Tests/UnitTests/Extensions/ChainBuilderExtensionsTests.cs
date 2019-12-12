@@ -33,6 +33,23 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.Extensions
         }
 
         [Test]
+		public void CopyCityLocationCity_CityLocationIsNull_ReturnsCity()
+		{
+			// Arrange:
+            var cityBlock = new CityBlock();
+            var expectedCity = new EnCity( 1 ) { CityName = "Test City" };
+            var cityLocation = new CityLocation( 1 ) {
+                EnCity = expectedCity
+            };
+
+            // Action:
+			var actualCity =  cityBlock.CopyCityLocationCity( cityLocation ).First();
+
+            // Assert:
+			Assert.IsTrue( ReferenceEquals( expectedCity, actualCity ) );
+        }
+
+        [Test]
 		public void CopyCityLocationCity__CityLocationIsNotNull_CityIsNull__CopyCity()
 		{
 			// Arrange:
