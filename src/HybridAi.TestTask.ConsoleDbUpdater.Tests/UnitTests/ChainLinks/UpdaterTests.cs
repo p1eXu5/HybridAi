@@ -77,7 +77,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
 
         [Test]
-        [Ignore("Not implemented.")]
         public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__AddsDataToDatabase()
         {
             // Arrange:
@@ -85,24 +84,25 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             ImportedModelsRequest request = _getCityBlocksAndCityLocations();
 
             // Action:
-            using (var updater = _getUpdater())
+            using (Updater updater = _getUpdater())
             {
                 updater.Process( request );
             }
 
             // Assert:
             using var ctx = new IpDbContext(_getOptions());
+
             var blocksIpv4 = ctx.GetIpv4Blocks().ToArray();
             var blocksIpv6 = ctx.GetIpv6Blocks().ToArray();
             var cityLocations = ctx.GetCityLocations().ToArray();
             var enCities = ctx.GetEnCities().ToArray();
             var esCities = ctx.GetEsCities().ToArray();
 
-            Assert.That( blocksIpv4.Length, Is.EqualTo( 2 ) );
-            Assert.That( blocksIpv6.Length, Is.EqualTo( 2 ) );
-            Assert.That( cityLocations.Length, Is.EqualTo( 2 ) );
-            Assert.That( enCities.Length, Is.EqualTo( 2 ) );
-            Assert.That( esCities.Length, Is.EqualTo( 1 ) );
+            Assert.That( blocksIpv4.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.That( blocksIpv6.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.That( cityLocations.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.That( enCities.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.That( esCities.Length, Is.EqualTo( 1 ), LoggerFactory.Instance.Logger.GetMessages() );
         }
 
         [Test]
