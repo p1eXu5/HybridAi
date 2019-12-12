@@ -63,6 +63,24 @@ namespace HybridAi.TestTask.Data.Services.UpdaterService
             return ip;
         }
 
+
+        public static IQueryable< CityLocation > GetCityLocations( this IpDbContext context, int minGeonameId, int maxGeonameId )
+        {
+            return
+                ( from i in context.CityLocations
+                  where i.GeonameId >= minGeonameId
+                      && i.GeonameId <= maxGeonameId
+                  orderby i.GeonameId
+                  select i).Include( c => c.RuCity )
+                           .Include( c => c.DeCity )
+                           .Include( c => c.FrCity )
+                           .Include( c => c.EsCity )
+                           .Include( c => c.JaCity )
+                           .Include( c => c.PtBrCity )
+                           .Include( c => c.ZhCnCity )
+                           .AsQueryable();
+        }
+
         public static IQueryable< CityBlockIpv4 > GetIpv4Blocks( this IpDbContext context )
         {
             return context.CityBlockIpv4Collection.AsQueryable();

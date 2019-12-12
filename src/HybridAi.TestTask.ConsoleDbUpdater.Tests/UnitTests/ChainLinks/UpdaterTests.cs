@@ -80,7 +80,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__AddsDataToDatabase()
         {
             // Arrange:
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            var dbName = "Add_CityBlocksAndCityLocations";
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions( dbName );
             ImportedModelsRequest request = _getCityBlocksAndCityLocations();
 
             // Action:
@@ -90,7 +91,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             }
 
             // Assert:
-            using var ctx = new IpDbContext(_getOptions());
+            using var ctx = new IpDbContext(_getOptions( dbName ));
 
             var blocksIpv4 = ctx.GetIpv4Blocks().ToArray();
             var blocksIpv6 = ctx.GetIpv6Blocks().ToArray();
@@ -106,40 +107,47 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         }
 
         [Test]
-        [Ignore("Not implemented.")]
         public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__ReturnsDoneWithNewCount()
         {
             // Arrange:
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
+            var dbName = "Add_DoneCount";
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions( dbName );
             ImportedModelsRequest request = _getCityBlocksAndCityLocations();
 
             // Action:
-            using (var updater = _getUpdater())
-            {
-
-            }
+            using Updater updater = _getUpdater();
+            var resultRequest = updater.Process( request ).Request;
 
             // Assert:
-            using var ctx = new IpDbContext(_getOptions());
+            Assert.IsTrue( resultRequest is DoneRequest );
+            Assert.That( ((DoneRequest)resultRequest).NewCount, Is.EqualTo( 4 ) );
+            Assert.That( ((DoneRequest)resultRequest).UpdateCount, Is.EqualTo( 0 ) );
         }
 
         [Test]
-        [Ignore("Not implemented.")]
         public void Process__ImportedModelsAreCityLocations_DbIsEmpty__AddsDataToDatabase()
         {
             // Arrange:
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
-            (ImportedModelsRequest request, _) = _getCityLocations();
+            var dbName = "Add_CityLocations";
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions( dbName );
+            ImportedModelsRequest request = _getCityLocations();
 
             // Action:
-            using (var updater = _getUpdater())
+            using (Updater updater = _getUpdater())
             {
-
+                updater.Process( request );
             }
 
             // Assert:
-            using var ctx = new IpDbContext(_getOptions());
+            using var ctx = new IpDbContext(_getOptions( dbName ));
 
+            var cityLocations = ctx.GetCityLocations().ToArray();
+            var enCities = ctx.GetEnCities().ToArray();
+            var esCities = ctx.GetEsCities().ToArray();
+
+            Assert.That( cityLocations.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.That( enCities.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.That( esCities.Length, Is.EqualTo( 1 ), LoggerFactory.Instance.Logger.GetMessages() );
         }
 
 
@@ -148,56 +156,18 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         [Ignore("Not implemented.")]
         public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbHasData__UpdatesDataToDatabase()
         {
-            // Arrange:
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
-            ImportedModelsRequest request = _getCityBlocksAndCityLocations();
-
-            // Action:
-            using (var updater = _getUpdater())
-            {
-
-            }
-
-            // Assert:
-            using var ctx = new IpDbContext(_getOptions());
-
         }
 
         [Test]
         [Ignore("Not implemented.")]
         public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__ReturnsDoneWithUpdateCount()
         {
-            // Arrange:
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
-            ImportedModelsRequest request = _getCityBlocksAndCityLocations();
-
-            // Action:
-            using (var updater = _getUpdater())
-            {
-
-            }
-
-            // Assert:
-            using var ctx = new IpDbContext(_getOptions());
         }
 
         [Test]
         [Ignore("Not implemented.")]
         public void Process__ImportedModelsAreCityLocations_DbHasData__UpdatesDataToDatabase()
         {
-            // Arrange:
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
-            (ImportedModelsRequest request, ForDbSeedRecords dbRecords) = _getCityLocations();
-
-            // Action:
-            using (var updater = _getUpdater())
-            {
-
-            }
-
-            // Assert:
-            using var ctx = new IpDbContext(_getOptions());
-
         }
 
 
@@ -206,56 +176,18 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         [Ignore("Not implemented.")]
         public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbHasSomeData__AddsAndUpdatesDataToDatabase()
         {
-            // Arrange:
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
-            ImportedModelsRequest request = _getCityBlocksAndCityLocations();
-
-            // Action:
-            using (var updater = _getUpdater())
-            {
-
-            }
-
-            // Assert:
-            using var ctx = new IpDbContext(_getOptions());
-
         }
 
         [Test]
         [Ignore("Not implemented.")]
         public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__ReturnsDoneWithNewCountAndUpdateCount()
         {
-            // Arrange:
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
-            ImportedModelsRequest request = _getCityBlocksAndCityLocations();
-
-            // Action:
-            using (var updater = _getUpdater())
-            {
-
-            }
-
-            // Assert:
-            using var ctx = new IpDbContext(_getOptions());
         }
 
         [Test]
         [Ignore("Not implemented.")]
         public void Process__ImportedModelsAreCityLocations_DbHasSomeData__AddsAndUpdatesDataToDatabase()
         {
-            // Arrange:
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions();
-            (ImportedModelsRequest request, ForDbSeedRecords dbRecords) = _getCityLocations();
-
-            // Action:
-            using (var updater = _getUpdater())
-            {
-
-            }
-
-            // Assert:
-            using var ctx = new IpDbContext(_getOptions());
-
         }
 
         #endregion
@@ -287,25 +219,35 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
         private ImportedModelsRequest _getCityBlocksAndCityLocations()
         {
+            var result =  
+                new List< List< IEntity > > {
+                    new List< IEntity > {
+                        new CityBlockIpv4( "1.1.1.1" ) {
+                            CityLocationGeonameId = 1,
+                        },
+                        new CityBlockIpv4( "2.2.2.2" ) {
+                            CityLocationGeonameId = 2,
+                        }
+                    },
+                    new List< IEntity > {
+                        new CityBlockIpv6( "11:11::11:11" ) {
+                            CityLocationGeonameId = 1,
+                        },
+                        new CityBlockIpv6( "22:22::22:22" ) {
+                            CityLocationGeonameId = 2,
+                        }
+                    },
+                };
+
+            result.AddRange( _getCityLocations().ModelCollections );
+            return new ImportedModelsRequest( result.ToArray() );
+        }
+
+        private ImportedModelsRequest _getCityLocations()
+        {
             return 
                 new ImportedModelsRequest( 
                      new List< IEntity >[] {
-                         new List< IEntity > {
-                             new CityBlockIpv4( "1.1.1.1" ) {
-                                 CityLocationGeonameId = 1,
-                             },
-                             new CityBlockIpv4( "2.2.2.2" ) {
-                                 CityLocationGeonameId = 2,
-                             }
-                         },
-                         new List< IEntity > {
-                             new CityBlockIpv6( "11:11::11:11" ) {
-                                 CityLocationGeonameId = 1,
-                             },
-                             new CityBlockIpv6( "22:22::22:22" ) {
-                                 CityLocationGeonameId = 2,
-                             }
-                         },
                          new List< IEntity > {
                              new CityLocation( 1 ) {
                                  ContinentCode = "AA",
@@ -335,11 +277,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
                              },
                          },
                      } );
-        }
-
-        private (ImportedModelsRequest request, ForDbSeedRecords dbRecords ) _getCityLocations()
-        {
-            throw new NotImplementedException();
         }
 
         #endregion
