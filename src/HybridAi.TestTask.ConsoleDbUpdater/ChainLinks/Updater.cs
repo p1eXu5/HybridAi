@@ -63,7 +63,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                 if ( !colls.Any()
                     || colls.All(c => !c.Any()))
                 {
-                    return new DoneRequest("Imported model collections are empty.").Response;
+                    return new FailRequest("Imported model collections are empty.").Response;
                 }
 
                 List<Type> types = colls.Aggregate(

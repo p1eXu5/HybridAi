@@ -27,7 +27,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         #region ctor tests
 
         [Test]
-        public void ctor__ImportedModelsRequestIsEmpty_SuccessorIsNull__ReturnsResponseWithDoneRequest()
+        public void ctor__ImportedModelsRequestIsEmpty_SuccessorIsNull__ReturnsResponseWithFailRequest()
         {
             // Arrange:
             Updater mapper = _getUpdater();
@@ -37,8 +37,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var response = mapper.Process(request);
 
             // Assert:
-            Assert.IsFalse(ReferenceEquals(response.Request, request));
-            Assert.IsTrue(response is Response<DoneRequest>);
+            Assert.IsFalse( ReferenceEquals(response.Request, request) );
+            Assert.IsTrue( response.Request is FailRequest );
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var request = _getEmptyImportedModelsRequest();
 
             // Action:
-            var message = ((IResponse<DoneRequest>)mapper.Process(request)).Request.Message;
+            var message = ((FailRequest)mapper.Process(request).Request).Message;
 
             // Assert:
             StringAssert.Contains("Imported model collections are empty.", message);
