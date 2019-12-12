@@ -63,5 +63,10 @@ namespace HybridAi.TestTask.Data.Models
         {
             return GeonameId.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return $"GeonameId: {GeonameId}; {ContinentCode} {CountryIsoCode}";
+        }
     }
 }

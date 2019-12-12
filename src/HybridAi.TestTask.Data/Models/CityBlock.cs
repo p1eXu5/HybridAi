@@ -22,5 +22,10 @@ namespace HybridAi.TestTask.Data.Models
         public int CityLocationGeonameId { get; set; }
 
         public CityLocation CityLocation { get; set; }
+
+        public override string ToString()
+        {
+            return $"GeonameId: {CityLocationGeonameId}";
+        }
     }
 }

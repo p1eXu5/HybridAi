@@ -20,7 +20,7 @@ namespace HybridAi.TestTask.Data.Models
 
         public override string ToString()
         {
-            return $"{this.Network}";
+            return $"{this.Network}; {base.ToString()}";
         }
 
         public override int GetHashCode()
