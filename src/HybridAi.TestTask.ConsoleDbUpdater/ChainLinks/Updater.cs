@@ -197,10 +197,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             var innerImpBlocks = impBlocks;
 
 
-            Parallel.For( 0, dbBlocks.Count, ( i, s ) => {
+            //Parallel.For( 0, dbBlocks.Count, ( i, s ) => {
+            for ( int i = 0; i < dbBlocks.Count; ++ i ) {
 
                 var impBlock = innerImpBlocks.FirstOrDefault( b => b.GetNetwork().Equals( dbBlocks[i].GetNetwork() ) );
-                if ( impBlock == null ) return;
+                if ( impBlock == null ) continue; //return;
 
                 if ( _updateDbCityBlock( dbBlocks[i], impBlock ) ) {
                     arr[i] = impBlock;
@@ -208,7 +209,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
                 innerImpBlocks.Remove( impBlock );
 
-            } );
+            } //);
 
             var set = new HashSet< CityBlock >( arr );
             set.SymmetricExceptWith( impBlocks );
