@@ -26,14 +26,14 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Extensions
             }
             else {
                 var blockCityLocation = block.CityLocation;
-                res.Add( _copyCity( blockCityLocation, cityLocation, nameof( blockCityLocation.EnCity ) ) );
-                res.Add( _copyCity( blockCityLocation, cityLocation, nameof( blockCityLocation.RuCity ) ) );
-                res.Add( _copyCity( blockCityLocation, cityLocation, nameof( blockCityLocation.EsCity ) ) );
-                res.Add( _copyCity( blockCityLocation, cityLocation, nameof( blockCityLocation.DeCity ) ) );
-                res.Add( _copyCity( blockCityLocation, cityLocation, nameof( blockCityLocation.FrCity ) ) );
-                res.Add( _copyCity( blockCityLocation, cityLocation, nameof( blockCityLocation.JaCity ) ) );
-                res.Add( _copyCity( blockCityLocation, cityLocation, nameof( blockCityLocation.PtBrCity ) ) );
-                res.Add( _copyCity( blockCityLocation, cityLocation, nameof( blockCityLocation.ZhCnCity ) ) );
+                res.Add( CopyProperty<CityLocation, City>( blockCityLocation, cityLocation, nameof( blockCityLocation.EnCity ) ) );
+                res.Add( CopyProperty<CityLocation, City>( blockCityLocation, cityLocation, nameof( blockCityLocation.RuCity ) ) );
+                res.Add( CopyProperty<CityLocation, City>( blockCityLocation, cityLocation, nameof( blockCityLocation.EsCity ) ) );
+                res.Add( CopyProperty<CityLocation, City>( blockCityLocation, cityLocation, nameof( blockCityLocation.DeCity ) ) );
+                res.Add( CopyProperty<CityLocation, City>( blockCityLocation, cityLocation, nameof( blockCityLocation.FrCity ) ) );
+                res.Add( CopyProperty<CityLocation, City>( blockCityLocation, cityLocation, nameof( blockCityLocation.JaCity ) ) );
+                res.Add( CopyProperty<CityLocation, City>( blockCityLocation, cityLocation, nameof( blockCityLocation.PtBrCity ) ) );
+                res.Add( CopyProperty<CityLocation, City>( blockCityLocation, cityLocation, nameof( blockCityLocation.ZhCnCity ) ) );
             }
 
 #pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
@@ -41,7 +41,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Extensions
 #pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
         }
 
-        private static City? _copyCity( CityLocation clkA, CityLocation clkB, string propertyName )
+
+
+        public static TOut CopyProperty<TIn, TOut>( TIn clkA, TIn clkB, string propertyName )
+            where TIn : IEntity
         {
             PropertyInfo? clkAPropertyInfo = clkA.GetType().GetProperty( propertyName, BindingFlags.Instance | BindingFlags.Public );
             PropertyInfo? clkBPropertyInfo = clkB.GetType().GetProperty( propertyName, BindingFlags.Instance | BindingFlags.Public );
@@ -54,10 +57,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Extensions
                     clkAPropertyInfo.SetValue( clkA, valB );
                 }
 
-                return (City?)valB;
+                return (TOut)valB;
             }
 
-            return null;
+            return default(TOut);
         }
     }
 }

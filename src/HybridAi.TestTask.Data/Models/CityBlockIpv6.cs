@@ -18,6 +18,7 @@ namespace HybridAi.TestTask.Data.Models
         [Required]
         public string Network { get; }
 
+        public override string GetNetwork() => Network;
         public override string ToString()
         {
             return $"{this.Network}; {base.ToString()}";

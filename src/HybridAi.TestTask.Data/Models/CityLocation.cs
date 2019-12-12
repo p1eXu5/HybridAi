@@ -25,6 +25,7 @@ namespace HybridAi.TestTask.Data.Models
         [Required]
         public string CountryIsoCode { get; set; }
 
+
         [StringLength(4)]
         public string Subdivision1IsoCode { get; set; }
 

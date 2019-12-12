@@ -27,5 +27,7 @@ namespace HybridAi.TestTask.Data.Models
         {
             return $"GeonameId: {CityLocationGeonameId}";
         }
+
+        public virtual string GetNetwork() => String.Empty;
     }
 }

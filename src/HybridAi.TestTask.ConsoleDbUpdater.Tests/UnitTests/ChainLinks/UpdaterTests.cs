@@ -153,9 +153,42 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
 
         [Test]
-        [Ignore("Not implemented.")]
         public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbHasData__UpdatesDataToDatabase()
         {
+            // Arrange:
+            var dbName = "Update_CityBlocksAndCityLocations";
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions( dbName );
+            ImportedModelsRequest request = _getCityBlocksAndCityLocations();
+
+            using (var ctxForSeed = new IpDbContext(_getOptions(dbName)))
+            {   
+                var blocks = _getInDbCityBlocks();
+                ctxForSeed.AddRange( blocks );
+                ctxForSeed.SaveChanges();
+            }
+
+            // Action:
+            using (Updater updater = _getUpdater())
+            {
+                updater.Process( request );
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext(_getOptions( dbName ));
+
+            var blocksIpv4 = ctx.GetIpv4Blocks().ToArray();
+            var blocksIpv6 = ctx.GetIpv6Blocks().ToArray();
+            var cityLocations = ctx.GetCityLocations().ToArray();
+            var enCities = ctx.GetEnCities().ToArray();
+            var esCities = ctx.GetEsCities().ToArray();
+
+            Assert.That( blocksIpv4.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.That( blocksIpv6.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.That( cityLocations.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.That( enCities.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.That( esCities.Length, Is.EqualTo( 1 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.NotNull( blocksIpv4.First().CityLocation );
+            Assert.NotNull( blocksIpv6.First().CityLocation.EsCity );
         }
 
         [Test]
@@ -217,6 +250,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             return options;
         }
 
+        /// <summary>
+        /// Returns imported ip4.1-[cl1.1,cl2.1]; ip4.2-[cl1.2]; ip6.1-[cl1.1,cl2.1]; ipv6.2-[cl1.2]
+        /// <br/>Method works with <see cref="_getCityLocations"/>.
+        /// </summary>
+        /// <returns></returns>
         private ImportedModelsRequest _getCityBlocksAndCityLocations()
         {
             var result =  
@@ -243,6 +281,34 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             return new ImportedModelsRequest( result.ToArray() );
         }
 
+        /// <summary>
+        /// Returns single <see cref="CityBlockIpv4"/> with <see cref="CityBlockIpv4.Network" /> equals to "1.1.1.1" only
+        /// and filled <see cref="CityBlockIpv6"/> with <see cref="CityBlockIpv4.Network" /> equals to "11:11::11:11" with single <see cref="EnCity"/>.
+        /// </summary>
+        /// <returns></returns>
+        private List< CityBlock > _getInDbCityBlocks()
+        {
+            return
+                new List< CityBlock > {
+                    new CityBlockIpv4( "1.1.1.1" ),
+                    new CityBlockIpv6( "11:11::11:11" ) {
+                        CityLocationGeonameId = 1,
+                        CityLocation = new CityLocation( 1 ) {
+                            ContinentCode = "AA",
+                            CountryIsoCode = "AA",
+                            TimeZone = "AA",
+                            EnCity = new EnCity( 1 ) {
+                                LocaleCode = new LocaleCode( "en" )
+                            }
+                        }
+                    }
+                };
+        }
+
+        /// <summary>
+        /// Returns imported [cl1.1; cl1.2]; [cl2.1]
+        /// </summary>
+        /// <returns></returns>
         private ImportedModelsRequest _getCityLocations()
         {
             return 
@@ -278,6 +344,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
                          },
                      } );
         }
+
+
 
         #endregion
 

@@ -81,29 +81,67 @@ namespace HybridAi.TestTask.Data.Services.UpdaterService
                            .AsQueryable();
         }
 
+        /// <summary>
+        /// Returns <see cref="IQueryable"/> of <see cref="CityBlockIpv4"/>.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static IQueryable< CityBlockIpv4 > GetIpv4Blocks( this IpDbContext context )
         {
             return context.CityBlockIpv4Collection.AsQueryable();
         }
 
+        /// <summary>
+        /// Returns <see cref="IQueryable"/> of <see cref="CityBlockIpv6"/>.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static IQueryable< CityBlockIpv6 > GetIpv6Blocks( this IpDbContext context )
         {
             return context.CityBlockIpv6Collection.AsQueryable();
         }
 
+        /// <summary>
+        /// Returns <see cref="IQueryable"/> of <see cref="CityLocation"/> ordered by <see cref="CityLocation.GeonameId"/>.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static IQueryable< CityLocation > GetCityLocations( this IpDbContext context )
         {
-            return context.CityLocations.AsQueryable();
+            return context.CityLocations.OrderBy( c => c.GeonameId ).AsQueryable();
         }
 
+        /// <summary>
+        /// Returns <see cref="IQueryable"/> of <see cref="EnCity"/> ordered by <see cref="City.GeonameId"/>
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static IQueryable< EnCity > GetEnCities( this IpDbContext context )
         {
-            return context.EnCities.AsQueryable();
+            return context.EnCities.OrderBy( c => c.GeonameId ).AsQueryable();
         }
 
+        /// <summary>
+        /// Returns <see cref="IQueryable"/> of <see cref="EsCity"/> ordered by <see cref="City.GeonameId"/>
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static IQueryable< EsCity > GetEsCities( this IpDbContext context )
         {
-            return context.EsCities.AsQueryable();
+            return context.EsCities.OrderBy( c => c.GeonameId ).AsQueryable();
         }
+
+        public static City? GetCity( this IpDbContext context, City city )
+            => city switch {
+                EnCity en => context.EnCities.FirstOrDefault( c => c.GeonameId == en.GeonameId ),
+                RuCity ru => context.RuCities.FirstOrDefault( c => c.GeonameId == ru.GeonameId ),
+                FrCity fr => context.FrCities.FirstOrDefault( c => c.GeonameId == fr.GeonameId ),
+                DeCity de => context.DeCities.FirstOrDefault( c => c.GeonameId == de.GeonameId ),
+                EsCity es => context.EsCities.FirstOrDefault( c => c.GeonameId == es.GeonameId ),
+                JaCity ja => context.JaCities.FirstOrDefault( c => c.GeonameId == ja.GeonameId ),
+                PtBrCity pt => context.PtBrCities.FirstOrDefault( c => c.GeonameId == pt.GeonameId ),
+                ZhCnCity zh => context.ZhCnCities.FirstOrDefault( c => c.GeonameId == zh.GeonameId ),
+                _ => null
+            };
     }
 }

@@ -170,12 +170,14 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             try {
                 if ( dbBblocks.Any() ) {
-
+                    updCount = _updateCityBlocks( dbBblocks, ref blocks );
                 }
-                else {
+
+                if ( blocks.Any() ) {
                     context.AddRange( blocks );
                     newCount = blocks.Count;
                 }
+                
 
                 context.SaveChanges();
             }
@@ -187,6 +189,168 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             return (newCount, updCount);
         }
 
+
+        private int _updateCityBlocks( List< CityBlock > dbBlocks, ref List< CityBlock > impBlocks )
+        {
+            int updCount = 0;
+            var arr = new CityBlock[ dbBlocks.Count ];
+            var innerImpBlocks = impBlocks;
+
+
+            Parallel.For( 0, dbBlocks.Count, ( i, s ) => {
+
+                var impBlock = innerImpBlocks.FirstOrDefault( b => b.GetNetwork().Equals( dbBlocks[i].GetNetwork() ) );
+                if ( impBlock == null ) return;
+
+                if ( _updateDbCityBlock( dbBlocks[i], impBlock ) ) {
+                    arr[i] = impBlock;
+                }
+
+                innerImpBlocks.Remove( impBlock );
+
+            } );
+
+            var set = new HashSet< CityBlock >( arr );
+            set.SymmetricExceptWith( impBlocks );
+            impBlocks = set.ToList();
+
+            return updCount;
+        }
+
+
+        private bool _updateDbCityBlock( CityBlock dbBlock, CityBlock impBlock )
+        {
+            CityBlockExtensions.CopyProperty< CityBlock, int? >( dbBlock, impBlock, nameof( CityBlock.RegistredCountryGeonameId ) );
+            CityBlockExtensions.CopyProperty< CityBlock, int? >( dbBlock, impBlock, nameof( CityBlock.RepresentedCountryGeonameId ) );
+            CityBlockExtensions.CopyProperty< CityBlock, bool >( dbBlock, impBlock, nameof( CityBlock.IsAnonymousProxy ) );
+            CityBlockExtensions.CopyProperty< CityBlock, bool >( dbBlock, impBlock, nameof( CityBlock.IsSatelliteProvider ) );
+            CityBlockExtensions.CopyProperty< CityBlock, string >( dbBlock, impBlock, nameof( CityBlock.PostalCode ) );
+            CityBlockExtensions.CopyProperty< CityBlock, double >( dbBlock, impBlock, nameof( CityBlock.Latitude ) );
+            CityBlockExtensions.CopyProperty< CityBlock, double >( dbBlock, impBlock, nameof( CityBlock.Longitude ) );
+            CityBlockExtensions.CopyProperty< CityBlock, int >( dbBlock, impBlock, nameof( CityBlock.CityLocationGeonameId ) );
+
+            var dbCityLocation = dbBlock.CityLocation;
+            _updateDbCityLocation( ref dbCityLocation, impBlock.CityLocation );
+
+            // feature will be added on request 
+            return true;
+        }
+
+        private bool _updateDbCityLocation( ref CityLocation dbCityLocation, CityLocation impCityLocation )
+        {
+            if ( impCityLocation == null ) return false;
+            
+            if ( dbCityLocation == null ) 
+            {
+                var ctx = DbContext;
+                var db = ctx.CityLocations.FirstOrDefault( cl => cl.GeonameId == impCityLocation.GeonameId );
+
+                if ( db != null ) {
+                    dbCityLocation =  db;
+                    return true;
+                }
+
+                dbCityLocation = new CityLocation( impCityLocation.GeonameId ) {
+                    ContinentCode = impCityLocation.ContinentCode,
+                    CountryIsoCode = impCityLocation.CountryIsoCode,
+                    Subdivision1IsoCode = impCityLocation.Subdivision1IsoCode,
+                    Subdivision2IsoCode = impCityLocation.Subdivision2IsoCode,
+                    MetroCode = impCityLocation.MetroCode,
+                    TimeZone = impCityLocation.TimeZone,
+                    IsInEuropeanUnion = impCityLocation.IsInEuropeanUnion
+                };
+            }
+            else {
+                CityBlockExtensions.CopyProperty< CityLocation, string >( dbCityLocation, impCityLocation, nameof( CityLocation.Subdivision1IsoCode ) );
+                CityBlockExtensions.CopyProperty< CityLocation, string? >( dbCityLocation, impCityLocation, nameof( CityLocation.Subdivision2IsoCode ) );
+                CityBlockExtensions.CopyProperty< CityLocation, string? >( dbCityLocation, impCityLocation, nameof( CityLocation.MetroCode ) );
+                CityBlockExtensions.CopyProperty< CityLocation, bool >( dbCityLocation, impCityLocation, nameof( CityLocation.IsInEuropeanUnion ) );
+            }
+
+            City dbEnCity = dbCityLocation.EnCity;
+            _updateDbCity( ref dbEnCity, impCityLocation.EnCity, c => new EnCity( c.GeonameId ) );
+
+            City dbRuCity = dbCityLocation.RuCity;
+            _updateDbCity( ref dbRuCity, impCityLocation.RuCity, c => new RuCity( c.GeonameId ) );
+
+            City dbFrCity = dbCityLocation.FrCity;
+            _updateDbCity( ref dbFrCity, impCityLocation.FrCity, c => new FrCity( c.GeonameId ) );
+
+            City dbDeCity = dbCityLocation.DeCity;
+            _updateDbCity( ref dbDeCity, impCityLocation.DeCity, c => new DeCity( c.GeonameId ) );
+
+            City dbEsCity = dbCityLocation.EsCity;
+            _updateDbCity( ref dbEsCity, impCityLocation.EsCity, c => new EsCity( c.GeonameId ) );
+
+            City dbJaCity = dbCityLocation.JaCity;
+            _updateDbCity( ref dbJaCity, impCityLocation.JaCity, c => new JaCity( c.GeonameId ) );
+
+            City dbPtBrCity = dbCityLocation.PtBrCity;
+            _updateDbCity( ref dbPtBrCity, impCityLocation.PtBrCity, c => new PtBrCity( c.GeonameId ) );
+
+            City dbZhCnCity = dbCityLocation.ZhCnCity;
+            _updateDbCity( ref dbZhCnCity, impCityLocation.ZhCnCity, c => new ZhCnCity( c.GeonameId ) );
+            
+            // feature will be added on request 
+            return true;
+        }
+
+
+        private bool _updateDbCity( ref City dbCity, City impCity, Func< City, City > factory )
+        {
+            if ( impCity == null ) return false;
+
+            if ( dbCity == null ) 
+            {
+                var ctx = DbContext;
+                var db = ctx.GetCity( impCity );
+                if ( db != null ) {
+                    dbCity = db;
+                    return true;
+                }
+
+                dbCity = factory( impCity );
+                dbCity.ContinentName = impCity.ContinentName;
+                dbCity.CountryName = impCity.CountryName;
+                dbCity.Subdivision1Name = impCity.Subdivision1Name;
+                dbCity.Subdivision2Name = impCity.Subdivision2Name;
+                dbCity.CityName = impCity.CityName;
+
+            }
+            else {
+                CityBlockExtensions.CopyProperty< City, string >( dbCity, impCity, nameof( City.ContinentName) );
+                CityBlockExtensions.CopyProperty< City, string >( dbCity, impCity, nameof( City.CountryName) );
+                CityBlockExtensions.CopyProperty< City, string >( dbCity, impCity, nameof( City.Subdivision1Name) );
+                CityBlockExtensions.CopyProperty< City, string >( dbCity, impCity, nameof( City.Subdivision2Name) );
+                CityBlockExtensions.CopyProperty< City, string >( dbCity, impCity, nameof( City.CityName) );
+            }
+
+            LocaleCode locale = dbCity.LocaleCode;
+            _updateDbLocale( ref locale, impCity.LocaleCode );
+
+            // feature will be added on request 
+            return true;
+        }
+
+        private bool _updateDbLocale( ref LocaleCode dbLocale, LocaleCode impLocale )
+        {
+            if ( impLocale == null ) return false;
+
+            if ( dbLocale == null ) 
+            {
+                var ctx = DbContext;
+                var db = ctx.LocaleCodes.FirstOrDefault( l => l.Name.Equals( impLocale.Name ) );
+                if ( db != null ) {
+                    dbLocale = db;
+                    return true;
+                }
+
+                dbLocale = impLocale;
+            }
+
+            // feature will be added on request 
+            return true;
+        }
 
         private bool _updateCityLocations(List<IEntity>[] colls, out int newCount, out int updCount)
         {
