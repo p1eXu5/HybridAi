@@ -23,7 +23,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var response = formatter.Process( argumentRequest );
 
             // Assert:
-			Assert.IsTrue( response is IResponse< FileLocationRequest > );
+			Assert.IsTrue( response.Request is FileLocationRequest );
         }
 
 
@@ -41,7 +41,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var response = formatter.Process( argumentRequest );
 
             // Assert:
-            Assert.IsTrue( response is IResponse< UrlRequest > );
+            Assert.IsTrue( response.Request is UrlRequest );
         }
 
 

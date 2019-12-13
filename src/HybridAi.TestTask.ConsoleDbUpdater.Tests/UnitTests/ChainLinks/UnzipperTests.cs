@@ -61,7 +61,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var response = chain.Process( request );
 
             // Assert:
-            Assert.IsTrue( response is Response< FileLocationRequest > );
+            Assert.IsTrue( response.Request is FileLocationRequest );
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var response = chain.Process( request );
 
             // Assert:
-            Assert.IsTrue( response is Response< FolderRequest >, (( TestLogger )LoggerFactory.Instance.Logger).Messages );
+            Assert.IsTrue( response.Request is FolderRequest, (( TestLogger )LoggerFactory.Instance.Logger).Messages );
         }
 
         [Test]

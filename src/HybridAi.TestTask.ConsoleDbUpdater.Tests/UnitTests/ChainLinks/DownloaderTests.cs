@@ -25,11 +25,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
             // Assert:
             Assert.IsTrue( ReferenceEquals( response.Request, request ) );
-            Assert.IsFalse( response is Response< FileLocationRequest > );
+            Assert.IsFalse( response.Request is FileLocationRequest );
         }
 
         [Test]
-        public void Process__UrlIsNotExisted_SuccessorIsNull__ReturnsUrlResponse()
+        public void Process__UrlIsNotExisted_SuccessorIsNull__ReturnsResponseWithUrlRequest()
         {
             // Arrange:
             var chain = _getDownloader();
@@ -38,7 +38,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var response = chain.Process( new UrlRequest( "https://a.a/a.zip" ) );
 
             // Assert:
-            Assert.IsTrue( response is Response< UrlRequest > );
+            Assert.IsTrue( response.Request is UrlRequest );
         }
 
         #region factory
