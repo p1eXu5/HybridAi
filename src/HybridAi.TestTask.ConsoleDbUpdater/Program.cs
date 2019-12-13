@@ -6,6 +6,7 @@ using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
 using HybridAi.TestTask.ConsoleDbUpdater.ModelMappers;
+using HybridAi.TestTask.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater
@@ -16,6 +17,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
         static async Task Main(string[] args)
         {
+            using ( var ctx = new IpDbContext() )
+            {
+                ctx.Database.Migrate();
+            }
+
             ModelMapperFactory.Instance.Register< CityBlockMapper >( CityBlockMapper.CityBlockHeader );
             ModelMapperFactory.Instance.Register< CityLocationMapper >( CityLocationMapper.CityLocationHeader );
 
@@ -31,8 +37,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                                                                 .AddUpdater();
 
             var argumentChainBuilder = new ChainBuilder().AddArgumentFormatter()
-                                                                  .Append(copierChainBuilder)
-                                                                  .Append(updateChainBuilder);
+                                                         .Append(copierChainBuilder)
+                                                         .Append(updateChainBuilder);
 
             IChainLink< Request, IResponse< Request > > argumentChain;
 

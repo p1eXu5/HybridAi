@@ -8,12 +8,12 @@ using HybridAi.TestTask.ConsoleDbUpdater.Models;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater
 {
-    public class ChainBuilder : IChainBuilder< IChainLink<Request, IResponse< Request >> >, IDisposable
+    public class ChainBuilder : IChainBuilder< IChainLink<Request, IResponse< Request >> >, IEnumerable< Type >, IDisposable
     {
         private readonly object _locker = new object();
         private IChainLink< Request, IResponse< Request > >? _result;
 
-        private List< object >? _chainTypes;
+        private List< Type >? _chainTypes;
 
         #region properties
 
@@ -23,7 +23,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
             private set => _result = value;
         }
 
-        private List<object> _ChainTypes => _chainTypes ??= new List<object>(10);
+        private List< Type > _ChainTypes => _chainTypes ??= new List< Type >(10);
 
         #endregion
 
@@ -46,16 +46,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
                 var chainTypes = _ChainTypes;
                 for ( int i = chainTypes.Count - 1; i >= 0; --i ) {
-                    switch(chainTypes[i]) {
-                        case Type type:
-#pragma warning disable CS8601 // Possible null reference assignment.
-                            result = (IChainLink<Request, IResponse< Request >>?)Activator.CreateInstance( type, new object[] { result } );
-#pragma warning restore CS8601 // Possible null reference assignment.
-                            continue;
-                        case ChainLink chainLink:
-                            result = chainLink.SetSuccessor( result );
-                            continue;
-                    }
+
+#nullable disable
+                    result = (IChainLink<Request, IResponse< Request >>)Activator.CreateInstance( chainTypes[i], new object[] { result } );
+#nullable restore
                 }
 
 
@@ -72,10 +66,14 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
             throw new InvalidOperationException( "Add chain links." );
         }
 
-        public IChainBuilder< IChainLink<Request, IResponse< Request > > > Append( IEnumerable< object > chines )
+        public IChainBuilder< IChainLink< Request, IResponse< Request > > > Append( IEnumerable< Type > chainTypes )
         {
-            throw new NotImplementedException();
+            var chains = _ChainTypes;
+            chains.AddRange( chainTypes );
+
+            return this;
         }
+
 
         public void Reset()
         {
@@ -109,9 +107,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
             return res;
         }
 
-        public IEnumerator< object > GetEnumerator()
+        public IEnumerator< Type > GetEnumerator()
         {
-            return _ChainTypes.GetEnumerator();
+            var chains = _ChainTypes;
+            return chains.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

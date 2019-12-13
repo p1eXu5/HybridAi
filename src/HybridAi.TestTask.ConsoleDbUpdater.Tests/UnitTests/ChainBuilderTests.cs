@@ -8,7 +8,7 @@ using HybridAi.TestTask.ConsoleDbUpdater.ChainLinks;
 using HybridAi.TestTask.ConsoleDbUpdater.Models;
 // ReSharper disable ClassNeverInstantiated.Local
 
-namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests
+namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests
 {
 
 	[TestFixture]
@@ -21,6 +21,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests
         {
             _chainNames = new List< Type >();
         }
+
 
 		[Test]
 		public void AddChainLinks__ChainLinkTypeWithoutSupportedCtor_DerivedFromChainLink__ThrowsArgumentException()
@@ -102,9 +103,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests
             StringAssert.Contains( $"Add chain links.", ex.Message );
         }
 
-
         [ Test ]
-        public void Build_HaveChainLinks_CreatesChainl()
+        public void Build_HaveChainLinks_CreatesChain()
         {
             // Arrange:
             var builder = new ChainBuilder();
@@ -118,6 +118,25 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests
             // Assert:
             Assert.That( _chainNames, Is.EquivalentTo( expected ) );
         }
+
+
+        [ Test ]
+        public void Append_BuilderHaveChainLinks_AppendLinks()
+        {
+            // Arrange:
+            var builder1 = new ChainBuilder();
+            var builder2 = new ChainBuilder();
+            builder2.AddChainLink< ChainOne >();
+            builder2.AddChainLink< ChainTwo >();
+
+            // Action:
+            builder1.Append( builder2 );
+
+            // Assert:
+            var chainCount = builder1.ToArray().Length;
+            Assert.AreEqual( 2, chainCount );
+        }
+
 
 		#region factory
 		// Insert factory methods here:
