@@ -495,7 +495,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                 if ( dbCityLocations.Any() ) {
                     updCount = _updateCityLocations( dbCityLocations, ref cityLocations );
                 }
-                else {
+                
+                if ( cityLocations.Any() ) {
                     context.AddRange( cityLocations );
                     newCount = cityLocations.Count;
                 }
