@@ -51,13 +51,27 @@ namespace HybridAi.TestTask.Data.Models
         public ICollection< CityBlockIpv4 > CityBlockIpv4Collection { get; set; }
         public ICollection< CityBlockIpv6 > CityBlockIpv6Collection { get; set; }
 
+        public int? RuCityGeonameId { get; set; }
         public RuCity RuCity { get; set; }
+        public int? EnCityGeonameId { get; set; }
         public EnCity EnCity { get; set; }
+
+        public int? DeCityGeonameId { get; set; }
         public DeCity DeCity { get; set; }
+
+        public int? FrCityGeonameId { get; set; }
         public FrCity FrCity { get; set; }
+
+        public int? EsCityGeonameId { get; set; }
         public EsCity EsCity { get; set; }
+
+        public int? JaCityGeonameId { get; set; }
         public JaCity JaCity { get; set; }
+
+        public int? PtBrCityGeonameId { get; set; }
         public PtBrCity PtBrCity { get; set; }
+
+        public int? ZhCnCityGeonameId { get; set; }
         public ZhCnCity ZhCnCity { get; set; }
 
         public override int GetHashCode()
