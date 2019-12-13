@@ -19,7 +19,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
         public IChainLink<Request, IResponse<Request>> Result
         {
-            get => _result ?? throw new InvalidOperationException();
+            get => _result ?? throw new InvalidOperationException( "Build the Result." );
             private set => _result = value;
         }
 
@@ -28,21 +28,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
         #endregion
 
 
-        public void AddChainLink<T>( T chainLink ) where T : ChainLink
-        {
-            if (chainLink == null) throw new ArgumentNullException( nameof( chainLink ), @"Chain link cannot be null." ); ;
-
-            var type = typeof(T);
-            if ( !_checkConstructor(type) ) throw new ArgumentException( "Type has no properly constructor." );
-
-            var chain = _ChainTypes;
-            chain.Add( type );
-        }
-
-        public void AddChainLink<T>() where T : ChainLink
+        public void AddChainLink<T>() where T : IChainLink< Request, IResponse< Request > >
         {
             var type = typeof(T);
-            if ( !_checkConstructor(type) ) throw new ArgumentException( "Type has no properly constructor." );
+            if ( !_checkConstructor(type) ) throw new ArgumentException( 
+                $"Type must have constructor with single {nameof(IChainLink< Request, IResponse< Request > >)}." );
 
             var chain = _ChainTypes;
             chain.Add( type );
@@ -79,7 +69,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                 }
             }
 
-            throw new InvalidOperationException();
+            throw new InvalidOperationException( "Add chain links." );
         }
 
         public IChainBuilder< IChainLink<Request, IResponse< Request > > > Append( IEnumerable< object > chines )
@@ -113,7 +103,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                 ParameterInfo[] parameters = ctor.GetParameters();
                 if ( parameters.Length != 1 ) continue;
 
-                res = parameters[0].ParameterType is ChainLink;
+                res = parameters[0].ParameterType.FullName.Equals( typeof( IChainLink< Request, IResponse< Request > >).FullName);
             }
 
             return res;
