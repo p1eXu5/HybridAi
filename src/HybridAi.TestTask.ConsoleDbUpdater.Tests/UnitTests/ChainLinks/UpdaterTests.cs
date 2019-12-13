@@ -23,6 +23,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             LoggerFactory.Instance.Logger = new TestLogger();
         }
 
+        [ TearDown ]
+        public void DeleteDatabase()
+        {
+            using var context = new IpDbContext();
+
+            context.Database.EnsureDeleted();
+        }
 
         #region ctor tests
 
@@ -217,9 +224,48 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         }
 
         [Test]
-        [Ignore("Not implemented.")]
         public void Process__ImportedModelsAreCityLocations_DbHasData__UpdatesDataToDatabase()
         {
+            // Arrange:
+            ImportedModelsRequest request = _getCityLocations();
+
+            using (var ctxForSeed = new IpDbContext()) 
+            {
+                ctxForSeed.Database.Migrate();
+
+                var seededCityLocation = new CityLocation( 1 ) {
+                    ContinentCode = "AB",
+                    CountryIsoCode = "AB",
+                    TimeZone = "Test Time Zone"
+                };
+
+                ctxForSeed.Add( seededCityLocation );
+                ctxForSeed.SaveChanges();
+            }
+
+            using (var ctxAssert = new IpDbContext()) {
+                var clk = ctxAssert.GetCityLocations( 1, 1 ).ToArray();
+                Assert.NotNull( clk );
+            }
+
+            return;
+
+            // Action:
+            using (Updater updater = _getUpdater())
+            {
+                updater.Process( request );
+            }
+
+            // Assert:
+            using var ctx = new IpDbContext();
+
+            var cityLocations = ctx.GetCityLocations().ToArray();
+            var enCities = ctx.GetEnCities().ToArray();
+            var esCities = ctx.GetEsCities().ToArray();
+
+            Assert.That( cityLocations.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.That( enCities.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
+            Assert.That( esCities.Length, Is.EqualTo( 1 ), LoggerFactory.Instance.Logger.GetMessages() );
         }
 
 

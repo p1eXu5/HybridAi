@@ -206,7 +206,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             var arr = new CityBlock[ dbBlocks.Count ];
             var innerImpBlocks = impBlocks;
 
-
             //Parallel.For( 0, dbBlocks.Count, ( i, s ) => {
             for ( int i = 0; i < dbBlocks.Count; ++ i ) {
 
@@ -215,16 +214,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
                 if ( _updateDbCityBlock( dbBlocks[i], impBlock ) ) {
                     arr[i] = impBlock;
+                    ++updCount;
                 }
             } //);
 
             var set = new HashSet< CityBlock >( impBlocks );
             set.ExceptWith( arr );
-
-            //var ctx = DbContext;
-            //for ( int i = 0; i < arr.Length; ++i ) {
-            //    swit
-            //}
 
             _updateImpLocales( set );
             impBlocks = set.ToList();
@@ -259,30 +254,33 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
         private void _updateImpLocales( HashSet< CityBlock > cityBlocks )
         {
+            foreach ( var block in cityBlocks ) {
+                _updateImpLocales( block.CityLocation );
+            }
+        }
+
+        private void _updateImpLocales( CityLocation cityLocation )
+        {
             var ctx = DbContext;
 
-            foreach ( var block in cityBlocks ) {
-                var cityLocation = block.CityLocation;
-                
-                void update( City impCity )
-                {
-                    if ( impCity?.LocaleCode == null ) return;
+            void update( City impCity )
+            {
+                if ( impCity?.LocaleCode == null ) return;
 
-                    var dbLocale = ctx.LocaleCodes.FirstOrDefault( lc => lc.Name.Equals( impCity.LocaleCode.Name ) );
-                    if ( dbLocale == null ) return;
+                var dbLocale = ctx.LocaleCodes.FirstOrDefault( lc => lc.Name.Equals( impCity.LocaleCode.Name ) );
+                if ( dbLocale == null ) return;
 
-                    impCity.LocaleCode = dbLocale;
-                }
-
-                update( cityLocation.EnCity );
-                update( cityLocation.RuCity );
-                update( cityLocation.DeCity );
-                update( cityLocation.FrCity );
-                update( cityLocation.EsCity );
-                update( cityLocation.JaCity );
-                update( cityLocation.PtBrCity );
-                update( cityLocation.ZhCnCity );
+                impCity.LocaleCode = dbLocale;
             }
+
+            update( cityLocation.EnCity );
+            update( cityLocation.RuCity );
+            update( cityLocation.DeCity );
+            update( cityLocation.FrCity );
+            update( cityLocation.EsCity );
+            update( cityLocation.JaCity );
+            update( cityLocation.PtBrCity );
+            update( cityLocation.ZhCnCity );
         }
 
         /// <summary>
@@ -440,6 +438,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             return (newCount, updCount) != _fail;
         }
 
+        /// <summary>
+        /// Merge cities to CityLocation.
+        /// </summary>
+        /// <param name="cityLocations"></param>
         private void _mergeCityLocations( ref List< CityLocation > cityLocations )
         {
             var locales = new Dictionary< string, LocaleCode >( 8 );
@@ -485,13 +487,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             (int newCount, int updCount) = (0, 0);
             var context = DbContext;
 
-            List< CityLocation > dbBblocks = context.GetCityLocations(
+            List< CityLocation > dbCityLocations = context.GetCityLocations(
                 cityLocations.First().GeonameId, 
                 cityLocations.Last().GeonameId ).ToList();
 
             try {
-                if ( dbBblocks.Any() ) {
-
+                if ( dbCityLocations.Any() ) {
+                    updCount = _updateCityLocations( dbCityLocations, ref cityLocations );
                 }
                 else {
                     context.AddRange( cityLocations );
@@ -508,6 +510,42 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             return (newCount, updCount);
         }
 
+        /// <summary>
+        /// Copies data from imported CityBlocks to database CityBlocks and adjusts LocaleCodes.
+        /// </summary>
+        /// <param name="dbBlocks"></param>
+        /// <param name="impBlocks"></param>
+        /// <returns></returns>
+        private int _updateCityLocations( List< CityLocation > dbCityLocations, ref List< CityLocation > impCityLocations )
+        {
+            int updCount = 0;
+            var impUpdatedFrom = new CityLocation[ dbCityLocations.Count ];
+            var innerImpCityLocations = impCityLocations;
+
+            //Parallel.For( 0, dbBlocks.Count, ( i, s ) => {
+            for ( int i = 0; i < dbCityLocations.Count; ++ i ) {
+
+                var impClk = innerImpCityLocations.FirstOrDefault( b => b.GeonameId.Equals( dbCityLocations[i].GeonameId ) );
+                if ( impClk == null ) continue; //return;
+
+                var clk = dbCityLocations[i];
+                if ( _updateDbCityLocation( ref clk, impClk ) ) {
+                    impUpdatedFrom[i] = impClk;
+                    ++updCount;
+                }
+            } //);
+
+            var set = new HashSet< CityLocation >( impCityLocations );
+            set.ExceptWith( impUpdatedFrom );
+
+            foreach ( var cityLocation in set ) {
+                _updateImpLocales( cityLocation );
+            }
+            impCityLocations = set.ToList();
+
+            return updCount;
+        }
+        
 
         private List<T2> _getTypedAggregateCollection<T1, T2>(List<T1>[] coll)
             where T1 : IEntity
