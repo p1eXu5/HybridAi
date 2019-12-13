@@ -13,7 +13,7 @@ namespace HybridAi.TestTask.Data.Configurations.Cities
             builder.HasKey( c => c.GeonameId );
             builder.Property( c => c.GeonameId ).HasColumnType( "int" ).IsRequired();
 
-            builder.HasOne( c => c.CityLocation ).WithOne( cl => cl.DeCity ).HasForeignKey< CityLocation >( c => c.GeonameId );
+            builder.HasOne( c => c.CityLocation ).WithOne( cl => cl.DeCity ).HasForeignKey< CityLocation >( c => c.DeCityGeonameId );
             builder.HasOne(c => c.LocaleCode).WithMany(l => l.DeCities).HasForeignKey(c => c.LocaleCodeName);
         }
     }
