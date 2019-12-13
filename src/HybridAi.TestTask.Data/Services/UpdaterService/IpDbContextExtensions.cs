@@ -68,8 +68,6 @@ namespace HybridAi.TestTask.Data.Services.UpdaterService
 
         public static IQueryable< CityLocation > GetCityLocations( this IpDbContext context, int minGeonameId, int maxGeonameId )
         {
-            // EntityFrameworkCore.InMemory is broken (entities not returned when using 'Include()' and navigation property is null )
-
             return
                 ( from i in context.CityLocations
                   where i.GeonameId >= minGeonameId
