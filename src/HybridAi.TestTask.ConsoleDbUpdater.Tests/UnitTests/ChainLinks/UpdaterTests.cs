@@ -262,6 +262,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
                     new List< IEntity > {
                         new CityBlockIpv4( "1.1.1.1" ) {
                             CityLocationGeonameId = 1,
+                            RegistredCountryGeonameId = 666,
+                            RepresentedCountryGeonameId = 999,
                         },
                         new CityBlockIpv4( "2.2.2.2" ) {
                             CityLocationGeonameId = 2,
@@ -270,6 +272,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
                     new List< IEntity > {
                         new CityBlockIpv6( "11:11::11:11" ) {
                             CityLocationGeonameId = 1,
+                            RegistredCountryGeonameId = 666,
+                            RepresentedCountryGeonameId = 999,
                         },
                         new CityBlockIpv6( "22:22::22:22" ) {
                             CityLocationGeonameId = 2,

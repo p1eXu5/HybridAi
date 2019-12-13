@@ -206,20 +206,49 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                 if ( _updateDbCityBlock( dbBlocks[i], impBlock ) ) {
                     arr[i] = impBlock;
                 }
-
-                innerImpBlocks.Remove( impBlock );
-
             } //);
 
             var set = new HashSet< CityBlock >( impBlocks );
             set.ExceptWith( arr );
-            impBlocks = set.ToList();
 
-            // TODO check LocaleCodes
+            //var ctx = DbContext;
+            //for ( int i = 0; i < arr.Length; ++i ) {
+            //    swit
+            //}
+
+            _updateImpLocales( set );
+            impBlocks = set.ToList();
 
             return updCount;
         }
 
+        private void _updateImpLocales( HashSet< CityBlock > cityBlocks )
+        {
+            var ctx = DbContext;
+
+            foreach ( var block in cityBlocks ) {
+                var cityLocation = block.CityLocation;
+                
+                void update( City impCity )
+                {
+                    if ( impCity?.LocaleCode == null ) return;
+
+                    var dbLocale = ctx.LocaleCodes.FirstOrDefault( lc => lc.Name.Equals( impCity.LocaleCode.Name ) );
+                    if ( dbLocale == null ) return;
+
+                    impCity.LocaleCode = dbLocale;
+                }
+
+                update( cityLocation.EnCity );
+                update( cityLocation.RuCity );
+                update( cityLocation.DeCity );
+                update( cityLocation.FrCity );
+                update( cityLocation.EsCity );
+                update( cityLocation.JaCity );
+                update( cityLocation.PtBrCity );
+                update( cityLocation.ZhCnCity );
+            }
+        }
 
         private bool _updateDbCityBlock( CityBlock dbBlock, CityBlock impBlock )
         {
@@ -453,38 +482,22 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        private bool disposedValue = false;
 
         protected virtual void Dispose( bool disposing )
         {
             if (!disposedValue) {
                 if (disposing) {
-                    // TODO: dispose managed state (managed objects).
                     _dbContext?.Dispose();
                     _dbContext = null;
                 }
 
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
                 disposedValue = true;
             }
         }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~Updater()
-        // {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose( true );
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
         }
         #endregion
     }
