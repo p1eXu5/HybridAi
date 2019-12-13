@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HybridAi.TestTask.Data.Migrations
 {
     [DbContext(typeof(IpDbContext))]
-    [Migration("20191213111520_InitialCreate")]
+    [Migration("20191213135815_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -386,7 +386,7 @@ namespace HybridAi.TestTask.Data.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("LocaleCodes");
+                    b.ToTable("LocaleCodes","dbo");
 
                     b.HasData(
                         new

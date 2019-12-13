@@ -13,6 +13,8 @@ namespace HybridAi.TestTask.Data.Configurations
     {
         public virtual void Configure(EntityTypeBuilder< LocaleCode > builder)
         {
+            builder.ToTable( "LocaleCodes", "dbo" );
+
             builder.HasKey(e => e.Name);
             builder.Property( e => e.Name ).HasColumnType( "varchar(8)" ).IsRequired();
 

@@ -12,6 +12,7 @@ namespace HybridAi.TestTask.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "LocaleCodes",
+                schema: "dbo",
                 columns: table => new
                 {
                     Name = table.Column<string>(type: "varchar(8)", maxLength: 8, nullable: false)
@@ -41,6 +42,7 @@ namespace HybridAi.TestTask.Data.Migrations
                     table.ForeignKey(
                         name: "FK_DeCities_LocaleCodes_LocaleCodeName",
                         column: x => x.LocaleCodeName,
+                        principalSchema: "dbo",
                         principalTable: "LocaleCodes",
                         principalColumn: "Name",
                         onDelete: ReferentialAction.Restrict);
@@ -66,6 +68,7 @@ namespace HybridAi.TestTask.Data.Migrations
                     table.ForeignKey(
                         name: "FK_EnCities_LocaleCodes_LocaleCodeName",
                         column: x => x.LocaleCodeName,
+                        principalSchema: "dbo",
                         principalTable: "LocaleCodes",
                         principalColumn: "Name",
                         onDelete: ReferentialAction.Restrict);
@@ -91,6 +94,7 @@ namespace HybridAi.TestTask.Data.Migrations
                     table.ForeignKey(
                         name: "FK_EsCities_LocaleCodes_LocaleCodeName",
                         column: x => x.LocaleCodeName,
+                        principalSchema: "dbo",
                         principalTable: "LocaleCodes",
                         principalColumn: "Name",
                         onDelete: ReferentialAction.Restrict);
@@ -116,6 +120,7 @@ namespace HybridAi.TestTask.Data.Migrations
                     table.ForeignKey(
                         name: "FK_FrCities_LocaleCodes_LocaleCodeName",
                         column: x => x.LocaleCodeName,
+                        principalSchema: "dbo",
                         principalTable: "LocaleCodes",
                         principalColumn: "Name",
                         onDelete: ReferentialAction.Restrict);
@@ -141,6 +146,7 @@ namespace HybridAi.TestTask.Data.Migrations
                     table.ForeignKey(
                         name: "FK_JaCities_LocaleCodes_LocaleCodeName",
                         column: x => x.LocaleCodeName,
+                        principalSchema: "dbo",
                         principalTable: "LocaleCodes",
                         principalColumn: "Name",
                         onDelete: ReferentialAction.Restrict);
@@ -166,6 +172,7 @@ namespace HybridAi.TestTask.Data.Migrations
                     table.ForeignKey(
                         name: "FK_PtBrCities_LocaleCodes_LocaleCodeName",
                         column: x => x.LocaleCodeName,
+                        principalSchema: "dbo",
                         principalTable: "LocaleCodes",
                         principalColumn: "Name",
                         onDelete: ReferentialAction.Restrict);
@@ -191,6 +198,7 @@ namespace HybridAi.TestTask.Data.Migrations
                     table.ForeignKey(
                         name: "FK_RuCities_LocaleCodes_LocaleCodeName",
                         column: x => x.LocaleCodeName,
+                        principalSchema: "dbo",
                         principalTable: "LocaleCodes",
                         principalColumn: "Name",
                         onDelete: ReferentialAction.Restrict);
@@ -216,6 +224,7 @@ namespace HybridAi.TestTask.Data.Migrations
                     table.ForeignKey(
                         name: "FK_ZhCnCities_LocaleCodes_LocaleCodeName",
                         column: x => x.LocaleCodeName,
+                        principalSchema: "dbo",
                         principalTable: "LocaleCodes",
                         principalColumn: "Name",
                         onDelete: ReferentialAction.Restrict);
@@ -362,6 +371,7 @@ namespace HybridAi.TestTask.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                schema: "dbo",
                 table: "LocaleCodes",
                 column: "Name",
                 values: new object[]
@@ -540,7 +550,8 @@ namespace HybridAi.TestTask.Data.Migrations
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "LocaleCodes");
+                name: "LocaleCodes",
+                schema: "dbo");
         }
     }
 }

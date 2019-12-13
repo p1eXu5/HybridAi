@@ -384,7 +384,7 @@ namespace HybridAi.TestTask.Data.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("LocaleCodes");
+                    b.ToTable("LocaleCodes","dbo");
 
                     b.HasData(
                         new
