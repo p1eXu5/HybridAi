@@ -93,7 +93,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         }
 
         /// <summary>
-        /// Merges city blocks with city locations, save it in database and sets new and update records count. 
+        /// Merges city blocks with city locations, save it in database and sets new record count and update record count. 
         /// </summary>
         /// <param name="colls"></param>
         /// <param name="newCount"></param>
@@ -160,6 +160,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             }
         }
 
+        /// <summary>
+        /// Updates database CityBlocks and adds new CityBlocks to database.
+        /// </summary>
+        /// <param name="blocks"></param>
+        /// <returns></returns>
         private (int newCount, int updCount) _updateCityBlocks(List< CityBlock > blocks)
         {
             (int newCount, int updCount) = (0, 0);
@@ -189,7 +194,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             return (newCount, updCount);
         }
 
-
+        /// <summary>
+        /// Copies data from imported CityBlocks to database CityBlocks and adjusts LocaleCodes.
+        /// </summary>
+        /// <param name="dbBlocks"></param>
+        /// <param name="impBlocks"></param>
+        /// <returns></returns>
         private int _updateCityBlocks( List< CityBlock > dbBlocks, ref List< CityBlock > impBlocks )
         {
             int updCount = 0;
@@ -222,6 +232,31 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             return updCount;
         }
 
+        /// <summary>
+        /// Copies data from imported CityBlock to database CityBlock.
+        /// </summary>
+        /// <param name="dbBlock"></param>
+        /// <param name="impBlock"></param>
+        /// <returns></returns>
+        private bool _updateDbCityBlock( CityBlock dbBlock, CityBlock impBlock )
+        {
+            CityBlockExtensions.CopyProperty< CityBlock, int? >( dbBlock, impBlock, nameof( CityBlock.RegistredCountryGeonameId ) );
+            CityBlockExtensions.CopyProperty< CityBlock, int? >( dbBlock, impBlock, nameof( CityBlock.RepresentedCountryGeonameId ) );
+            CityBlockExtensions.CopyProperty< CityBlock, bool >( dbBlock, impBlock, nameof( CityBlock.IsAnonymousProxy ) );
+            CityBlockExtensions.CopyProperty< CityBlock, bool >( dbBlock, impBlock, nameof( CityBlock.IsSatelliteProvider ) );
+            CityBlockExtensions.CopyProperty< CityBlock, string >( dbBlock, impBlock, nameof( CityBlock.PostalCode ) );
+            CityBlockExtensions.CopyProperty< CityBlock, double >( dbBlock, impBlock, nameof( CityBlock.Latitude ) );
+            CityBlockExtensions.CopyProperty< CityBlock, double >( dbBlock, impBlock, nameof( CityBlock.Longitude ) );
+            CityBlockExtensions.CopyProperty< CityBlock, int >( dbBlock, impBlock, nameof( CityBlock.CityLocationGeonameId ) );
+
+            var dbCityLocation = dbBlock.CityLocation;
+            _updateDbCityLocation( ref dbCityLocation, impBlock.CityLocation );
+            dbBlock.CityLocation = dbCityLocation;
+
+            // feature will be added on request 
+            return true;
+        }
+
         private void _updateImpLocales( HashSet< CityBlock > cityBlocks )
         {
             var ctx = DbContext;
@@ -250,24 +285,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             }
         }
 
-        private bool _updateDbCityBlock( CityBlock dbBlock, CityBlock impBlock )
-        {
-            CityBlockExtensions.CopyProperty< CityBlock, int? >( dbBlock, impBlock, nameof( CityBlock.RegistredCountryGeonameId ) );
-            CityBlockExtensions.CopyProperty< CityBlock, int? >( dbBlock, impBlock, nameof( CityBlock.RepresentedCountryGeonameId ) );
-            CityBlockExtensions.CopyProperty< CityBlock, bool >( dbBlock, impBlock, nameof( CityBlock.IsAnonymousProxy ) );
-            CityBlockExtensions.CopyProperty< CityBlock, bool >( dbBlock, impBlock, nameof( CityBlock.IsSatelliteProvider ) );
-            CityBlockExtensions.CopyProperty< CityBlock, string >( dbBlock, impBlock, nameof( CityBlock.PostalCode ) );
-            CityBlockExtensions.CopyProperty< CityBlock, double >( dbBlock, impBlock, nameof( CityBlock.Latitude ) );
-            CityBlockExtensions.CopyProperty< CityBlock, double >( dbBlock, impBlock, nameof( CityBlock.Longitude ) );
-            CityBlockExtensions.CopyProperty< CityBlock, int >( dbBlock, impBlock, nameof( CityBlock.CityLocationGeonameId ) );
-
-            var dbCityLocation = dbBlock.CityLocation;
-            _updateDbCityLocation( ref dbCityLocation, impBlock.CityLocation );
-
-            // feature will be added on request 
-            return true;
-        }
-
+        /// <summary>
+        /// Tries to find database CityLocation and copies data from imported CityLocation.
+        /// </summary>
+        /// <param name="dbCityLocation"></param>
+        /// <param name="impCityLocation"></param>
+        /// <returns></returns>
         private bool _updateDbCityLocation( ref CityLocation dbCityLocation, CityLocation impCityLocation )
         {
             if ( impCityLocation == null ) return false;
@@ -279,18 +302,20 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
                 if ( db != null ) {
                     dbCityLocation =  db;
-                    return true;
                 }
+                else {
+                    dbCityLocation = new CityLocation( impCityLocation.GeonameId ) {
+                        ContinentCode = impCityLocation.ContinentCode,
+                        CountryIsoCode = impCityLocation.CountryIsoCode,
+                        Subdivision1IsoCode = impCityLocation.Subdivision1IsoCode,
+                        Subdivision2IsoCode = impCityLocation.Subdivision2IsoCode,
+                        MetroCode = impCityLocation.MetroCode,
+                        TimeZone = impCityLocation.TimeZone,
+                        IsInEuropeanUnion = impCityLocation.IsInEuropeanUnion
+                    };
 
-                dbCityLocation = new CityLocation( impCityLocation.GeonameId ) {
-                    ContinentCode = impCityLocation.ContinentCode,
-                    CountryIsoCode = impCityLocation.CountryIsoCode,
-                    Subdivision1IsoCode = impCityLocation.Subdivision1IsoCode,
-                    Subdivision2IsoCode = impCityLocation.Subdivision2IsoCode,
-                    MetroCode = impCityLocation.MetroCode,
-                    TimeZone = impCityLocation.TimeZone,
-                    IsInEuropeanUnion = impCityLocation.IsInEuropeanUnion
-                };
+                    ctx.Add( dbCityLocation );
+                }
             }
             else {
                 CityBlockExtensions.CopyProperty< CityLocation, string >( dbCityLocation, impCityLocation, nameof( CityLocation.Subdivision1IsoCode ) );
@@ -301,28 +326,36 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             City dbEnCity = dbCityLocation.EnCity;
             _updateDbCity( ref dbEnCity, impCityLocation.EnCity, c => new EnCity( c.GeonameId ) );
+            dbCityLocation.EnCity = (EnCity)dbEnCity;
 
             City dbRuCity = dbCityLocation.RuCity;
             _updateDbCity( ref dbRuCity, impCityLocation.RuCity, c => new RuCity( c.GeonameId ) );
+            dbCityLocation.RuCity = (RuCity)dbRuCity;
 
             City dbFrCity = dbCityLocation.FrCity;
             _updateDbCity( ref dbFrCity, impCityLocation.FrCity, c => new FrCity( c.GeonameId ) );
+            dbCityLocation.FrCity = (FrCity)dbFrCity;
 
             City dbDeCity = dbCityLocation.DeCity;
             _updateDbCity( ref dbDeCity, impCityLocation.DeCity, c => new DeCity( c.GeonameId ) );
+            dbCityLocation.DeCity = (DeCity)dbDeCity;
 
             City dbEsCity = dbCityLocation.EsCity;
             _updateDbCity( ref dbEsCity, impCityLocation.EsCity, c => new EsCity( c.GeonameId ) );
+            dbCityLocation.EsCity = (EsCity)dbEsCity;
 
             City dbJaCity = dbCityLocation.JaCity;
             _updateDbCity( ref dbJaCity, impCityLocation.JaCity, c => new JaCity( c.GeonameId ) );
+            dbCityLocation.JaCity = (JaCity)dbJaCity;
 
             City dbPtBrCity = dbCityLocation.PtBrCity;
             _updateDbCity( ref dbPtBrCity, impCityLocation.PtBrCity, c => new PtBrCity( c.GeonameId ) );
+            dbCityLocation.PtBrCity = (PtBrCity)dbPtBrCity;
 
             City dbZhCnCity = dbCityLocation.ZhCnCity;
             _updateDbCity( ref dbZhCnCity, impCityLocation.ZhCnCity, c => new ZhCnCity( c.GeonameId ) );
-            
+            dbCityLocation.ZhCnCity = (ZhCnCity)dbZhCnCity;
+
             // feature will be added on request 
             return true;
         }
@@ -336,18 +369,20 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             {
                 var ctx = DbContext;
                 var db = ctx.GetCity( impCity );
+
                 if ( db != null ) {
                     dbCity = db;
-                    return true;
                 }
+                else {
+                    dbCity = factory( impCity );
+                    dbCity.ContinentName = impCity.ContinentName;
+                    dbCity.CountryName = impCity.CountryName;
+                    dbCity.Subdivision1Name = impCity.Subdivision1Name;
+                    dbCity.Subdivision2Name = impCity.Subdivision2Name;
+                    dbCity.CityName = impCity.CityName;
 
-                dbCity = factory( impCity );
-                dbCity.ContinentName = impCity.ContinentName;
-                dbCity.CountryName = impCity.CountryName;
-                dbCity.Subdivision1Name = impCity.Subdivision1Name;
-                dbCity.Subdivision2Name = impCity.Subdivision2Name;
-                dbCity.CityName = impCity.CityName;
-
+                    ctx.Add( dbCity );
+                }
             }
             else {
                 CityBlockExtensions.CopyProperty< City, string >( dbCity, impCity, nameof( City.ContinentName) );
@@ -359,6 +394,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             LocaleCode locale = dbCity.LocaleCode;
             _updateDbLocale( ref locale, impCity.LocaleCode );
+            dbCity.LocaleCode = locale;
 
             // feature will be added on request 
             return true;
@@ -378,12 +414,21 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                 }
 
                 dbLocale = impLocale;
+                ctx.Add( dbLocale );
             }
 
             // feature will be added on request 
             return true;
         }
 
+
+        /// <summary>
+        /// Merges city locations with cities, save it in database and sets new record count and update record count. 
+        /// </summary>
+        /// <param name="colls"></param>
+        /// <param name="newCount"></param>
+        /// <param name="updCount"></param>
+        /// <returns></returns>
         private bool _updateCityLocations(List<IEntity>[] colls, out int newCount, out int updCount)
         {
             List< CityLocation > cityLocations = _getTypedAggregateCollection< IEntity, CityLocation >(colls);
