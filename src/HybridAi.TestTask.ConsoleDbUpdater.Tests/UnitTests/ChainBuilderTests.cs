@@ -14,7 +14,9 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests
 	[TestFixture]
 	public class ChainBuilderTests
 	{
+        #nullable disable
         private static List< Type > _chainNames;
+        #nullable restore
 
         [SetUp]
         public void PrepareChainNames()
