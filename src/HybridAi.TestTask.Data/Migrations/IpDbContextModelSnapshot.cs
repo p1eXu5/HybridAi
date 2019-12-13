@@ -23,12 +23,12 @@ namespace HybridAi.TestTask.Data.Migrations
                 {
                     b.Property<string>("Network")
                         .HasColumnType("varchar(15)")
-                        .HasMaxLength(15);
+                        .HasMaxLength(18);
 
-                    b.Property<short>("AccuracyRadius")
+                    b.Property<short?>("AccuracyRadius")
                         .HasColumnType("smallint");
 
-                    b.Property<int>("CityLocationGeonameId")
+                    b.Property<int?>("CityLocationGeonameId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsAnonymousProxy")
@@ -37,10 +37,10 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.Property<bool>("IsSatelliteProvider")
                         .HasColumnType("boolean");
 
-                    b.Property<double>("Latitude")
+                    b.Property<double?>("Latitude")
                         .HasColumnType("double precision");
 
-                    b.Property<double>("Longitude")
+                    b.Property<double?>("Longitude")
                         .HasColumnType("double precision");
 
                     b.Property<string>("PostalCode")
@@ -56,6 +56,8 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.HasKey("Network");
 
                     b.HasIndex("CityLocationGeonameId");
+
+                    b.HasIndex("RegistredCountryGeonameId");
 
                     b.ToTable("CityBlocksIpv4s","dbo");
                 });
@@ -66,10 +68,13 @@ namespace HybridAi.TestTask.Data.Migrations
                         .HasColumnType("varchar(39)")
                         .HasMaxLength(39);
 
-                    b.Property<short>("AccuracyRadius")
+                    b.Property<short?>("AccuracyRadius")
                         .HasColumnType("smallint");
 
-                    b.Property<int>("CityLocationGeonameId")
+                    b.Property<int?>("CityLocationGeonameId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("CountryLocationGeonameId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsAnonymousProxy")
@@ -78,10 +83,10 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.Property<bool>("IsSatelliteProvider")
                         .HasColumnType("boolean");
 
-                    b.Property<double>("Latitude")
+                    b.Property<double?>("Latitude")
                         .HasColumnType("double precision");
 
-                    b.Property<double>("Longitude")
+                    b.Property<double?>("Longitude")
                         .HasColumnType("double precision");
 
                     b.Property<string>("PostalCode")
@@ -97,6 +102,8 @@ namespace HybridAi.TestTask.Data.Migrations
                     b.HasKey("Network");
 
                     b.HasIndex("CityLocationGeonameId");
+
+                    b.HasIndex("CountryLocationGeonameId");
 
                     b.ToTable("CityBlocksIpv6s","dbo");
                 });
@@ -536,18 +543,22 @@ namespace HybridAi.TestTask.Data.Migrations
                 {
                     b.HasOne("HybridAi.TestTask.Data.Models.CityLocation", "CityLocation")
                         .WithMany("CityBlockIpv4Collection")
-                        .HasForeignKey("CityLocationGeonameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CityLocationGeonameId");
+
+                    b.HasOne("HybridAi.TestTask.Data.Models.CityLocation", "CountryLocation")
+                        .WithMany()
+                        .HasForeignKey("RegistredCountryGeonameId");
                 });
 
             modelBuilder.Entity("HybridAi.TestTask.Data.Models.CityBlockIpv6", b =>
                 {
                     b.HasOne("HybridAi.TestTask.Data.Models.CityLocation", "CityLocation")
                         .WithMany("CityBlockIpv6Collection")
-                        .HasForeignKey("CityLocationGeonameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CityLocationGeonameId");
+
+                    b.HasOne("HybridAi.TestTask.Data.Models.CityLocation", "CountryLocation")
+                        .WithMany()
+                        .HasForeignKey("CountryLocationGeonameId");
                 });
 
             modelBuilder.Entity("HybridAi.TestTask.Data.Models.CityLocation", b =>

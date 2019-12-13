@@ -14,7 +14,7 @@ namespace HybridAi.TestTask.Data.Models
             Network = network;
         }
 
-        [StringLength(15)]
+        [StringLength(18)]
         [Required]
         public string Network { get; }
 

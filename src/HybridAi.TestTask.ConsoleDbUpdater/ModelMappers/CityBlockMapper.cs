@@ -46,22 +46,22 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
 
                 if ( obj is T block ) 
                 {
-                    block.CityLocationGeonameId = int.Parse( values[1] );
+                    block.CityLocationGeonameId = String.IsNullOrWhiteSpace( values[1] ) ? (int?)null : int.Parse( values[1] );
                     block.RegistredCountryGeonameId = String.IsNullOrWhiteSpace( values[2] ) ? (int?)null : int.Parse( values[2] );
                     // no data in the example file
                     block.RepresentedCountryGeonameId = null;
                     block.IsAnonymousProxy = int.Parse( values[4] ) == 1;
                     block.IsSatelliteProvider = int.Parse( values[5] ) == 1;
                     block.PostalCode = String.IsNullOrWhiteSpace( values[6] ) ? null : values[6];
-                    block.Latitude = double.Parse( values[7] );
-                    block.Longitude = double.Parse( values[8] );
-                    block.AccuracyRadius = short.Parse( values[9] );
+                    block.Latitude = String.IsNullOrWhiteSpace( values[7] ) ? (double?)null : double.Parse( values[7] );
+                    block.Longitude = String.IsNullOrWhiteSpace( values[8] ) ? (double?)null : double.Parse( values[8] );
+                    block.AccuracyRadius = String.IsNullOrWhiteSpace( values[9] ) ? (short?)null : short.Parse( values[9] );
 
                     return block;
                 }
             }
             catch ( Exception ex ) {
-                LoggerFactory.Instance.Log( ex.Message );
+                LoggerFactory.Instance.Log( ex.Message + " " + String.Join( ',', values ) );
             }
 
             return null;

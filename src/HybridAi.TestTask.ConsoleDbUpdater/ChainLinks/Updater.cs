@@ -33,7 +33,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
         #region properties
 
-        public IpDbContext DbContext
+        protected IpDbContext DbContext
         {
             get
             {
@@ -76,20 +76,24 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
                 if (types.Any(t => typeof(CityBlock).IsAssignableFrom(t)))
                 {
-                    if (_updateCityBlocks(importedEntities, out int newCount, out int updCount)) {
+                    if (_UpdateCityBlocks(importedEntities, out int newCount, out int updCount)) {
+                        Dispose();
                         return new DoneRequest( newCount, updCount, $"There are {newCount} new records and {updCount} updated records." ).Response;
                     }
 
+                    Dispose();
                     return new FailRequest($"There are {newCount} new records and {updCount} updated records.").Response;
                 }
                 else
                 {
-                    if (_updateCityLocations(importedEntities, out int newCount, out int updCount)) {
+                    if (_UpdateCityLocations(importedEntities, out int newCount, out int updCount)) {
+                        Dispose();
                         return new DoneRequest($"There are {newCount} new records and {updCount} updated records.").Response;
                     }
                 }
             }
 
+            Dispose();
             return base.Process(request);
         }
 
@@ -100,7 +104,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         /// <param name="newCount"></param>
         /// <param name="updCount"></param>
         /// <returns></returns>
-        private bool _updateCityBlocks( List<IEntity>[] importedEntities, out int newCount, out int updCount)
+        protected virtual bool _UpdateCityBlocks( List<IEntity>[] importedEntities, out int newCount, out int updCount)
         {
             List< CityBlock > blocks = _getTypedAggregateCollection< IEntity, CityBlock >(importedEntities);
             blocks.Sort(new CityBlockComparer());
@@ -108,16 +112,36 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             List< CityLocation > cityLocations = _getTypedAggregateCollection< IEntity, CityLocation >(importedEntities);
             if (!cityLocations.Any())
             {
-                (newCount, updCount) = _updateCityBlocks( blocks );
+                (newCount, updCount) = _UpdateCityBlocks( blocks );
                 return (newCount, updCount) != _fail;
             }
             cityLocations.Sort( new CityLocationComparer() );
 
             _mergeCityBlocks( blocks, cityLocations );
 
-            (newCount, updCount) = _updateCityBlocks( blocks );
+            (newCount, updCount) = _UpdateCityBlocks( blocks );
             return (newCount, updCount) != _fail;
         }
+
+        /// <summary>
+        /// Merges city locations with cities, save it in database and sets new record count and update record count. 
+        /// </summary>
+        /// <param name="colls"></param>
+        /// <param name="newCount"></param>
+        /// <param name="updCount"></param>
+        /// <returns></returns>
+        protected virtual bool _UpdateCityLocations(List<IEntity>[] colls, out int newCount, out int updCount)
+        {
+            List< CityLocation > cityLocations = _getTypedAggregateCollection< IEntity, CityLocation >(colls);
+            cityLocations.Sort( new CityLocationComparer() );
+
+           _mergeCityLocations( ref cityLocations );
+
+            (newCount, updCount) = _UpdateCityLocations( cityLocations );
+            return (newCount, updCount) != _fail;
+        }
+
+
 
         /// <summary>
         /// Merge city blocks with city locations and unifies locale codes.
@@ -131,7 +155,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             while (blkInd < blocks.Count && clkInd < cityLocations.Count)
             {
-                int geoId = blocks[blkInd].CityLocationGeonameId;
+                if ( blocks[blkInd].CityLocationGeonameId == null ) continue;
+                int geoId = blocks[blkInd].CityLocationGeonameId.Value;
                 int j = 0;
 
                 while ( blkInd < blocks.Count && blocks[blkInd].CityLocationGeonameId == geoId)
@@ -166,17 +191,17 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         /// </summary>
         /// <param name="blocks"></param>
         /// <returns></returns>
-        private (int newCount, int updCount) _updateCityBlocks(List< CityBlock > blocks)
+        private (int newCount, int updCount) _UpdateCityBlocks(List< CityBlock > blocks)
         {
             (int newCount, int updCount) = (0, 0);
             var context = DbContext;
             List<CityBlock> dbBblocks = context.GetCityBlocks(
-                blocks.First().CityLocationGeonameId, 
-                blocks.Last().CityLocationGeonameId );
+                blocks.FirstOrDefault( b => b.CityLocationGeonameId != null)?.CityLocationGeonameId ?? 0, 
+                blocks.Last( b => b.CityLocationGeonameId != null)?.CityLocationGeonameId ?? 0 );
 
             try {
                 if ( dbBblocks.Any() ) {
-                    updCount = _updateCityBlocks( dbBblocks, ref blocks );
+                    updCount = _UpdateCityBlocks( dbBblocks, ref blocks );
                 }
 
                 if ( blocks.Any() ) {
@@ -201,7 +226,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         /// <param name="dbBlocks"></param>
         /// <param name="impBlocks"></param>
         /// <returns></returns>
-        private int _updateCityBlocks( List< CityBlock > dbBlocks, ref List< CityBlock > impBlocks )
+        private int _UpdateCityBlocks( List< CityBlock > dbBlocks, ref List< CityBlock > impBlocks )
         {
             int updCount = 0;
             var arr = new CityBlock[ dbBlocks.Count ];
@@ -421,23 +446,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         }
 
 
-        /// <summary>
-        /// Merges city locations with cities, save it in database and sets new record count and update record count. 
-        /// </summary>
-        /// <param name="colls"></param>
-        /// <param name="newCount"></param>
-        /// <param name="updCount"></param>
-        /// <returns></returns>
-        private bool _updateCityLocations(List<IEntity>[] colls, out int newCount, out int updCount)
-        {
-            List< CityLocation > cityLocations = _getTypedAggregateCollection< IEntity, CityLocation >(colls);
-            cityLocations.Sort( new CityLocationComparer() );
-
-           _mergeCityLocations( ref cityLocations );
-
-            (newCount, updCount) = _updateCityLocations( cityLocations );
-            return (newCount, updCount) != _fail;
-        }
 
         /// <summary>
         /// Merge cities to CityLocation.
@@ -483,7 +491,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         }
 
 
-        private (int newCount, int updCount) _updateCityLocations(List< CityLocation > cityLocations )
+        private (int newCount, int updCount) _UpdateCityLocations(List< CityLocation > cityLocations )
         {
             (int newCount, int updCount) = (0, 0);
             var context = DbContext;
@@ -494,7 +502,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             try {
                 if ( dbCityLocations.Any() ) {
-                    updCount = _updateCityLocations( dbCityLocations, ref cityLocations );
+                    updCount = _UpdateCityLocations( dbCityLocations, ref cityLocations );
                 }
                 
                 if ( cityLocations.Any() ) {
@@ -518,7 +526,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         /// <param name="dbBlocks"></param>
         /// <param name="impBlocks"></param>
         /// <returns></returns>
-        private int _updateCityLocations( List< CityLocation > dbCityLocations, ref List< CityLocation > impCityLocations )
+        private int _UpdateCityLocations( List< CityLocation > dbCityLocations, ref List< CityLocation > impCityLocations )
         {
             int updCount = 0;
             var impUpdatedFrom = new CityLocation[ dbCityLocations.Count ];

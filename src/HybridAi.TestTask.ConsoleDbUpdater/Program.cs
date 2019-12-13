@@ -17,10 +17,17 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
         static async Task Main(string[] args)
         {
+            var options = DbContextOptionsFactory.Instance.DbContextOptions;
             // ReSharper disable once UseAwaitUsing
-            using ( var ctx = new IpDbContext() )
+            using ( var ctx = new IpDbContext(options) )
             {
-                ctx.Database.Migrate();
+                try {
+                    ctx.Database.Migrate();
+                }
+                catch ( Exception ex ) {
+                    Console.WriteLine( ex.Message );
+                    return;
+                }
             }
 
             ModelMapperFactory.Instance.Register< CityBlockMapper >( CityBlockMapper.CityBlockHeader );
@@ -48,6 +55,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                         LoggerFactory.Instance.Log( done.Message );
                     }
                     else if ( remoteResult.Request is FailRequest fail ) {
+                        Console.WriteLine( "Log:" );
                         LoggerFactory.Instance.Log( fail.Message );
                     }
 

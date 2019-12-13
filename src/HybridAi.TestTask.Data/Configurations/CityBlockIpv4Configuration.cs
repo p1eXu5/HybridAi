@@ -21,6 +21,7 @@ namespace HybridAi.TestTask.Data.Configurations
             builder.HasIndex( c => c.CityLocationGeonameId );
 
             builder.HasOne( c => c.CityLocation ).WithMany().HasForeignKey( c => c.CityLocationGeonameId );
+            builder.HasOne( c => c.CountryLocation ).WithMany().HasForeignKey( c => c.RegistredCountryGeonameId );
         }
     }
 }

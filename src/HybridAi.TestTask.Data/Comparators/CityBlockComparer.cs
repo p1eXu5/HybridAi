@@ -12,9 +12,9 @@ namespace HybridAi.TestTask.Data.Comparators
     {
         public int Compare( [AllowNull] CityBlock x, [AllowNull] CityBlock y )
         {
-            if (x == null)
+            if (x == null || x.CityLocationGeonameId == null )
             {
-                if (y == null) {
+                if (y == null || y.CityLocationGeonameId == null) {
                     return 0;
                 }
                 else {
@@ -22,11 +22,12 @@ namespace HybridAi.TestTask.Data.Comparators
                 }
             }
             else {
-                if (y == null) {
+                if (y == null || y.CityLocationGeonameId == null) {
                     return 1;
                 }
                 else {
-                    return x.CityLocationGeonameId.CompareTo( y.CityLocationGeonameId );
+
+                    return x.CityLocationGeonameId.Value.CompareTo( y.CityLocationGeonameId.Value );
                     
                 }
             }

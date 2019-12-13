@@ -319,16 +319,16 @@ namespace HybridAi.TestTask.Data.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    Network = table.Column<string>(type: "varchar(15)", maxLength: 15, nullable: false),
+                    Network = table.Column<string>(type: "varchar(15)", maxLength: 18, nullable: false),
+                    CityLocationGeonameId = table.Column<int>(nullable: true),
                     RegistredCountryGeonameId = table.Column<int>(nullable: true),
                     RepresentedCountryGeonameId = table.Column<int>(nullable: true),
                     IsAnonymousProxy = table.Column<bool>(nullable: false),
                     IsSatelliteProvider = table.Column<bool>(nullable: false),
                     PostalCode = table.Column<string>(maxLength: 8, nullable: true),
-                    Latitude = table.Column<double>(nullable: false),
-                    Longitude = table.Column<double>(nullable: false),
-                    AccuracyRadius = table.Column<short>(nullable: false),
-                    CityLocationGeonameId = table.Column<int>(nullable: false)
+                    Latitude = table.Column<double>(nullable: true),
+                    Longitude = table.Column<double>(nullable: true),
+                    AccuracyRadius = table.Column<short>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -339,7 +339,14 @@ namespace HybridAi.TestTask.Data.Migrations
                         principalSchema: "dbo",
                         principalTable: "CityLocations",
                         principalColumn: "GeonameId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CityBlocksIpv4s_CityLocations_RegistredCountryGeonameId",
+                        column: x => x.RegistredCountryGeonameId,
+                        principalSchema: "dbo",
+                        principalTable: "CityLocations",
+                        principalColumn: "GeonameId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -348,15 +355,16 @@ namespace HybridAi.TestTask.Data.Migrations
                 columns: table => new
                 {
                     Network = table.Column<string>(type: "varchar(39)", maxLength: 39, nullable: false),
+                    CityLocationGeonameId = table.Column<int>(nullable: true),
                     RegistredCountryGeonameId = table.Column<int>(nullable: true),
+                    CountryLocationGeonameId = table.Column<int>(nullable: true),
                     RepresentedCountryGeonameId = table.Column<int>(nullable: true),
                     IsAnonymousProxy = table.Column<bool>(nullable: false),
                     IsSatelliteProvider = table.Column<bool>(nullable: false),
                     PostalCode = table.Column<string>(maxLength: 8, nullable: true),
-                    Latitude = table.Column<double>(nullable: false),
-                    Longitude = table.Column<double>(nullable: false),
-                    AccuracyRadius = table.Column<short>(nullable: false),
-                    CityLocationGeonameId = table.Column<int>(nullable: false)
+                    Latitude = table.Column<double>(nullable: true),
+                    Longitude = table.Column<double>(nullable: true),
+                    AccuracyRadius = table.Column<short>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -367,7 +375,14 @@ namespace HybridAi.TestTask.Data.Migrations
                         principalSchema: "dbo",
                         principalTable: "CityLocations",
                         principalColumn: "GeonameId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CityBlocksIpv6s_CityLocations_CountryLocationGeonameId",
+                        column: x => x.CountryLocationGeonameId,
+                        principalSchema: "dbo",
+                        principalTable: "CityLocations",
+                        principalColumn: "GeonameId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -393,10 +408,22 @@ namespace HybridAi.TestTask.Data.Migrations
                 column: "CityLocationGeonameId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CityBlocksIpv4s_RegistredCountryGeonameId",
+                schema: "dbo",
+                table: "CityBlocksIpv4s",
+                column: "RegistredCountryGeonameId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CityBlocksIpv6s_CityLocationGeonameId",
                 schema: "dbo",
                 table: "CityBlocksIpv6s",
                 column: "CityLocationGeonameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CityBlocksIpv6s_CountryLocationGeonameId",
+                schema: "dbo",
+                table: "CityBlocksIpv6s",
+                column: "CountryLocationGeonameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CityLocations_DeCityGeonameId",
