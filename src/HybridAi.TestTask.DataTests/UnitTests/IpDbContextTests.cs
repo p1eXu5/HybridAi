@@ -17,6 +17,8 @@ namespace HybridAi.TestTask.DataTests.UnitTests
         public void Setup()
         {
             LoggerFactory.Instance.Logger = new TestLogger();
+            DbContextOptionsFactory.Instance.ConnectionString =
+                "Host=localhost;Database=TestIpDb;Username=testuser;Password=123;IntegratedSecurity=true";
         }
 
 
