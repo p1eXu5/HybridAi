@@ -58,15 +58,15 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             if (request is ImportedModelsRequest modelsRequest)
             {
 
-                var colls = modelsRequest.ModelCollections;
+                var importedEntities = modelsRequest.ModelCollections;
 
-                if ( !colls.Any()
-                    || colls.All(c => !c.Any()))
+                if ( !importedEntities.Any()
+                    || importedEntities.All(c => !c.Any()))
                 {
                     return new FailRequest("Imported model collections are empty.").Response;
                 }
 
-                List<Type> types = colls.Aggregate(
+                List<Type> types = importedEntities.Aggregate(
                     new List<Type>(), (a, b) =>
                     {
                         a.Add(b.First().GetType());
@@ -75,7 +75,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
                 if (types.Any(t => typeof(CityBlock).IsAssignableFrom(t)))
                 {
-                    if (_updateCityBlocks(colls, out int newCount, out int updCount)) {
+                    if (_updateCityBlocks(importedEntities, out int newCount, out int updCount)) {
                         return new DoneRequest( newCount, updCount, $"There are {newCount} new records and {updCount} updated records." ).Response;
                     }
 
@@ -83,7 +83,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                 }
                 else
                 {
-                    if (_updateCityLocations(colls, out int newCount, out int updCount)) {
+                    if (_updateCityLocations(importedEntities, out int newCount, out int updCount)) {
                         return new DoneRequest($"There are {newCount} new records and {updCount} updated records.").Response;
                     }
                 }
@@ -95,16 +95,16 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         /// <summary>
         /// Merges city blocks with city locations, save it in database and sets new record count and update record count. 
         /// </summary>
-        /// <param name="colls"></param>
+        /// <param name="importedEntities"></param>
         /// <param name="newCount"></param>
         /// <param name="updCount"></param>
         /// <returns></returns>
-        private bool _updateCityBlocks(List<IEntity>[] colls, out int newCount, out int updCount)
+        private bool _updateCityBlocks( List<IEntity>[] importedEntities, out int newCount, out int updCount)
         {
-            List< CityBlock > blocks = _getTypedAggregateCollection< IEntity, CityBlock >(colls);
+            List< CityBlock > blocks = _getTypedAggregateCollection< IEntity, CityBlock >(importedEntities);
             blocks.Sort(new CityBlockComparer());
 
-            List< CityLocation > cityLocations = _getTypedAggregateCollection< IEntity, CityLocation >(colls);
+            List< CityLocation > cityLocations = _getTypedAggregateCollection< IEntity, CityLocation >(importedEntities);
             if (!cityLocations.Any())
             {
                 (newCount, updCount) = _updateCityBlocks( blocks );

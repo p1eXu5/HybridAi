@@ -192,9 +192,28 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         }
 
         [Test]
-        [Ignore("Not implemented.")]
-        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__ReturnsDoneWithUpdateCount()
+        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__WhenUpdatesReturnsDoneWithNewCount()
         {
+            // Arrange:
+            var dbName = "Update_DoneCount";
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions( dbName );
+            ImportedModelsRequest request = _getCityBlocksAndCityLocations();
+
+            using (var ctxForSeed = new IpDbContext(_getOptions(dbName)))
+            {   
+                var blocks = _getInDbCityBlocks();
+                ctxForSeed.AddRange( blocks );
+                ctxForSeed.SaveChanges();
+            }
+
+            // Action:
+            using Updater updater = _getUpdater();
+            var resultRequest = updater.Process( request ).Request;
+
+            // Assert:
+            Assert.IsTrue( resultRequest is DoneRequest );
+            Assert.That( ((DoneRequest)resultRequest).NewCount, Is.EqualTo( 2 ) );
+            Assert.That( ((DoneRequest)resultRequest).UpdateCount, Is.EqualTo( 2 ) );
         }
 
         [Test]
