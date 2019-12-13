@@ -24,9 +24,9 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
         #region ctor
 
-        public Updater(ChainLink? successor)
-            : base(successor)
+        public Updater( IChainLink< Request, IResponse< Request > > successor ) : base( successor )
         { }
+
 
         #endregion
 
@@ -54,6 +54,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
         public override IResponse<Request> Process(Request request)
         {
+            LoggerFactory.Instance.Log( "Start update database..." );
 
             if (request is ImportedModelsRequest modelsRequest)
             {
@@ -584,5 +585,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             Dispose( true );
         }
         #endregion
+
     }
 }

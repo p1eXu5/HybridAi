@@ -10,9 +10,9 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
     {
         private readonly char[] _urlSymbols = new[] { '?' };
 
-        public ArgumentFormatter( ChainLink? successor ) 
-            : base( successor )
+        public ArgumentFormatter( IChainLink< Request, IResponse< Request > > successor ) : base( successor )
         { }
+
 
         public override IResponse< Request > Process( Request request )
         {
@@ -42,5 +42,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             return false;
         }
+
     }
 }

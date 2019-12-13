@@ -14,12 +14,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
     {
         private readonly string _downloadFolder = Environment.GetFolderPath( Environment.SpecialFolder.InternetCache );
 
-        public Downloader( ChainLink? successor ) 
-            : base( successor )
+        public Downloader( IChainLink< Request, IResponse< Request > > successor ) : base( successor )
         { }
 
         public override IResponse< Request > Process( Request request )
         {
+            LoggerFactory.Instance.Log( "Start download process..." );
+
             if (request is UrlRequest urlRequest)
             {
                 var url = urlRequest.Url;
@@ -80,5 +81,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             return !String.IsNullOrWhiteSpace( fileName );
         }
+
     }
 }

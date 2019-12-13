@@ -27,18 +27,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Extensions
             return builder;
         }
 
-        public static ChainBuilder AddExtensionChecker(this ChainBuilder builder)
-        {
-            builder.AddChainLink< ExtensionChecker >();
-            return builder;
-        }
-
-        public static ChainBuilder AddCsvHeaderChecker(this ChainBuilder builder)
-        {
-            builder.AddChainLink< CsvHeaderChecker >();
-            return builder;
-        }
-
         public static ChainBuilder AddMapper(this ChainBuilder builder)
         {
             builder.AddChainLink< Mapper >();

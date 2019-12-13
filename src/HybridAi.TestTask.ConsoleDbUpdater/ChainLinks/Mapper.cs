@@ -12,12 +12,14 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
     public class Mapper : ChainLink
     {
-        public Mapper( ChainLink? successor ) 
-            : base( successor )
+        public Mapper( IChainLink< Request, IResponse< Request > > successor ) : base( successor )
         { }
+
 
         public override IResponse< Request > Process( Request request )
         {
+            LoggerFactory.Instance.Log( "Start parsing files..." );
+
             if ( request is FolderRequest folderRequest ) 
             {
                 var task = Task.Run( async () => 
@@ -64,5 +66,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             return mm?.Result;
         }
+
     }
 }

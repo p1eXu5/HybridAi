@@ -412,17 +412,5 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
 
         #endregion
-
-
-        #region test types
-
-        private struct ForDbSeedRecords
-        {
-            public IEnumerable< CityBlockIpv4 > CityBlockIpv4s;
-            public IEnumerable< CityBlockIpv6 > CityBlockIpv6s;
-            public IEnumerable< CityLocation > CityLocations;
-        }
-
-        #endregion
     }
 }

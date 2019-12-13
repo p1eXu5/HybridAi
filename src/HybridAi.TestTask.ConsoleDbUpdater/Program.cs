@@ -17,6 +17,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
         static async Task Main(string[] args)
         {
+            // ReSharper disable once UseAwaitUsing
             using ( var ctx = new IpDbContext() )
             {
                 ctx.Database.Migrate();
@@ -26,29 +27,33 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
             ModelMapperFactory.Instance.Register< CityLocationMapper >( CityLocationMapper.CityLocationHeader );
 
             ChainBuilder remoteChainBuilder = new ChainBuilder().AddDownloader()
-                                                                .AddUnzipper();
-
-            ChainBuilder copierChainBuilder = new ChainBuilder().AddUnzipper()
-                                                                .AddTempFileCreator();
-
-            ChainBuilder updateChainBuilder = new ChainBuilder().AddExtensionChecker()
-                                                                .AddCsvHeaderChecker()
+                                                                .AddUnzipper()
                                                                 .AddMapper()
-                                                                .AddUpdater();
+                                                                .AddUpdater();;
 
-            var argumentChainBuilder = new ChainBuilder().AddArgumentFormatter()
-                                                         .Append(copierChainBuilder)
-                                                         .Append(updateChainBuilder);
+            var argumentChainBuilder = new ChainBuilder().AddArgumentFormatter().Append( remoteChainBuilder );
+
+
 
             IChainLink< Request, IResponse< Request > > argumentChain;
 
             switch ( args.Length ) {
                 case 0:
                     IChainLink< Request, IResponse< Request >> defaultChain 
-                        = remoteChainBuilder.AddUnzipper().Build();
-                    defaultChain.Process( new UrlRequest( DEFAULT_FILE_URL ) );
+                        = remoteChainBuilder.Build();
+
+                    var remoteResult = defaultChain.Process( new UrlRequest( DEFAULT_FILE_URL ) );
+
+                    if ( remoteResult.Request is DoneRequest done ) {
+                        LoggerFactory.Instance.Log( done.Message );
+                    }
+                    else if ( remoteResult.Request is FailRequest fail ) {
+                        LoggerFactory.Instance.Log( fail.Message );
+                    }
+
                     break;
                 case 1:
+                    throw new NotImplementedException( "Local files is not maintained yet." );
                     argumentChain = argumentChainBuilder.Build();
                     argumentChain.Process( new ArgumentRequest( args[0] ) );
                     break;
@@ -64,6 +69,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                     break;
             }
 
+            Console.ReadKey( true );
         }
     }
 }

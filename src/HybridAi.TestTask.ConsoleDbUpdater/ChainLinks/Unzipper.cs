@@ -14,12 +14,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         public const string ZIP_EXT = ".zip";
         public readonly string[] MaintainedExtensions = new[] { ".txt", ".csv" };
 
-        public Unzipper( ChainLink? successor ) 
-            : base( successor )
+        public Unzipper( IChainLink< Request, IResponse< Request > > successor ) : base( successor )
         { }
 
         public override IResponse< Request > Process( Request request )
         {
+            LoggerFactory.Instance.Log( "Start unzip process..." );
+
             if ( request is FileLocationRequest fileLocationRequest ) 
             {
                 string path = fileLocationRequest.Path;
@@ -71,5 +72,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             return base.Process( request );
         }
+
     }
 }
