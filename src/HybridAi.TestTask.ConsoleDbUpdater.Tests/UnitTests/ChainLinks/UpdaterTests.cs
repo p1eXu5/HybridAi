@@ -21,6 +21,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         public void Setup()
         {
             LoggerFactory.Instance.Logger = new TestLogger();
+            DbContextOptionsFactory.Instance.ConnectionString =
+                "Host=localhost;Database=TestIpDb;Username=testuser;Password=123;IntegratedSecurity=true";
         }
 
         [ TearDown ]
@@ -227,12 +229,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         public void Process__ImportedModelsAreCityLocations_DbHasData__UpdatesDataToDatabase()
         {
             // Arrange:
+            var dbName = "Update_CityLocationsCount";
+            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions( dbName );
             ImportedModelsRequest request = _getCityLocations();
 
-            using (var ctxForSeed = new IpDbContext()) 
+            using (var ctxForSeed = new IpDbContext(_getOptions(dbName))) 
             {
-                ctxForSeed.Database.Migrate();
-
                 var seededCityLocation = new CityLocation( 1 ) {
                     ContinentCode = "AB",
                     CountryIsoCode = "AB",
@@ -243,13 +245,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
                 ctxForSeed.SaveChanges();
             }
 
-            using (var ctxAssert = new IpDbContext()) {
-                var clk = ctxAssert.GetCityLocations( 1, 1 ).ToArray();
-                Assert.NotNull( clk );
-            }
-
-            return;
-
             // Action:
             using (Updater updater = _getUpdater())
             {
@@ -257,7 +252,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             }
 
             // Assert:
-            using var ctx = new IpDbContext();
+            using var ctx = new IpDbContext(_getOptions(dbName));
 
             var cityLocations = ctx.GetCityLocations().ToArray();
             var enCities = ctx.GetEnCities().ToArray();
