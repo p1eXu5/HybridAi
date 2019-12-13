@@ -15,13 +15,18 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
         private List< object >? _chainTypes;
 
-        public IChainLink< Request, IResponse< Request > > Result
+        #region properties
+
+        public IChainLink<Request, IResponse<Request>> Result
         {
-            get => _result ?? throw new InvalidOperationException(); 
+            get => _result ?? throw new InvalidOperationException();
             private set => _result = value;
         }
 
-        private List< object > _ChainTypes => _chainTypes ??= new List< object >(10);
+        private List<object> _ChainTypes => _chainTypes ??= new List<object>(10);
+
+        #endregion
+
 
         public void AddChainLink<T>( T chainLink ) where T : ChainLink
         {
@@ -77,12 +82,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
             throw new InvalidOperationException();
         }
 
-
         public IChainBuilder< IChainLink<Request, IResponse< Request > > > Append( IEnumerable< object > chines )
         {
             throw new NotImplementedException();
         }
-
 
         public void Reset()
         {
