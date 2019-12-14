@@ -34,23 +34,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             return base._UpdateCityLocations( colls, out newCount, out updCount );
         }
 
-
-        protected IEnumerable< LocaleCode > _distinctLocaleCodes( List< IEntity > entities )
-        {
-            return entities.Cast< CityLocation >().SelectMany( e => {
-                var list = new List< LocaleCode >(8);
-                if (e.EnCity?.LocaleCode != null) list.Add( e.EnCity.LocaleCode );
-                if (e.EsCity?.LocaleCode != null) list.Add( e.EsCity.LocaleCode );
-                if (e.DeCity?.LocaleCode != null) list.Add( e.DeCity.LocaleCode );
-                if (e.FrCity?.LocaleCode != null) list.Add( e.FrCity.LocaleCode );
-                if (e.RuCity?.LocaleCode != null) list.Add( e.RuCity.LocaleCode );
-                if (e.JaCity?.LocaleCode != null) list.Add( e.JaCity.LocaleCode );
-                if (e.PtBrCity?.LocaleCode != null) list.Add( e.PtBrCity.LocaleCode );
-                if (e.ZhCnCity?.LocaleCode != null) list.Add( e.ZhCnCity.LocaleCode );
-                return list;
-            } ).Distinct( new LocaleCodeComparer() );
-        }
-
         protected (List< IEntity >, List< IEntity >) _decollateEntities( List<IEntity>[] entities )
         {
             List< IEntity > blocks = new List< IEntity >();
@@ -66,6 +49,28 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             }
 
             return (blocks, locations);
+        }
+
+        protected IEnumerable< LocaleCode > _distinctLocaleCodes( List< IEntity > cityLocations )
+        {
+            return cityLocations.Cast< CityLocation >().SelectMany( e => {
+                var list = new List< LocaleCode >(8);
+                if (e.EnCity?.LocaleCode != null) list.Add( e.EnCity.LocaleCode );
+                if (e.EsCity?.LocaleCode != null) list.Add( e.EsCity.LocaleCode );
+                if (e.DeCity?.LocaleCode != null) list.Add( e.DeCity.LocaleCode );
+                if (e.FrCity?.LocaleCode != null) list.Add( e.FrCity.LocaleCode );
+                if (e.RuCity?.LocaleCode != null) list.Add( e.RuCity.LocaleCode );
+                if (e.JaCity?.LocaleCode != null) list.Add( e.JaCity.LocaleCode );
+                if (e.PtBrCity?.LocaleCode != null) list.Add( e.PtBrCity.LocaleCode );
+                if (e.ZhCnCity?.LocaleCode != null) list.Add( e.ZhCnCity.LocaleCode );
+                return list;
+            } ).Distinct( new LocaleCodeComparer() );
+        }
+
+
+        protected IEnumerable< City > _distinctCities( List< IEntity > cityLocations, Func< CityLocation, City > getter )
+        {
+            return cityLocations.Cast< CityLocation >().Select( getter ).Where( c => c != null ).Distinct( new CityComparer() );
         }
     }
 }
