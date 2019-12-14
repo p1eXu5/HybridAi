@@ -19,7 +19,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
 
 
-            return base._process( importedEntities );
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />

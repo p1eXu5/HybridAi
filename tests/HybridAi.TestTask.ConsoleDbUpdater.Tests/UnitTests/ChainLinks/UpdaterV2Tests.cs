@@ -33,10 +33,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             context.Database.EnsureDeleted();
         }
 
-        #region ctor tests
+
+        #region Process tests
 
         [Test]
-        public void ctor__ImportedModelsRequestIsEmpty_SuccessorIsNull__ReturnsResponseWithFailRequest()
+        public void Process__ImportedModelsRequestIsEmpty_SuccessorIsNull__ReturnsResponseWithSameRequest()
         {
             // Arrange:
             Updater mapper = _getUpdater();
@@ -51,7 +52,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         }
 
         [Test]
-        public void ctor__ImportedModelsRequestIsEmpty_SuccessorIsNull__ReturnsResponseWithRequestWithExpectedMessage()
+        public void Process__ImportedModelsRequestIsEmpty_SuccessorIsNull__ReturnsResponseWithRequestWithExpectedMessage()
         {
             // Arrange:
             Updater mapper = _getUpdater();
@@ -64,10 +65,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             StringAssert.Contains("Imported model collections are empty.", message);
         }
 
-        #endregion
 
-
-        #region Process tests
 
         [Test]
         public void Process__NotImportedModelsRequest_SuccessorIsNull__ReturnsResponseWithSameRequest()
@@ -86,7 +84,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
 
         [Test]
-        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__AddsDataToDatabase()
+        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__AddsDataInDatabase()
         {
             // Arrange:
             var dbName = "Add_CityBlocksAndCityLocations";
@@ -134,7 +132,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         }
 
         [Test]
-        public void Process__ImportedModelsAreCityLocations_DbIsEmpty__AddsDataToDatabase()
+        public void Process__ImportedModelsAreCityLocations_DbIsEmpty__AddsDataInDatabase()
         {
             // Arrange:
             var dbName = "Add_CityLocations";
@@ -162,7 +160,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
 
         [Test]
-        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbHasData__UpdatesDataToDatabase()
+        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbHasData__UpdatesDataInDatabase()
         {
             // Arrange:
             var dbName = "Update_CityBlocksAndCityLocations";
@@ -226,7 +224,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         }
 
         [Test]
-        public void Process__ImportedModelsAreCityLocations_DbHasData__UpdatesDataToDatabase()
+        public void Process__ImportedModelsAreCityLocations_DbHasData__UpdatesDataInDatabase()
         {
             // Arrange:
             var dbName = "Update_CityLocationsCount";
@@ -267,7 +265,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
         [Test]
         [Ignore("Not implemented.")]
-        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbHasSomeData__AddsAndUpdatesDataToDatabase()
+        public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbHasSomeData__AddsAndUpdatesDataInDatabase()
         {
         }
 
@@ -279,7 +277,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
         [Test]
         [Ignore("Not implemented.")]
-        public void Process__ImportedModelsAreCityLocations_DbHasSomeData__AddsAndUpdatesDataToDatabase()
+        public void Process__ImportedModelsAreCityLocations_DbHasSomeData__AddsAndUpdatesDataInDatabase()
         {
         }
 

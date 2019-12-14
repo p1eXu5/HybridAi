@@ -58,6 +58,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             if (request is ImportedModelsRequest modelsRequest)
             {
+                if ( !modelsRequest.ModelCollections.Any() != true
+                    || modelsRequest.ModelCollections.All(c => !c.Any()))
+                {
+                    return new FailRequest("Imported model collections are empty.").Response;
+                }
+
                 return _process( modelsRequest.ModelCollections );
             }
 
@@ -68,11 +74,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
         protected virtual IResponse<Request> _process( List<IEntity>[] importedEntities )
         {
-            if ( !importedEntities.Any()
-                || importedEntities.All(c => !c.Any()))
-            {
-                return new FailRequest("Imported model collections are empty.").Response;
-            }
 
             List<Type> types = importedEntities.Aggregate(
                 new List<Type>(), (a, b) =>
