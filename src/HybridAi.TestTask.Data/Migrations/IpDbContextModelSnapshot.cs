@@ -23,7 +23,7 @@ namespace HybridAi.TestTask.Data.Migrations
                 {
                     b.Property<string>("Network")
                         .HasColumnType("varchar(15)")
-                        .HasMaxLength(18);
+                        .HasMaxLength(12);
 
                     b.Property<short?>("AccuracyRadius")
                         .HasColumnType("smallint");
@@ -66,7 +66,7 @@ namespace HybridAi.TestTask.Data.Migrations
                 {
                     b.Property<string>("Network")
                         .HasColumnType("varchar(39)")
-                        .HasMaxLength(39);
+                        .HasMaxLength(47);
 
                     b.Property<short?>("AccuracyRadius")
                         .HasColumnType("smallint");

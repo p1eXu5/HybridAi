@@ -319,7 +319,7 @@ namespace HybridAi.TestTask.Data.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    Network = table.Column<string>(type: "varchar(15)", maxLength: 18, nullable: false),
+                    Network = table.Column<string>(type: "varchar(15)", maxLength: 12, nullable: false),
                     CityLocationGeonameId = table.Column<int>(nullable: true),
                     RegistredCountryGeonameId = table.Column<int>(nullable: true),
                     RepresentedCountryGeonameId = table.Column<int>(nullable: true),
@@ -354,7 +354,7 @@ namespace HybridAi.TestTask.Data.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    Network = table.Column<string>(type: "varchar(39)", maxLength: 39, nullable: false),
+                    Network = table.Column<string>(type: "varchar(39)", maxLength: 47, nullable: false),
                     CityLocationGeonameId = table.Column<int>(nullable: true),
                     RegistredCountryGeonameId = table.Column<int>(nullable: true),
                     CountryLocationGeonameId = table.Column<int>(nullable: true),
