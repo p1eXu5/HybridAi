@@ -16,7 +16,7 @@ namespace HybridAi.TestTask.Data.Configurations
             builder.ToTable( "CityBlocksIpv6s", "dbo" );
 
             builder.HasKey( c => c.Network );
-            builder.Property( c => c.Network ).HasColumnType( "varchar(39)" );
+            builder.Property( c => c.Network ).HasColumnType( "varchar(47)" );
 
             builder.HasIndex( c => c.CityLocationGeonameId );
 

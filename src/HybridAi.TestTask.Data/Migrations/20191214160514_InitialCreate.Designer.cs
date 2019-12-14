@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HybridAi.TestTask.Data.Migrations
 {
     [DbContext(typeof(IpDbContext))]
-    [Migration("20191214105231_InitialCreate")]
+    [Migration("20191214160514_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,8 +24,8 @@ namespace HybridAi.TestTask.Data.Migrations
             modelBuilder.Entity("HybridAi.TestTask.Data.Models.CityBlockIpv4", b =>
                 {
                     b.Property<string>("Network")
-                        .HasColumnType("varchar(15)")
-                        .HasMaxLength(12);
+                        .HasColumnType("varchar(11)")
+                        .HasMaxLength(11);
 
                     b.Property<short?>("AccuracyRadius")
                         .HasColumnType("smallint");
@@ -67,7 +67,7 @@ namespace HybridAi.TestTask.Data.Migrations
             modelBuilder.Entity("HybridAi.TestTask.Data.Models.CityBlockIpv6", b =>
                 {
                     b.Property<string>("Network")
-                        .HasColumnType("varchar(39)")
+                        .HasColumnType("varchar(47)")
                         .HasMaxLength(47);
 
                     b.Property<short?>("AccuracyRadius")

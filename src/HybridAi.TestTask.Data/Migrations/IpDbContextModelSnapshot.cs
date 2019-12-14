@@ -22,8 +22,8 @@ namespace HybridAi.TestTask.Data.Migrations
             modelBuilder.Entity("HybridAi.TestTask.Data.Models.CityBlockIpv4", b =>
                 {
                     b.Property<string>("Network")
-                        .HasColumnType("varchar(15)")
-                        .HasMaxLength(12);
+                        .HasColumnType("varchar(11)")
+                        .HasMaxLength(11);
 
                     b.Property<short?>("AccuracyRadius")
                         .HasColumnType("smallint");
@@ -65,7 +65,7 @@ namespace HybridAi.TestTask.Data.Migrations
             modelBuilder.Entity("HybridAi.TestTask.Data.Models.CityBlockIpv6", b =>
                 {
                     b.Property<string>("Network")
-                        .HasColumnType("varchar(39)")
+                        .HasColumnType("varchar(47)")
                         .HasMaxLength(47);
 
                     b.Property<short?>("AccuracyRadius")
