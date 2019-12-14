@@ -8,7 +8,7 @@ using HybridAi.TestTask.Data.Models;
 
 namespace HybridAi.TestTask.Data.Comparators
 {
-    public class CityLocationComparer : IComparer< CityLocation >
+    public class CityLocationComparer : IComparer< CityLocation >, IEqualityComparer< CityLocation >
     {
         public int Compare( [AllowNull] CityLocation x, [AllowNull] CityLocation y )
         {
@@ -30,6 +30,16 @@ namespace HybridAi.TestTask.Data.Comparators
                     
                 }
             }
+        }
+
+        public bool Equals( CityLocation x, CityLocation y )
+        {
+            return Compare( x, y ) == 0;
+        }
+
+        public int GetHashCode( CityLocation obj )
+        {
+            return obj.GetHashCode();
         }
     }
 }
