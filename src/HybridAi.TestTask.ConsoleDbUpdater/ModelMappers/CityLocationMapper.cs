@@ -87,8 +87,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
         {
             T? city = _createCity< T >( values, cityLocation );
             if ( city != null ) {
-                city.LocaleCode = new LocaleCode(  values[1] );
-
+                city.LocaleCode = new LocaleCode( values[1] );
+                city.LocaleCodeName = values[ 1 ];
                 action( city );
                 return cityLocation;
             }
