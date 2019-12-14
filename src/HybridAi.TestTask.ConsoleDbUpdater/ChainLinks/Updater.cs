@@ -58,43 +58,55 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             if (request is ImportedModelsRequest modelsRequest)
             {
-
-                var importedEntities = modelsRequest.ModelCollections;
-
-                if ( !importedEntities.Any()
-                    || importedEntities.All(c => !c.Any()))
-                {
-                    return new FailRequest("Imported model collections are empty.").Response;
-                }
-
-                List<Type> types = importedEntities.Aggregate(
-                    new List<Type>(), (a, b) =>
-                    {
-                        a.Add(b.First().GetType());
-                        return a;
-                    });
-
-                if (types.Any(t => typeof(CityBlock).IsAssignableFrom(t)))
-                {
-                    if (_UpdateCityBlocks(importedEntities, out int newCount, out int updCount)) {
-                        Dispose();
-                        return new DoneRequest( newCount, updCount, $"There are {newCount} new records and {updCount} updated records." ).Response;
-                    }
-
-                    Dispose();
-                    return new FailRequest($"There are {newCount} new records and {updCount} updated records.").Response;
-                }
-                else
-                {
-                    if (_UpdateCityLocations(importedEntities, out int newCount, out int updCount)) {
-                        Dispose();
-                        return new DoneRequest($"There are {newCount} new records and {updCount} updated records.").Response;
-                    }
-                }
+                return _process( modelsRequest.ModelCollections );
             }
 
             Dispose();
             return base.Process(request);
+        }
+
+
+        protected virtual IResponse<Request> _process( List<IEntity>[] importedEntities )
+        {
+            if ( !importedEntities.Any()
+                || importedEntities.All(c => !c.Any()))
+            {
+                return new FailRequest("Imported model collections are empty.").Response;
+            }
+
+            List<Type> types = importedEntities.Aggregate(
+                new List<Type>(), (a, b) =>
+                {
+                    a.Add(b.First().GetType());
+                    return a;
+                });
+
+            if (types.Any(t => typeof(CityBlock).IsAssignableFrom(t)))
+            {
+                if (_UpdateCityBlocks(importedEntities, out int newCount, out int updCount)) {
+                    return _getDoneRequest( newCount, updCount );
+                }
+            }
+            else
+            {
+                if (_UpdateCityLocations(importedEntities, out int newCount, out int updCount)) {
+                    return _getDoneRequest( newCount, updCount );
+                }
+            }
+
+            return _getFailRequest();
+        }
+
+        protected IResponse<Request> _getDoneRequest( int newCount, int updCount)
+        {
+            Dispose();
+            return new DoneRequest( newCount, updCount, $"There are {newCount} new records and {updCount} updated records." ).Response;
+        }
+
+        protected IResponse<Request> _getFailRequest()
+        {
+            Dispose();
+            return new FailRequest($"Fail.").Response;
         }
 
         /// <summary>

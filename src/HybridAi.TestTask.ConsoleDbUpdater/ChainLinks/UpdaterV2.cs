@@ -11,6 +11,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         public UpdaterV2( IChainLink< Request, IResponse< Request > > successor ) : base( successor )
         { }
 
+        protected override IResponse< Request > _process( List< IEntity >[] importedEntities )
+        {
+            return base._process( importedEntities );
+        }
+
         /// <inheritdoc />
         protected override bool _UpdateCityBlocks( List< IEntity >[] importedEntities, out int newCount, out int updCount )
         {
@@ -21,6 +26,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         protected override bool _UpdateCityLocations( List< IEntity >[] colls, out int newCount, out int updCount )
         {
             return base._UpdateCityLocations( colls, out newCount, out updCount );
+        }
+
+        private HashSet< LocaleCode > _distinctLocaleCodes( List<IEntity>[] entities )
+        {
+            throw new NotImplementedException();
         }
     }
 }
