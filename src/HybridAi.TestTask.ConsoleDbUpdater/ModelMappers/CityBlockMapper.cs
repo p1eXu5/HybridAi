@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net;
 using System.Text;
 using HybridAi.TestTask.Data.Models;
 
@@ -42,7 +43,16 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
             where T : CityBlock
         {
             try {
-                var obj = Activator.CreateInstance( typeof( T ), new[] { values[0] } );
+                int slashPosition = values[0].IndexOf( '/' );
+
+                if ( !IPAddress.TryParse( values[0].Substring( 0, slashPosition ), out var addr )) {
+                    LoggerFactory.Instance.Log( "Can't parse ip address:" + " " + String.Join( ',', values ) );
+                    return null;
+                }
+
+                byte[] addrBytes = addr.GetAddressBytes();
+
+                var obj = Activator.CreateInstance( typeof( T ), new[] { BitConverter.ToString( addrBytes ) } );
 
                 if ( obj is T block ) 
                 {
