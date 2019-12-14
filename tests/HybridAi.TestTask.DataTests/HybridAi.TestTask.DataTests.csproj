@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HybridAi.TestTask.ConsoleDbUpdater\HybridAi.TestTask.ConsoleDbUpdater.csproj" />
-    <ProjectReference Include="..\HybridAi.TestTask.Data\HybridAi.TestTask.Data.csproj" />
+    <ProjectReference Include="..\..\src\HybridAi.TestTask.ConsoleDbUpdater\HybridAi.TestTask.ConsoleDbUpdater.csproj" />
+    <ProjectReference Include="..\..\src\HybridAi.TestTask.Data\HybridAi.TestTask.Data.csproj" />
   </ItemGroup>
 
 </Project>
