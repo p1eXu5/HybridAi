@@ -113,6 +113,23 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
         }
 
         [Test]
+        public void Process__FolderRequestContainsCityBlockIpv4Files_SuccessorIsNull__ReturnsCityBlockIpv4WithCityLocationIds()
+        {
+            // Arrange:
+            var mapper = _getMapper();
+            FolderRequest request = _getFolderRequest( _ipv4csv, _ipv6csv, _encitycsv, _rucitycsv );
+
+            // Action:
+            var collections = ((ImportedModelsRequest)mapper.Process( request ).Request).ModelCollections;
+            var ipv4Collections = collections.Where( c => c[0] is CityBlockIpv4 ).ToArray();
+            // Assert:
+            Assert.IsTrue( ipv4Collections.All( ipv4 => ipv4.All( b => {
+                var cl = b as CityBlock;
+                return cl?.CityLocationGeonameId != null || cl?.RegistredCountryGeonameId != null;
+            } ) ) );
+        }
+
+        [Test]
         public void Process__FolderRequestContainsCityBlockIpv6Files_SuccessorIsNull__ReturnsExpectedCityBlockIpv6Count()
         {
             // Arrange:
@@ -143,6 +160,25 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
                                                            return a;
                                                        } )
                                                        .Count, ((TestLogger)LoggerFactory.Instance.Logger).Messages );
+        }
+
+        [Test]
+        public void Process__FolderRequestContainsEnCityFiles_SuccessorIsNull__ReturnsEnCityWithNotNullLocaleCodeName()
+        {
+            // Arrange:
+            var mapper = _getMapper();
+            FolderRequest request = _getFolderRequest( _encitycsv );
+
+            // Action:
+            var collections = ((ImportedModelsRequest)mapper.Process( request ).Request).ModelCollections;
+            var cityLocationCollections = collections.Where( c => c[0] is CityLocation ).ToArray();
+            // Assert:
+            Assert.IsTrue( cityLocationCollections.Select( c => c.Select( e => ((CityLocation)e).EnCity) )
+                                                       .Aggregate( new List<City>(), (a, c) => { 
+                                                           a.AddRange(c);
+                                                           return a;
+                                                       } )
+                                                       .All( c => !String.IsNullOrWhiteSpace( c.LocaleCodeName ) ) );
         }
 
         [Test]
