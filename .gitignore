@@ -440,3 +440,7 @@ $RECYCLE.BIN/
 /docs/HybridAi.TestTask.vpp.bak_000f
 
 *.vpp*
+/docs/geoip2-csv-converter-v1.1.0-windows-64/geoip2-csv-converter.exe
+/docs/geoip2-csv-converter-v1.1.0-windows-64
+/docs/ip4-ranges.csv
+/docs/ip6-ranges.csv
