@@ -1,6 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿/*
+ * This product includes GeoLite2 data created by MaxMind, available from
+ * <a href="https://www.maxmind.com">https://www.maxmind.com</a>.
+ */
+
+
 using HybridAi.TestTask.Data.Configurations;
 using HybridAi.TestTask.Data.Configurations.Cities;
 using HybridAi.TestTask.Data.Models;

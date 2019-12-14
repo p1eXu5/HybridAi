@@ -1,9 +1,13 @@
-﻿using HybridAi.TestTask.ConsoleDbUpdater.ChainLinks;
+﻿/*
+ * This product includes GeoLite2 data created by MaxMind, available from
+ * <a href="https://www.maxmind.com">https://www.maxmind.com</a>.
+ */
+
+
+using HybridAi.TestTask.ConsoleDbUpdater.ChainLinks;
 using HybridAi.TestTask.ConsoleDbUpdater.Extensions;
 using HybridAi.TestTask.ConsoleDbUpdater.Models;
 using System;
-using System.Configuration;
-using System.IO;
 using System.Threading.Tasks;
 using HybridAi.TestTask.ConsoleDbUpdater.ModelMappers;
 using HybridAi.TestTask.Data;
@@ -38,12 +42,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                                                                 .AddMapper()
                                                                 .AddUpdater();;
 
-            var argumentChainBuilder = new ChainBuilder().AddArgumentFormatter().Append( remoteChainBuilder );
-
-
-
-            IChainLink< Request, IResponse< Request > > argumentChain;
-
             switch ( args.Length ) {
                 case 0:
                     IChainLink< Request, IResponse< Request >> defaultChain 
@@ -62,11 +60,18 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                     break;
                 case 1:
                     throw new NotImplementedException( "Local files is not maintained yet." );
+
+#pragma warning disable CS0162 // Unreachable code detected
+                    IChainLink< Request, IResponse< Request > > argumentChain;
+                    var argumentChainBuilder = new ChainBuilder().AddArgumentFormatter().Append( remoteChainBuilder );
                     argumentChain = argumentChainBuilder.Build();
                     argumentChain.Process( new ArgumentRequest( args[0] ) );
                     break;
+#pragma warning restore CS0162 // Unreachable code detected
                 default:
                     throw new NotImplementedException( "Multiple files is not maintained yet." );
+
+#pragma warning disable CS0162 // Unreachable code detected
                     argumentChain = argumentChainBuilder.Build();
                     var tasks = new Task< IResponse< Request > >[args.Length];
                     for (int i = 0; i < args.Length; i++) {
@@ -75,6 +80,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
                     }
                     IResponse< Request >[] result = await Task.WhenAll( tasks );
                     break;
+#pragma warning restore CS0162 // Unreachable code detected
             }
 
             Console.ReadKey( true );
