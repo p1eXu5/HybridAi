@@ -288,7 +288,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
         #region _distinct methods tests
 
-        [ Test ]
+        [ Test, Category( "Distinct Entities" ) ]
         public void _distinctLocaleCodes_EntitiesContainDataWithLocaleCodes_ReturnsDistinctLocaleCodes()
         {
             // Arrange:
@@ -303,7 +303,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         }
 
 
-        [ Test ]
+        [ Test, Category( "Distinct Entities" ) ]
         public void _distinctCity_EntitiesContainDataWithEnCities_ReturnsDistinctCities()
         {
             // Arrange:
@@ -317,6 +317,86 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             Assert.That( result.Count, Is.EqualTo( 2 ) );
         }
 
+        [ Test, Category( "Distinct Entities" ) ]
+        public void _distinctCity_EntitiesContainDataWithEnCities_ReturnsDistinctCitiesWithLocaleCodeIsNull()
+        {
+            // Arrange:
+            var updater = _getFakeUpdater();
+            var request = _getCityBlocksAndCityLocations();
+
+            // Action:
+            var result = updater.GetEnCities( request );
+
+            // Assert:
+            Assert.IsTrue( result.All( c => c.LocaleCode == null ) );
+        }
+
+        [ Test, Category( "Distinct Entities" ) ]
+        public void _distinctCity_EntitiesContainDataWithEnCities_ReturnsDistinctCitiesWithLocaleCodeIdsIsNotNull()
+        {
+            // Arrange:
+            var updater = _getFakeUpdater();
+            var request = _getCityBlocksAndCityLocations();
+
+            // Action:
+            var result = updater.GetEnCities( request );
+
+            // Assert:
+            Assert.IsTrue( result.All( c => !String.IsNullOrWhiteSpace( c.LocaleCodeName ) ) );
+        }
+
+        [ Test, Category( "Distinct Entities" ) ]
+        public void _distinctCityLocations_EntitiesContainDataWithEnCities_ReturnsDistinctCityLocation()
+        {
+            // Arrange:
+            var updater = _getFakeUpdater();
+            var request = _getCityBlocksAndCityLocations();
+
+            // Action:
+            var result = updater.GetEnCityLocations( request );
+
+            // Assert:
+            Assert.That( result.Count, Is.EqualTo( 2 ) );
+        }
+
+        [ Test, Category( "Distinct Entities" ) ]
+        public void _distinctCity_EntitiesContainDataWithEnCities_ReturnsDistinctCitiesWithCityIsNull()
+        {
+            // Arrange:
+            var updater = _getFakeUpdater();
+            var request = _getCityBlocksAndCityLocations();
+
+            // Action:
+            var result = updater.GetEnCityLocations( request );
+
+            // Assert:
+            Assert.IsTrue( result.All( c => 
+                c.EnCity == null
+                && c.DeCity == null
+                && c.FrCity == null
+                && c.JaCity == null
+                && c.PtBrCity == null
+                && c.RuCity == null
+                && c.ZhCnCity == null 
+                && c.EsCity == null ) );
+        }
+
+        [ Test, Category( "Distinct Entities" ) ]
+        public void _distinctCity_EntitiesContainDataWithEnCities_ReturnsDistinctCitiesWithCityIdsIsNotNull()
+        {
+            // Arrange:
+            var updater = _getFakeUpdater();
+            var request = _getCityBlocksAndCityLocations();
+
+            // Action:
+            var result = updater.GetEnCityLocations( request );
+
+            // Assert:
+            Assert.IsTrue( result.All( c => 
+                c.EnCityGeonameId != null
+                || c.DeCityGeonameId != null
+                || c.EsCityGeonameId != null ) );
+        }
 
         #endregion
 
@@ -407,7 +487,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         }
 
         /// <summary>
-        /// Returns imported [cl1.1; cl1.2]; [cl2.1]
+        /// Returns imported [cl1.1; cl1.2]; [cl2.1] with En, Es and De cities.
         /// </summary>
         /// <returns></returns>
         private ImportedModelsRequest _getCityLocations()
@@ -415,12 +495,15 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             return 
                 new ImportedModelsRequest( 
                      new List< IEntity >[] {
+                         // EnCities file emulator
                          new List< IEntity > {
                              new CityLocation( 1 ) {
                                  ContinentCode = "AA",
                                  CountryIsoCode = "AA",
                                  TimeZone = "AA",
+                                 EnCityGeonameId = 1,
                                  EnCity = new EnCity( 1 ) {
+                                     LocaleCodeName = "en",
                                      LocaleCode = new LocaleCode( "en" )
                                  }
                              },
@@ -428,27 +511,35 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
                                  ContinentCode = "BB",
                                  CountryIsoCode = "BB",
                                  TimeZone = "BB",
+                                 EnCityGeonameId = 2,
                                  EnCity = new EnCity( 2 ) {
+                                     LocaleCodeName = "en",
                                      LocaleCode = new LocaleCode( "en" )
                                  }
                              },
                          },
+                         // EsCities file emulator
                          new List< IEntity > {
                              new CityLocation( 1 ) {
                                  ContinentCode = "AA",
                                  CountryIsoCode = "AA",
                                  TimeZone = "AA",
+                                 EsCityGeonameId = 1,
                                  EsCity = new EsCity( 1 ) {
+                                     LocaleCodeName = "es",
                                      LocaleCode = new LocaleCode( "es" )
                                  }
                              },
                          },
+                         // DeCities file emulator
                          new List< IEntity > {
                              new CityLocation( 2 ) {
                                  ContinentCode = "BB",
                                  CountryIsoCode = "BB",
                                  TimeZone = "BB",
+                                 DeCityGeonameId = 1,
                                  DeCity = new DeCity( 2 ) {
+                                     LocaleCodeName = "de",
                                      LocaleCode = new LocaleCode( "de" )
                                  }
                              },
@@ -478,6 +569,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             {
                 var( blocks, locations) = _decollateEntities( request.ModelCollections );
                 return _distinctCities( locations, l => l.EnCity ).ToList();
+            }
+
+            public List< CityLocation > GetEnCityLocations( ImportedModelsRequest request )
+            {
+                var( blocks, locations) = _decollateEntities( request.ModelCollections );
+                return _distinctCityLocations( locations ).ToList();
             }
         }
 
