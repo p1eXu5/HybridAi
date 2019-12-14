@@ -70,7 +70,28 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
         protected IEnumerable< City > _distinctCities( List< IEntity > cityLocations, Func< CityLocation, City > getter )
         {
-            return cityLocations.Cast< CityLocation >().Select( getter ).Where( c => c != null ).Distinct( new CityComparer() );
+            return cityLocations.Cast< CityLocation >()
+                                .Select( getter )
+                                .Where( c => c != null )
+                                .Distinct( new CityComparer() )
+                                .Select( c => { if ( c.LocaleCode != null ) c.LocaleCode = null; return c; } );
+        }
+
+        protected IEnumerable< CityLocation > _distinctCityLocations( List< IEntity > cityLocations )
+        {
+            return cityLocations.Cast< CityLocation >()
+                                .Distinct( new CityLocationComparer() )
+                                .Select( cl => {
+                                    if ( cl.EnCity != null ) cl.EnCity = null;
+                                    if ( cl.EsCity != null ) cl.EsCity = null;
+                                    if ( cl.DeCity != null ) cl.DeCity = null;
+                                    if ( cl.FrCity != null ) cl.FrCity = null;
+                                    if ( cl.RuCity != null ) cl.RuCity = null;
+                                    if ( cl.EnCity != null ) cl.EnCity = null;
+                                    if ( cl.EnCity != null ) cl.EnCity = null;
+                                    if ( cl.EnCity != null ) cl.EnCity = null;
+                                    return cl;
+                                } );
         }
     }
 }
