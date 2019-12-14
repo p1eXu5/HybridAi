@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 {
-    public class UpdaterTests
+    public class UpdaterV2Tests
     {
         [ OneTimeSetUp ]
         public void Setup()
@@ -291,7 +291,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
         private Updater _getUpdater()
         {
-            return new Updater( null );
+            return new UpdaterV2( null );
         }
 
         private ImportedModelsRequest _getEmptyImportedModelsRequest()
