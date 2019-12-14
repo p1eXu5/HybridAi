@@ -286,7 +286,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         #endregion
 
 
-        #region _distinctLocaleCodes tests
+        #region _distinct methods tests
 
         [ Test ]
         public void _distinctLocaleCodes_EntitiesContainDataWithLocaleCodes_ReturnsDistinctLocaleCodes()
@@ -296,11 +296,27 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             var request = _getCityBlocksAndCityLocations();
 
             // Action:
-            var result = updater.Process( request );
+            var result = updater.GetLocaleCodes( request );
 
             // Assert:
-            Assert.That( updater.LocaleCodes.Count, Is.EqualTo( 3 ) );
+            Assert.That( result.Count, Is.EqualTo( 3 ) );
         }
+
+
+        [ Test ]
+        public void _distinctCity_EntitiesContainDataWithEnCities_ReturnsDistinctCities()
+        {
+            // Arrange:
+            var updater = _getFakeUpdater();
+            var request = _getCityBlocksAndCityLocations();
+
+            // Action:
+            var result = updater.GetEnCities( request );
+
+            // Assert:
+            Assert.That( result.Count, Is.EqualTo( 2 ) );
+        }
+
 
         #endregion
 
@@ -452,11 +468,16 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             public FakeUpdater( IChainLink< Request, IResponse< Request > > successor ) : base( successor )
             { }
 
-            protected override IResponse< Request > _process( List< IEntity >[] importedEntities )
+            public List< LocaleCode > GetLocaleCodes( ImportedModelsRequest request )
             {
-                var( blocks, locations) = _decollateEntities( importedEntities );
-                LocaleCodes = _distinctLocaleCodes( locations ).ToList();
-                return new DoneRequest( "" ).Response;
+                var( blocks, locations) = _decollateEntities( request.ModelCollections );
+                return _distinctLocaleCodes( locations ).ToList();
+            }
+
+            public List< City > GetEnCities( ImportedModelsRequest request )
+            {
+                var( blocks, locations) = _decollateEntities( request.ModelCollections );
+                return _distinctCities( locations, l => l.EnCity ).ToList();
             }
         }
 
