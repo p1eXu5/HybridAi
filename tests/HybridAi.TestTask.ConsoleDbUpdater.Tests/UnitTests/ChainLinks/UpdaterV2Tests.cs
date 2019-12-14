@@ -28,7 +28,8 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         [ TearDown ]
         public void DeleteDatabase()
         {
-            using var context = new IpDbContext();
+            var options = DbContextOptionsFactory.Instance.GetDbContextOptions();
+            using var context = new IpDbContext( options );
 
             context.Database.EnsureDeleted();
         }

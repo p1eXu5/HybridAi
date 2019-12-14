@@ -52,7 +52,7 @@ namespace HybridAi.TestTask.DataTests.UnitTests.Services.UpdaterService
 			using var ctx = new IpDbContext( options );
 
 			// Action:
-			var cities = ctx.GetEnCities( 2, 5 ).ToArray();
+			var cities = ctx.GetCities<EnCity>( 2, 5 ).ToArray();
 
 			// Assert:
 			Assert.IsTrue( cities.Length == 4 );

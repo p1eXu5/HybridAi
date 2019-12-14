@@ -146,9 +146,10 @@ namespace HybridAi.TestTask.Data.Services.UpdaterService
                 _ => null
             };
 
-        public static IQueryable< EnCity > GetEnCities( this IpDbContext context, int minGeonameId, int maxGeonameId )
+        public static IQueryable< T > GetCities<T>( this IpDbContext context, int minGeonameId, int maxGeonameId )
+            where T : City
         {
-            return context.EnCities.Where( c => minGeonameId <= c.GeonameId && c.GeonameId <= maxGeonameId ).AsQueryable();
+            return context.Set<T>().Where( c => minGeonameId <= c.GeonameId && c.GeonameId <= maxGeonameId ).AsQueryable();
         }
 
         public static IQueryable< CityBlockIpv4 > GetCityBlockIpv4s( this IpDbContext context, string minNetwork, string maxNetwork )
