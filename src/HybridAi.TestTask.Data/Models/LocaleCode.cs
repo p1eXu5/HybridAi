@@ -28,6 +28,11 @@ namespace HybridAi.TestTask.Data.Models
         public ICollection< JaCity >? JaCities { get; set; }
         public ICollection< PtBrCity>? PtBrCities { get; set; }
         public ICollection< ZhCnCity>? ZhCnCities { get; set; }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
     }
 
 #nullable restore

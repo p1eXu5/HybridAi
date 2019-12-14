@@ -286,12 +286,37 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         #endregion
 
 
+        #region _distinctLocaleCodes tests
+
+        [ Test ]
+        public void _distinctLocaleCodes_EntitiesContainDataWithLocaleCodes_ReturnsDistinctLocaleCodes()
+        {
+            // Arrange:
+            var updater = _getFakeUpdater();
+            var request = _getCityBlocksAndCityLocations();
+
+            // Action:
+            var result = updater.Process( request );
+
+            // Assert:
+            Assert.That( updater.LocaleCodes.Count, Is.EqualTo( 3 ) );
+        }
+
+        #endregion
+
+
         #region factory
         // Insert factory methods here:
 
         private Updater _getUpdater()
         {
             return new UpdaterV2( null );
+        }
+
+
+        private FakeUpdater _getFakeUpdater()
+        {
+            return new FakeUpdater( null );
         }
 
         private ImportedModelsRequest _getEmptyImportedModelsRequest()
@@ -322,8 +347,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
                     new List< IEntity > {
                         new CityBlockIpv4( "1.1.1.1" ) {
                             CityLocationGeonameId = 1,
-                            RegistredCountryGeonameId = 666,
-                            RepresentedCountryGeonameId = 999,
                         },
                         new CityBlockIpv4( "2.2.2.2" ) {
                             CityLocationGeonameId = 2,
@@ -332,8 +355,6 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
                     new List< IEntity > {
                         new CityBlockIpv6( "11:11::11:11" ) {
                             CityLocationGeonameId = 1,
-                            RegistredCountryGeonameId = 666,
-                            RepresentedCountryGeonameId = 999,
                         },
                         new CityBlockIpv6( "22:22::22:22" ) {
                             CityLocationGeonameId = 2,
@@ -394,7 +415,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
                                  EnCity = new EnCity( 2 ) {
                                      LocaleCode = new LocaleCode( "en" )
                                  }
-                             }
+                             },
                          },
                          new List< IEntity > {
                              new CityLocation( 1 ) {
@@ -406,10 +427,38 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
                                  }
                              },
                          },
+                         new List< IEntity > {
+                             new CityLocation( 2 ) {
+                                 ContinentCode = "BB",
+                                 CountryIsoCode = "BB",
+                                 TimeZone = "BB",
+                                 DeCity = new DeCity( 2 ) {
+                                     LocaleCode = new LocaleCode( "de" )
+                                 }
+                             },
+                         },
                      } );
         }
 
+        #endregion
 
+
+        #region fakes
+
+        private class FakeUpdater : UpdaterV2
+        {
+            public List< LocaleCode > LocaleCodes { get; private set; }
+
+            public FakeUpdater( IChainLink< Request, IResponse< Request > > successor ) : base( successor )
+            { }
+
+            protected override IResponse< Request > _process( List< IEntity >[] importedEntities )
+            {
+                var( blocks, locations) = _decollateEntities( importedEntities );
+                LocaleCodes = _distinctLocaleCodes( locations ).ToList();
+                return new DoneRequest( "" ).Response;
+            }
+        }
 
         #endregion
     }
