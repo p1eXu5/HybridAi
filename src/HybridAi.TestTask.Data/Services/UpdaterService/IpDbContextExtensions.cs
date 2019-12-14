@@ -145,5 +145,22 @@ namespace HybridAi.TestTask.Data.Services.UpdaterService
                 ZhCnCity zh => context.ZhCnCities.FirstOrDefault( c => c.GeonameId == zh.GeonameId ),
                 _ => null
             };
+
+        public static IQueryable< EnCity > GetEnCities( this IpDbContext context, int minGeonameId, int maxGeonameId )
+        {
+            return context.EnCities.Where( c => minGeonameId <= c.GeonameId && c.GeonameId <= maxGeonameId ).AsQueryable();
+        }
+
+        public static IQueryable< CityBlockIpv4 > GetCityBlockIpv4s( this IpDbContext context, string minNetwork, string maxNetwork )
+        {
+            var command = $"SELECT * FROM dbo.\"CityBlocksIpv4s\" AS block WHERE '{minNetwork}' <= block.\"Network\" AND block.\"Network\" <= '{maxNetwork}' ORDER BY block.\"Network\";";
+            return context.CityBlockIpv4Collection.FromSqlRaw( command );
+        }
+
+        public static IQueryable< CityBlockIpv6 > GetCityBlockIpv6s( this IpDbContext context, string minNetwork, string maxNetwork )
+        {
+            var command = $"SELECT * FROM dbo.\"CityBlocksIpv6s\" AS block WHERE '{minNetwork}' <= block.\"Network\" AND block.\"Network\" <= '{maxNetwork}' ORDER BY block.\"Network\";";
+            return context.CityBlockIpv6Collection.FromSqlRaw( command );
+        }
     }
 }
