@@ -27,12 +27,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
 
             if ( offset >= lines.Length ) return;
 
-            var result = new List< IEntity >( lines.Length );
+            var result = new List< IEntity >( new IEntity[lines.Length - offset] );
 
             Parallel.For( offset, lines.Length, ( i, s ) => {
                 IEntity? entity = _map( lines[i] );
                 if ( entity != null ) {
-                    result.Add( entity );
+                    result[i - offset] = entity;
                 }
             } );
 
@@ -40,5 +40,35 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
         }
 
         protected abstract IEntity? _map( string line );
+
+        protected string[] _Split( string[] values )
+        {
+            bool isOpen = false;
+            List< string> resValues = new List< string >();
+            int offset = 1;
+
+            for ( int i = 0; i < values.Length; ++i )
+            {
+                if ( isOpen && i > 0 ) {
+                    resValues[ i - offset] += "," + values[ i ];
+                    ++offset;
+                }
+                else {
+                    resValues.Add( values[i] );
+                }
+
+                int ind = 0;
+                do {
+                    ind = values[i].IndexOf( '\"', ind );
+
+                    if ( ind >= 0 ) {
+                        isOpen = !isOpen;
+                        ind = values[i].IndexOf( '\"', ++ind );
+                    }
+
+                } while ( ind >= 0 );
+            }
+            return resValues.ToArray();
+        }
     }
 }

@@ -101,6 +101,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ModelMappers
             Assert.IsTrue( mapper.Result.All( c => ((CityLocation)c).EnCity != null ) );
         }
 
+        
 
         #region factory
         // Insert factory methods here:
@@ -110,20 +111,21 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ModelMappers
             return new CityLocationMapper();
         }
 
+        
+
         private string _getRuCityFileName()
         {
-#nullable disable
             return Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "TestData\\rucity.csv" );
-#nullable restore
         }
 
         private string _getEnCityFileName()
         {
-#nullable disable
             return Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "TestData\\encity.csv" );
-#nullable restore
         }
 
         #endregion
+
+
+        
     }
 }

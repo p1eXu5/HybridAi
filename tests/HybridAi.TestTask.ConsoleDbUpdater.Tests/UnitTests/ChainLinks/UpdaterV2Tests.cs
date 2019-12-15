@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using HybridAi.TestTask.ConsoleDbUpdater.Tests.TestHelpers;
 using HybridAi.TestTask.Data;
 using HybridAi.TestTask.Data.Services.UpdaterService;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
@@ -41,7 +42,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         public void Process__ImportedModelsRequestIsEmpty_SuccessorIsNull__ReturnsResponseWithSameRequest()
         {
             // Arrange:
-            Updater mapper = _getUpdater();
+            Updater mapper = _getUpdaterV2();
             var request = _getEmptyImportedModelsRequest();
 
             // Action:
@@ -56,7 +57,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         public void Process__ImportedModelsRequestIsEmpty_SuccessorIsNull__ReturnsResponseWithRequestWithExpectedMessage()
         {
             // Arrange:
-            Updater mapper = _getUpdater();
+            Updater mapper = _getUpdaterV2();
             var request = _getEmptyImportedModelsRequest();
 
             // Action:
@@ -72,7 +73,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         public void Process__NotImportedModelsRequest_SuccessorIsNull__ReturnsResponseWithSameRequest()
         {
             // Arrange:
-            Updater mapper = _getUpdater();
+            Updater mapper = _getUpdaterV2();
             var request = Request.EmptyRequest;
 
             // Action:
@@ -84,22 +85,21 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
 
 
-        [Test]
+        [Test, Category( "Add data to database. Test with Postgre server. Run separate." )]
         public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__AddsDataInDatabase()
         {
             // Arrange:
-            var dbName = "Add_CityBlocksAndCityLocations";
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions( dbName );
+            var options = _getNpgsqlDbContextOptions();
             ImportedModelsRequest request = _getCityBlocksAndCityLocations();
 
             // Action:
-            using (Updater updater = _getUpdater())
+            using (Updater updater = _getUpdaterV2())
             {
                 updater.Process( request );
             }
 
             // Assert:
-            using var ctx = new IpDbContext(_getOptions( dbName ));
+            using var ctx = new IpDbContext( options );
 
             var blocksIpv4 = ctx.GetIpv4Blocks().ToArray();
             var blocksIpv6 = ctx.GetIpv6Blocks().ToArray();
@@ -114,21 +114,20 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             Assert.That( esCities.Length, Is.EqualTo( 1 ), LoggerFactory.Instance.Logger.GetMessages() );
         }
 
-        [Test]
+        [Test, Category( "Add data to database. Test with Postgre server. Run separate." )]
         public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__ReturnsDoneWithNewCount()
         {
             // Arrange:
-            var dbName = "Add_DoneCount";
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions( dbName );
+            var options = _getNpgsqlDbContextOptions();
             ImportedModelsRequest request = _getCityBlocksAndCityLocations();
 
             // Action:
-            using Updater updater = _getUpdater();
+            using Updater updater = _getUpdaterV2();
             var resultRequest = updater.Process( request ).Request;
 
             // Assert:
             Assert.IsTrue( resultRequest is DoneRequest );
-            Assert.That( ((DoneRequest)resultRequest).NewCount, Is.EqualTo( 4 ) );
+            Assert.That( ((DoneRequest)resultRequest).NewCount, Is.EqualTo( 10 ) );
             Assert.That( ((DoneRequest)resultRequest).UpdateCount, Is.EqualTo( 0 ) );
         }
 
@@ -137,17 +136,18 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         {
             // Arrange:
             var dbName = "Add_CityLocations";
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions( dbName );
+            var options = _getInMemoryDbContextOptions( dbName );
+            DbContextOptionsFactory.Instance.DbContextOptions = options;
             ImportedModelsRequest request = _getCityLocations();
 
             // Action:
-            using (Updater updater = _getUpdater())
+            using (Updater updater = _getUpdaterV2())
             {
                 updater.Process( request );
             }
 
             // Assert:
-            using var ctx = new IpDbContext(_getOptions( dbName ));
+            using var ctx = new IpDbContext(_getInMemoryDbContextOptions( dbName ));
 
             var cityLocations = ctx.GetCityLocations().ToArray();
             var enCities = ctx.GetEnCities().ToArray();
@@ -160,29 +160,28 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
 
 
 
-        [Test]
+        [Test, Category( "Add data to database. Test with Postgre server. Run separate." )]
         public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbHasData__UpdatesDataInDatabase()
         {
             // Arrange:
-            var dbName = "Update_CityBlocksAndCityLocations";
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions( dbName );
+            var options = _getNpgsqlDbContextOptions();
             ImportedModelsRequest request = _getCityBlocksAndCityLocations();
 
-            using (var ctxForSeed = new IpDbContext(_getOptions(dbName)))
+            using (var ctxForSeed = new IpDbContext( options ))
             {   
-                var blocks = _getInDbCityBlocks();
+                var blocks = _getInDbCityBlocks( ctxForSeed );
                 ctxForSeed.AddRange( blocks );
                 ctxForSeed.SaveChanges();
             }
 
             // Action:
-            using (Updater updater = _getUpdater())
+            using (Updater updater = _getUpdaterV2())
             {
                 updater.Process( request );
             }
 
             // Assert:
-            using var ctx = new IpDbContext(_getOptions( dbName ));
+            using var ctx = new IpDbContext( options );
 
             var blocksIpv4 = ctx.GetIpv4Blocks().ToArray();
             var blocksIpv6 = ctx.GetIpv6Blocks().ToArray();
@@ -196,32 +195,31 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             Assert.That( enCities.Length, Is.EqualTo( 2 ), LoggerFactory.Instance.Logger.GetMessages() );
             Assert.That( esCities.Length, Is.EqualTo( 1 ), LoggerFactory.Instance.Logger.GetMessages() );
             Assert.NotNull( blocksIpv4.First().CityLocation );
-            Assert.NotNull( blocksIpv6.First().CityLocation.EsCity );
+            Assert.NotNull( blocksIpv6.First().CityLocation );
         }
 
-        [Test]
+        [Test, Category( "Add data to database. Test with Postgre server. Run separate." )]
         public void Process__ImportedModelsAreCityBlocksAndCityLocations_DbIsEmpty__WhenUpdatesReturnsDoneWithNewCount()
         {
             // Arrange:
-            var dbName = "Update_DoneCount";
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions( dbName );
+            var options = _getNpgsqlDbContextOptions();;
             ImportedModelsRequest request = _getCityBlocksAndCityLocations();
 
-            using (var ctxForSeed = new IpDbContext(_getOptions(dbName)))
+            using (var ctxForSeed = new IpDbContext( options ))
             {   
-                var blocks = _getInDbCityBlocks();
+                var blocks = _getInDbCityBlocks( ctxForSeed );
                 ctxForSeed.AddRange( blocks );
                 ctxForSeed.SaveChanges();
             }
 
             // Action:
-            using Updater updater = _getUpdater();
+            using Updater updater = _getUpdaterV2();
             var resultRequest = updater.Process( request ).Request;
 
             // Assert:
             Assert.IsTrue( resultRequest is DoneRequest );
-            Assert.That( ((DoneRequest)resultRequest).NewCount, Is.EqualTo( 2 ) );
-            Assert.That( ((DoneRequest)resultRequest).UpdateCount, Is.EqualTo( 2 ) );
+            Assert.That( ((DoneRequest)resultRequest).NewCount, Is.EqualTo( 6 ) );
+            Assert.That( ((DoneRequest)resultRequest).UpdateCount, Is.EqualTo( 1 ) );
         }
 
         [Test]
@@ -229,10 +227,10 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         {
             // Arrange:
             var dbName = "Update_CityLocationsCount";
-            DbContextOptionsFactory.Instance.DbContextOptions = _getOptions( dbName );
+            DbContextOptionsFactory.Instance.DbContextOptions = _getInMemoryDbContextOptions( dbName );
             ImportedModelsRequest request = _getCityLocations();
 
-            using (var ctxForSeed = new IpDbContext(_getOptions(dbName))) 
+            using (var ctxForSeed = new IpDbContext(_getInMemoryDbContextOptions(dbName))) 
             {
                 var seededCityLocation = new CityLocation( 1 ) {
                     ContinentCode = "AB",
@@ -245,13 +243,13 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             }
 
             // Action:
-            using (Updater updater = _getUpdater())
+            using (Updater updater = _getUpdaterV2())
             {
                 updater.Process( request );
             }
 
             // Assert:
-            using var ctx = new IpDbContext(_getOptions(dbName));
+            using var ctx = new IpDbContext(_getInMemoryDbContextOptions(dbName));
 
             var cityLocations = ctx.GetCityLocations().ToArray();
             var enCities = ctx.GetEnCities().ToArray();
@@ -345,6 +343,21 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         }
 
         [ Test, Category( "Distinct Entities" ) ]
+        public void _distinctCity_LocationsWithNullEnCities_ReturnsEmpty()
+        {
+            // Arrange:
+            var updater = _getFakeUpdater();
+            var locations = _getCityLocationsWithNulls();
+
+            // Action:
+            var result = updater.GetDistinctEnCities( locations );
+
+            // Assert:
+            Assert.That( result, Is.Empty );
+        }
+
+
+        [ Test, Category( "Distinct Entities" ) ]
         public void _distinctCityLocations_EntitiesContainDataWithEnCities_ReturnsDistinctCityLocation()
         {
             // Arrange:
@@ -403,7 +416,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         #region factory
         // Insert factory methods here:
 
-        private Updater _getUpdater()
+        private Updater _getUpdaterV2()
         {
             return new UpdaterV2( null );
         }
@@ -422,10 +435,43 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             return new ImportedModelsRequest( models );
         }
 
-        private DbContextOptions< IpDbContext > _getOptions( [CallerMemberName]string dbName = null )
+        private DbContextOptions< IpDbContext > _getInMemoryDbContextOptions( [CallerMemberName]string dbName = null )
         {
             var options = new DbContextOptionsBuilder< IpDbContext >().UseInMemoryDatabase( dbName ?? "TestDb" ).Options;
             DbContextOptionsFactory.Instance.DbContextOptions = options;
+
+            return options;
+        }
+
+        private SqliteConnection _connection;
+
+        [TearDown]
+        public void CloseConnection()
+        {
+            _connection?.Close();
+        }
+
+        private DbContextOptions< IpDbContext > _getSQliteDbContextOptions()
+        {
+            _connection = new SqliteConnection("DataSource=:memory:");
+            _connection.Open();
+
+            return new DbContextOptionsBuilder< IpDbContext >()
+                    .UseSqlite(_connection)
+                    .Options;
+        }
+
+        /// <summary>
+        /// Creates test database and returns options.
+        /// </summary>
+        /// <returns></returns>
+        private DbContextOptions< IpDbContext > _getNpgsqlDbContextOptions()
+        {
+            var options = DbContextOptionsFactory.Instance.GetDbContextOptions();
+            using (var context = new IpDbContext(options))
+            {
+                context.Database.Migrate();
+            }
 
             return options;
         }
@@ -466,7 +512,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
         /// and filled <see cref="CityBlockIpv6"/> with <see cref="CityBlockIpv4.Network" /> equals to "11:11::11:11" with single <see cref="EnCity"/>.
         /// </summary>
         /// <returns></returns>
-        private List< CityBlock > _getInDbCityBlocks()
+        private List< CityBlock > _getInDbCityBlocks( IpDbContext ctx )
         {
             return
                 new List< CityBlock > {
@@ -478,7 +524,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
                             CountryIsoCode = "AA",
                             TimeZone = "AA",
                             EnCity = new EnCity( 1 ) {
-                                LocaleCode = new LocaleCode( "en" )
+                                LocaleCode = ctx.LocaleCodes.First( lc => lc.Name.Equals( "en" ) )
                             }
                         }
                     }
@@ -546,6 +592,24 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
                      } );
         }
 
+        private List<IEntity> _getCityLocationsWithNulls()
+        {
+            return new List< IEntity > {
+                new CityLocation( 1 ) {
+                    EnCity = null,
+                },
+                new CityLocation( 2 ) {
+                    EnCity = null,
+                },
+                new CityLocation( 3 ) {
+                    EnCity = null,
+                },
+                new CityLocation( 4 ) {
+                    EnCity = null,
+                },
+            };
+        }
+
         #endregion
 
 
@@ -567,6 +631,11 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ChainLinks
             public List< City > GetEnCities( ImportedModelsRequest request )
             {
                 var( blocks, locations) = _decollateEntities( request.ModelCollections );
+                return _distinctCities( locations, l => l.EnCity ).ToList();
+            }
+
+            public List< City > GetDistinctEnCities( List<IEntity> locations )
+            {
                 return _distinctCities( locations, l => l.EnCity ).ToList();
             }
 

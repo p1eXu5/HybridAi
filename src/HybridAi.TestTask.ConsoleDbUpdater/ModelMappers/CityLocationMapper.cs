@@ -37,7 +37,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
         {
             var values = line.Split( _Splitters );
 
-            if ( values.Length != Header.Length ) return null;
+            if ( values.Length != Header.Length ) {
+                values = _Split( values );
+                if ( values.Length != Header.Length ) {
+                    return null;
+                }
+            }
 
             CityLocation cityLocation = null;
 
@@ -99,8 +104,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
         private T? _createCity< T >( string[] values, CityLocation cityLocation )
             where T : City
         {
-            if ( String.IsNullOrWhiteSpace( values[2] )
-                 || String.IsNullOrWhiteSpace( values[5] ) ) {
+            if ( String.IsNullOrWhiteSpace( values[2] ) ) {
                 return null;
             }
 
@@ -111,8 +115,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
                 if ( obj is T city ) 
                 {
                     
-                    city.CountryName = values[5];
-                    
+                    city.CountryName = String.IsNullOrWhiteSpace( values[5] ) ? null : values[5];
                     city.Subdivision1Name = String.IsNullOrWhiteSpace( values[7] ) ? null : values[7];
                     city.Subdivision2Name = String.IsNullOrWhiteSpace( values[9] ) ? null : values[9];
                     city.CityName = values[10];

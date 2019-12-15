@@ -9,6 +9,9 @@ using HybridAi.TestTask.ConsoleDbUpdater.Models;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 {
+    /// <summary>
+    /// Unzip archive to the "C:\\Users\\&lt;user name&gt;\\AppData\\Local\\Temp\\" folder by default.
+    /// </summary>
     public class Unzipper : ChainLink
     {
         public const string ZIP_EXT = ".zip";

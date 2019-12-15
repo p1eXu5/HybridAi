@@ -74,6 +74,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                     return fullPath;
                 }
 
+                LoggerFactory.Instance.Log( $"Response: {response.StatusCode}" );
                 return null;
             } );
 

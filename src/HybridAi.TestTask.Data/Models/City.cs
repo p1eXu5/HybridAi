@@ -38,6 +38,11 @@ namespace HybridAi.TestTask.Data.Models
 
         public CityLocation CityLocation { get; set; }
 
+        public override string ToString()
+        {
+            return $"{GeonameId} ({LocaleCodeName})";
+        }
+
         public override int GetHashCode()
         {
             return GeonameId.GetHashCode();

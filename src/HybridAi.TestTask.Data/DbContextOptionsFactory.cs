@@ -37,10 +37,10 @@ namespace HybridAi.TestTask.Data
             var connectionString = ConnectionString;
 
             if ( !String.IsNullOrWhiteSpace( connectionString ) ) {
-                return new DbContextOptionsBuilder< IpDbContext >().UseNpgsql( connectionString ).Options;
+                return new DbContextOptionsBuilder< IpDbContext >().UseNpgsql( connectionString ).EnableSensitiveDataLogging().Options;
             }
             else {
-                return new DbContextOptionsBuilder< IpDbContext >().UseNpgsql( DEFAULT_CONNECTION_STRING ).Options;
+                return new DbContextOptionsBuilder< IpDbContext >().UseNpgsql( DEFAULT_CONNECTION_STRING ).EnableSensitiveDataLogging().Options;
             }
         }
     }

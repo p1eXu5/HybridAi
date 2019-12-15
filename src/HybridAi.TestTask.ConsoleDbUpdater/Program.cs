@@ -44,30 +44,28 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
             switch ( args.Length ) {
                 case 0:
-                    IChainLink< Request, IResponse< Request >> defaultChain 
+                    goto l1;
+                    IChainLink< Request, IResponse< Request >> remote 
                         = remoteChainBuilder.Build();
 
-                    var remoteResult = defaultChain.Process( new UrlRequest( DEFAULT_FILE_URL ) );
-
-                    if ( remoteResult.Request is DoneRequest done ) {
-                        LoggerFactory.Instance.Log( done.Message );
-                    }
-                    else if ( remoteResult.Request is FailRequest fail ) {
-                        Console.WriteLine( "Log:" );
-                        LoggerFactory.Instance.Log( fail.Message );
-                    }
-
+                    var remoteResult = remote.Process( new UrlRequest( DEFAULT_FILE_URL ) );
+                    CheckLog( remoteResult );
+                    
                     break;
                 case 1:
-                    throw new NotImplementedException( "Local files is not maintained yet." );
+l1:
+                    var argumentChainBuilder = new ChainBuilder().AddArgumentFormatter()
+                                                                 .Append( remoteChainBuilder );
+                    var argumentChain = argumentChainBuilder.Build();
+                    var argumentResult = argumentChain.Process( new ArgumentRequest(
+                        // TODO: change to args[0] when release
+                        // @"D:\Projects\Programming Projects\C# Projects\web\HybridAi\docs\GeoLite2-City-CSV_20191126\GeoLite2-City-CSV-slim.zip"
+                        @"D:\Projects\Programming Projects\C# Projects\web\HybridAi\docs\GeoLite2-City-CSV_20191210.zip" 
+                    ) );
 
-#pragma warning disable CS0162 // Unreachable code detected
-                    IChainLink< Request, IResponse< Request > > argumentChain;
-                    var argumentChainBuilder = new ChainBuilder().AddArgumentFormatter().Append( remoteChainBuilder );
-                    argumentChain = argumentChainBuilder.Build();
-                    argumentChain.Process( new ArgumentRequest( args[0] ) );
+                    CheckLog( argumentResult );
+
                     break;
-#pragma warning restore CS0162 // Unreachable code detected
                 default:
                     throw new NotImplementedException( "Multiple files is not maintained yet." );
 
@@ -84,6 +82,17 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
             }
 
             Console.ReadKey( true );
+        }
+
+        static void CheckLog( IResponse< Request > response )
+        {
+            if ( response.Request is DoneRequest done ) {
+                LoggerFactory.Instance.Log( done.Message );
+            }
+            else if ( response.Request is FailRequest fail ) {
+                Console.WriteLine( "Log:" );
+                LoggerFactory.Instance.Log( fail.Message );
+            }
         }
     }
 }

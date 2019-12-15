@@ -29,8 +29,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ModelMappers
         protected override IEntity? _map( string line )
         {
             var values = line.Split( _Splitters );
+            
+            if ( values.Length != Header.Length ) {
+                values = _Split( values );
+                if ( values.Length != Header.Length ) { return null; }
+            }
 
-            if ( values.Length != Header.Length ) return null;
             if ( values[0].Contains( ':' ) ) {
                 return _createCityBlock< CityBlockIpv6 >( values );
             }

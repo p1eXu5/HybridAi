@@ -90,7 +90,7 @@ namespace HybridAi.TestTask.Data.Services.UpdaterService
         /// <returns></returns>
         public static IQueryable< CityBlockIpv4 > GetIpv4Blocks( this IpDbContext context )
         {
-            return context.CityBlockIpv4Collection.AsQueryable();
+            return context.CityBlockIpv4Collection.Include( b => b.CityLocation ).AsQueryable();
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace HybridAi.TestTask.Data.Services.UpdaterService
         /// <returns></returns>
         public static IQueryable< CityBlockIpv6 > GetIpv6Blocks( this IpDbContext context )
         {
-            return context.CityBlockIpv6Collection.AsQueryable();
+            return context.CityBlockIpv6Collection.Include( b => b.CityLocation ).AsQueryable();
         }
 
         /// <summary>
