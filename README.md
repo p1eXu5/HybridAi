@@ -21,6 +21,18 @@ Web-сервис для определения географического местоположения
 When run without arguments it downloads files from this ([GeoLite2 City, .csv](https://geolite.maxmind.com/download/geoip/database/GeoLite2-City-CSV.zip)) and parse data to database.
 For simplicity, the file MD5 check is omitted.
 
+Usage:
+
+\> ConsoleDbUpdater.exe <br/>
+\> ConsoleDbUpdater.exe <file.zip> <br/>
+\> ConsoleDbUpdater.exe <uri.file.zip>
+
+## HybridAi.TestTask.WebApi
+
+Query example:
+
+http://localhost:5000/api/CityLocationInfo/2001:240:28e3::
+
 
 ##### For closing connections:
 
