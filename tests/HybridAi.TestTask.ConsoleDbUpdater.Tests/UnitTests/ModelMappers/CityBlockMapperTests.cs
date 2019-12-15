@@ -42,7 +42,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ModelMappers
             var fileName = _getIpv4FileName();
 
             // Action:
-            mapper.BuildModelCollectionAsync( fileName ).Wait();
+            mapper.BuildModelCollectionAsync( fileName, 1 ).Wait();
 
             // Assert:
 			Assert.IsTrue( mapper.Result.All( c => c is CityBlockIpv4 ) );
@@ -71,7 +71,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ModelMappers
             var fileName = _getIpv6FileName();
 
             // Action:
-            mapper.BuildModelCollectionAsync( fileName ).Wait();
+            mapper.BuildModelCollectionAsync( fileName, 1 ).Wait();
 
             // Assert:
             Assert.IsTrue( mapper.Result.All( c => c is CityBlockIpv6 ) );

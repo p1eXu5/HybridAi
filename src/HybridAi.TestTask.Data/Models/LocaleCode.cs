@@ -9,7 +9,7 @@ namespace HybridAi.TestTask.Data.Models
 {
 #nullable enable
 
-    public class LocaleCode
+    public class LocaleCode : IEntity
     {
         public LocaleCode( string name )
         {

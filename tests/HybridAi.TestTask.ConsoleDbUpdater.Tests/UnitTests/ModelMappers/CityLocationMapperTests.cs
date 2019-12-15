@@ -39,7 +39,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ModelMappers
             var fileName = _getRuCityFileName();
 
             // Action:
-            mapper.BuildModelCollectionAsync( fileName ).Wait();
+            mapper.BuildModelCollectionAsync( fileName, 1 ).Wait();
 
             // Assert:
             Assert.IsTrue( mapper.Result.All( c => c is CityLocation ) );
@@ -53,7 +53,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ModelMappers
             var fileName = _getRuCityFileName();
 
             // Action:
-            mapper.BuildModelCollectionAsync( fileName ).Wait();
+            mapper.BuildModelCollectionAsync( fileName, 1 ).Wait();
 
             // Assert:
             Assert.IsTrue( mapper.Result.All( c => ((CityLocation)c).RuCity != null ) );
@@ -81,7 +81,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ModelMappers
             var fileName = _getEnCityFileName();
 
             // Action:
-            mapper.BuildModelCollectionAsync( fileName ).Wait();
+            mapper.BuildModelCollectionAsync( fileName, 1 ).Wait();
 
             // Assert:
             Assert.IsTrue( mapper.Result.All( c => c is CityLocation ) );
@@ -95,7 +95,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.UnitTests.ModelMappers
             var fileName = _getEnCityFileName();
 
             // Action:
-            mapper.BuildModelCollectionAsync( fileName ).Wait();
+            mapper.BuildModelCollectionAsync( fileName, 1 ).Wait();
 
             // Assert:
             Assert.IsTrue( mapper.Result.All( c => ((CityLocation)c).EnCity != null ) );

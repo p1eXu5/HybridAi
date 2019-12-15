@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HybridAi.TestTask.ConsoleDbUpdater.Extensions;
 using HybridAi.TestTask.ConsoleDbUpdater.Models;
 using HybridAi.TestTask.Data.Models;
 using HybridAi.TestTask.Data.Comparators;
@@ -81,8 +82,20 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
             #region second iteration
 
-            (int upd, int ext)[] updExtCounts = new (int, int)[12];
-
+            (int upd, List<int> ext)[] updExtCounts = new (int, List<int>)[] {
+                (0, new List<int>() ),
+                (0, new List<int>() ),
+                (0, new List<int>() ),
+                (0, new List<int>() ),
+                (0, new List<int>() ),
+                (0, new List<int>() ),
+                (0, new List<int>() ),
+                (0, new List<int>() ),
+                (0, new List<int>() ),
+                (0, new List<int>() ),
+                (0, new List<int>() ),
+                (0, new List<int>() ),
+            };
 
             const int LOCALES = 0;
             const int EN = 1;
@@ -166,6 +179,15 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
 
             Task[] tasks = new[] {
+                //localeCodesTask,
+                //enCitiesTask,
+                //esCitiesTask,
+                //deCitiesTask,
+                //frCitiesTask,
+                //ruCitiesTask,
+                //jaCitiesTask,
+                //ptBrCitiesTask,
+                //zhCnCitiesTask,
                 cityLocationsTask,
                 blockTask,
                 blockIpv6Task
@@ -184,56 +206,69 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             int newCount = 0;
 
             LoggerFactory.Instance.Log( "\tAdd locales..." );
-            newCount += localeCodes.Count - updExtCounts[LOCALES].ext;
-            newCount += enCities.Count - updExtCounts[EN].ext;
-            newCount += esCities.Count - updExtCounts[ES].ext;
-            newCount += deCities.Count - updExtCounts[DE].ext;
-            newCount += frCities.Count - updExtCounts[FR].ext;
-            newCount += ruCities.Count - updExtCounts[RU].ext;
-            newCount += jaCities.Count - updExtCounts[JA].ext;
-            newCount += ptBrCities.Count - updExtCounts[PT].ext;
-            newCount += zhCnCities.Count - updExtCounts[ZH].ext;
-            newCount += cityLocations.Count - updExtCounts[LOCATIONS].ext;
-            newCount += cityBlockIpv4s.Count - updExtCounts[IP4].ext;
-            newCount += cityBlockIpv6s.Count - updExtCounts[IP6].ext;
+            newCount += localeCodes.Count - updExtCounts[LOCALES].ext.Count;
+            newCount += enCities.Count - updExtCounts[EN].ext.Count;
+            newCount += esCities.Count - updExtCounts[ES].ext.Count;
+            newCount += deCities.Count - updExtCounts[DE].ext.Count;
+            newCount += frCities.Count - updExtCounts[FR].ext.Count;
+            newCount += ruCities.Count - updExtCounts[RU].ext.Count;
+            newCount += jaCities.Count - updExtCounts[JA].ext.Count;
+            newCount += ptBrCities.Count - updExtCounts[PT].ext.Count;
+            newCount += zhCnCities.Count - updExtCounts[ZH].ext.Count;
+            newCount += cityLocations.Count - updExtCounts[LOCATIONS].ext.Count;
+            newCount += cityBlockIpv4s.Count - updExtCounts[IP4].ext.Count;
+            newCount += cityBlockIpv6s.Count - updExtCounts[IP6].ext.Count;
 
             try {
                 #region add entities to db context
                 
-                ctx.AddRange(localeCodes);
+
+                updExtCounts[LOCALES].ext.Sort();
+                ctx.AddRange(localeCodes.RemoveAtIndexes( updExtCounts[LOCALES].ext ) );
 
                 LoggerFactory.Instance.Log( "\tAdd en cities..." );
-                ctx.AddRange(enCities);
+                updExtCounts[EN].ext.Sort();
+                ctx.AddRange(enCities.RemoveAtIndexes( updExtCounts[EN].ext ) );
 
                 LoggerFactory.Instance.Log( "\tAdd es cities..." );
-                ctx.AddRange(esCities);
+                updExtCounts[ES].ext.Sort();
+                ctx.AddRange(esCities.RemoveAtIndexes( updExtCounts[ES].ext ) );
 
                 LoggerFactory.Instance.Log( "\tAdd de cities..." );
-                ctx.AddRange(deCities);
+                updExtCounts[DE].ext.Sort();
+                ctx.AddRange(deCities.RemoveAtIndexes( updExtCounts[DE].ext ) );
 
                 LoggerFactory.Instance.Log( "\tAdd fr cities..." );
-                ctx.AddRange(frCities);
+                updExtCounts[FR].ext.Sort();
+                ctx.AddRange(frCities.RemoveAtIndexes( updExtCounts[FR].ext ) );
 
                 LoggerFactory.Instance.Log( "\tAdd ru cities..." );
-                ctx.AddRange(ruCities);
+                updExtCounts[RU].ext.Sort();
+                ctx.AddRange(ruCities.RemoveAtIndexes( updExtCounts[RU].ext ) );
 
                 LoggerFactory.Instance.Log( "\tAdd ja cities..." );
-                ctx.AddRange(jaCities);
+                updExtCounts[JA].ext.Sort();
+                ctx.AddRange(jaCities.RemoveAtIndexes( updExtCounts[JA].ext ) );
 
                 LoggerFactory.Instance.Log( "\tAdd pt-Br cities..." );
-                ctx.AddRange(ptBrCities);
+                updExtCounts[PT].ext.Sort();
+                ctx.AddRange(ptBrCities.RemoveAtIndexes( updExtCounts[PT].ext ) );
 
                 LoggerFactory.Instance.Log( "\tAdd zh-Cn cities..." );
-                ctx.AddRange(zhCnCities);
+                updExtCounts[ZH].ext.Sort();
+                ctx.AddRange(zhCnCities.RemoveAtIndexes( updExtCounts[ZH].ext ) );
 
                 LoggerFactory.Instance.Log( "\tAdd locations..." );
-                ctx.AddRange(cityLocations);
+                updExtCounts[LOCATIONS].ext.Sort();
+                ctx.AddRange(cityLocations.RemoveAtIndexes( updExtCounts[LOCATIONS].ext ) );
 
                 LoggerFactory.Instance.Log( "\tAdd ip v.4..." );
-                ctx.AddRange(cityBlockIpv4s);
+                updExtCounts[IP4].ext.Sort();
+                ctx.AddRange(cityBlockIpv4s.RemoveAtIndexes( updExtCounts[IP4].ext ));
 
                 LoggerFactory.Instance.Log( "\tAdd ip v.6..." );
-                ctx.AddRange(cityBlockIpv6s);
+                updExtCounts[IP6].ext.Sort();
+                ctx.AddRange(cityBlockIpv6s.RemoveAtIndexes( updExtCounts[IP6].ext ));
 
                 #endregion
 
@@ -256,7 +291,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
         #region update methods
 
-        private Task? _getUpdateCityTask<T>(List<City> cities, Func<int, int, IQueryable<T>> getDbEntities, (int upd, int ext)[] updCounts, int ind )
+        private Task? _getUpdateCityTask<T>(List<City> cities, Func<int, int, IQueryable<T>> getDbEntities, (int upd, List<int> ext)[] updCounts, int ind )
         {
             var ctx = DbContext;
             var dbCities = getDbEntities(cities.Min(c => c.GeonameId), cities.Max(c => c.GeonameId)).Cast<City>().ToArray();
@@ -266,31 +301,32 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             return null;
         }
 
-        private (int, int) _updateLocaleCodes(LocaleCode[] dbLocaleCodes, List<LocaleCode> localeCodes)
+        private (int, List< int >) _updateLocaleCodes(LocaleCode[] dbLocaleCodes, List<LocaleCode> localeCodes)
         {
-            var existed = 0;
+            var existed = new List< int >( Enumerable.Repeat(-1, localeCodes.Count).ToArray() );
 
-            foreach (var code in localeCodes.ToArray())
+            Parallel.For( 0, localeCodes.Count, i =>
             {
+                var code = localeCodes[i];
+
                 var dbCode = dbLocaleCodes.FirstOrDefault(c => code.Name.Equals(c.Name));
                 if (dbCode != null)
                 {
-                    localeCodes.Remove(code);
+                    existed[i] = i;
                 }
-            }
+            });
 
-            return (0, existed);
+            return (0, existed.Where( e => e >= 0 ).ToList() );
         }
 
-        private (int, int) _updateCities(City[] dbCities, List<City> cities)
+        private (int, List< int >) _updateCities(City[] dbCities, List<City> cities)
         {
-            int updCount = 0, existed = 0;
+            int updCount = 0; 
+            var existed = new List<int> ( Enumerable.Repeat(-1, cities.Count).ToArray() );
 
-            var runningCities = cities.ToArray();
+            Parallel.For( 0, cities.Count, (i) => {
 
-            Parallel.For( 0, runningCities.Length, (i) => {
-
-                var city = runningCities[i];
+                var city = cities[i];
 
                 var dbCity = dbCities.FirstOrDefault(c => city.GeonameId.Equals(c.GeonameId));
                 if (dbCity != null)
@@ -322,26 +358,25 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                         isChanged = true;
                     }
 
-                    cities.Remove(city);
-                    ++existed;
+                    existed[i] = i;
 
                     if ( isChanged ) { ++updCount; }
                 }
 
             } );
 
-            return (updCount, existed);
+            return (updCount, existed.Where( e => e >= 0 ).ToList());
         }
 
-        private (int, int) _updateCityLocations(CityLocation[] dbCityLocations, List<CityLocation> cityLocations)
+        private (int, List< int >) _updateCityLocations(CityLocation[] dbCityLocations, List<CityLocation> cityLocations)
         {
-            int updCount = 0, existed = 0;
+            int updCount = 0;
+            var existed = new List<int>( Enumerable.Repeat(-1, cityLocations.Count).ToArray() );
 
-            var runningCityLocations = cityLocations.ToArray();
 
-            Parallel.For( 0, runningCityLocations.Length, (i) => {
+            Parallel.For( 0, cityLocations.Count, (i) => {
 
-                var clk = runningCityLocations[i];
+                var clk = cityLocations[i];
 
                 var dbClk = dbCityLocations.FirstOrDefault(c => clk.GeonameId.Equals(c.GeonameId));
                 if (dbClk != null)
@@ -374,8 +409,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                     if ( dbClk.PtBrCityGeonameId == null && clk.PtBrCityGeonameId != null) { dbClk.PtBrCityGeonameId = clk.PtBrCityGeonameId; isChanged = true; }
                     if ( dbClk.ZhCnCityGeonameId == null && clk.ZhCnCityGeonameId != null) { dbClk.ZhCnCityGeonameId = clk.ZhCnCityGeonameId; isChanged = true; }
 
-                    cityLocations.Remove(clk);
-                    ++existed;
+                    existed[i] = i;
 
                     if ( isChanged ) { ++updCount; }
                 }
@@ -383,16 +417,20 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
 
 
 
-            return (updCount, existed);
+            return (updCount, existed.Where( e => e >= 0 ).ToList() );
         }
 
-        private (int, int) _updateCityBlocks(CityBlock[] dbBlocks, List<CityBlock> blocks)
+        private (int, List< int >) _updateCityBlocks(CityBlock[] dbBlocks, List<CityBlock> blocks)
         {
-            int updCount = 0, existed = 0;
+            int updCount = 0; 
+            var existed = new List< int >( Enumerable.Repeat(-1, blocks.Count).ToArray() );
 
-            foreach (var block in blocks.ToArray())
-            {
+            Parallel.For( 0, blocks.Count, i => {
+            
+                var block = blocks[i];
+
                 var dbBlock = dbBlocks.FirstOrDefault(b => block.GetNetwork().Equals(b.GetNetwork()));
+                
                 if (dbBlock != null)
                 {
                     var isChanged = false;
@@ -407,13 +445,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                     if ( dbBlock.Longitude == null && block.Longitude != null) { dbBlock.Longitude = block.Longitude; isChanged = true; }
                     if ( dbBlock.AccuracyRadius == null && block.AccuracyRadius != null) { dbBlock.AccuracyRadius = block.AccuracyRadius; isChanged = true; }
 
-                    blocks.Remove(block);
-                    ++existed;
+                    existed[i] = i;
                     if ( isChanged ) { ++updCount; }
                 }
-            }
+            });
 
-            return (updCount, existed);
+            return (updCount, existed.Where( e => e >= 0 ).ToList() );
         }
 
         #endregion

@@ -12,7 +12,9 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using HybridAi.TestTask.ConsoleDbUpdater.ChainLinks;
+using HybridAi.TestTask.ConsoleDbUpdater.ModelMappers;
 using HybridAi.TestTask.ConsoleDbUpdater.Models;
+using HybridAi.TestTask.ConsoleDbUpdater.Tests.TestHelpers;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
@@ -21,6 +23,12 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
 	[TestFixture]
 	public class DownloaderTests
 	{
+        [OneTimeSetUp ]
+        public void SetupLogger()
+        {
+            LoggerFactory.Instance.Logger = new TestLogger();
+        }
+
 		[Test]
 		public void Process__DEFAULT_FILE_URL__DownloadsFileIntoInternetCacheFolder()
         {
@@ -33,7 +41,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
             var response = downloader.Process( urlRequest );
 
             // Assert:
-            Assert.IsTrue( File.Exists( ((FileLocationRequest)response.Request).Path ) );
+            Assert.IsTrue( File.Exists( (response.Request as FileLocationRequest)?.Path ?? "" ), LoggerFactory.Instance.Logger.GetMessages() );
         }
 
 		#region factory

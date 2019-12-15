@@ -62,5 +62,33 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Extensions
 
             return default(TOut);
         }
+
+        /// <summary>
+        /// Indexes must be sorted.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <param name="indexes"></param>
+        /// <returns></returns>
+        public static List<T> RemoveAtIndexes<T>( this List<T> input, List< int > indexes )
+            where T : IEntity
+        {
+            if ( !indexes.Any() ) return input;
+
+            var ii = 0;
+
+            for (int i = 0; i < input.Count; i++) {
+                
+                if ( indexes[ii] - ii == i ) {
+                    input.RemoveAt( i );
+                    --i;
+                    ++ii;
+                }
+
+                if ( ii >= indexes.Count ) return input;
+            }
+
+            return input;
+        }
     }
 }

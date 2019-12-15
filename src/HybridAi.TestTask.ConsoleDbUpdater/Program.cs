@@ -44,7 +44,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater
 
             switch ( args.Length ) {
                 case 0:
-                    goto l1;
+                    //goto l1;
                     IChainLink< Request, IResponse< Request >> remote 
                         = remoteChainBuilder.Build();
 
