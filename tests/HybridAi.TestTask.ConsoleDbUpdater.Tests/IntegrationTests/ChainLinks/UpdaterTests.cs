@@ -12,7 +12,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
     public class UpdaterTests
     {
         [Test]
-        public void ctor__ImportedModelsRequestNotEmpty_SuccessorIsNull__CanCreateDatabase()
+        public void Unit_()
         {
 
         }
@@ -21,12 +21,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests.ChainLinks
         #region factory
 		// Insert factory methods here:
 
-        private Updater _getMapper()
-        {
-            return new Updater( null );
-        }
 
-
-		#endregion
+        #endregion
     }
 }

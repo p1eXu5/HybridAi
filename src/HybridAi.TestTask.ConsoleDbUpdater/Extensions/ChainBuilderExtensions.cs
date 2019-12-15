@@ -35,7 +35,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Extensions
 
         public static ChainBuilder AddUpdater(this ChainBuilder builder)
         {
-            builder.AddChainLink< Updater >();
+            builder.AddChainLink< UpdaterV2 >();
             return builder;
         }
 

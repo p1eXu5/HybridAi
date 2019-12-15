@@ -17,24 +17,24 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
         { }
 
         [ SuppressMessage( "ReSharper", "InconsistentNaming" ) ]
-        protected override IResponse< Request > _process( List< IEntity >[] importedEntities )
+        protected override IResponse< Request > _Process( List< IEntity >[] importedEntities )
         {
             var( blocks, locations) = _decollateEntities( importedEntities );
 
             #region collections initializations
 
-            List<LocaleCode>? localeCodes = null;
-            List<City>? enCities = null;
-            List<City>? esCities = null;
-            List<City>? deCities = null;
-            List<City>? frCities = null;
-            List<City>? ruCities = null;
-            List<City>? jaCities = null;
-            List<City>? ptBrCities = null;
-            List<City>? zhCnCities = null;
-            List<CityLocation>? cityLocations = null;
-            List<CityBlock>? cityBlockIpv4s = null;
-            List<CityBlock>? cityBlockIpv6s = null;
+            List<LocaleCode> localeCodes = new List< LocaleCode >(0);
+            List<City> enCities = new List< City >(0);
+            List<City> esCities = new List< City >(0);
+            List<City> deCities = new List< City >(0);
+            List<City> frCities = new List< City >(0);
+            List<City> ruCities = new List< City >(0);
+            List<City> jaCities = new List< City >(0);
+            List<City> ptBrCities = new List< City >(0);
+            List<City> zhCnCities = new List< City >(0);
+            List<CityLocation> cityLocations = new List< CityLocation >(0);
+            List<CityBlock> cityBlockIpv4s = new List< CityBlock >(0);
+            List<CityBlock> cityBlockIpv6s = new List< CityBlock >(0);
 
             #endregion
 
@@ -66,65 +66,141 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                 blockTask
             });
 
+
             #endregion
 
 
-            localeCodesTask = null;
-            enCitiesTask = null;
-            esCitiesTask = null;
-            deCitiesTask = null;
-            frCitiesTask = null;
-            ruCitiesTask = null;
-            jaCitiesTask = null;
-            ptBrCitiesTask = null;
-            zhCnCitiesTask = null;
-            cityLocationsTask = null;
-            blockTask = null;
-            Task? blockIpv6Task = null;
+            int updCount = 0, newCount = 0;
+
+
+            #region update counts
+
+            updCount += localeCodes?.Count ?? 0;
+            updCount += enCities?.Count ?? 0;
+            updCount += esCities?.Count ?? 0;
+            updCount += deCities?.Count ?? 0;
+            updCount += frCities?.Count ?? 0;
+            updCount += ruCities?.Count ?? 0;
+            updCount += jaCities?.Count ?? 0;
+            updCount += ptBrCities?.Count ?? 0;
+            updCount += zhCnCities?.Count ?? 0;
+            updCount += cityBlockIpv4s?.Count ?? 0;
+            updCount += cityBlockIpv6s?.Count ?? 0;
+
+            #endregion
+
 
             var ctx = DbContext;
 
-            if ( localeCodes != null ) {
-                var dbLocaleCodes = ctx.LocaleCodes.ToArray();
-                if ( dbLocaleCodes.Any() )
-                    localeCodesTask = Task.Run( () => _updateLocaleCodes( dbLocaleCodes, localeCodes ) );
-            }
+#nullable disable
 
-            ruCitiesTask = enCities?.Any() == true ? _getCityTask( enCities, ( min, max ) => ctx.GetCities<EnCity>( min, max ) ) : null;
-            deCitiesTask = esCities?.Any() == true ? _getCityTask( esCities, ( min, max ) => ctx.GetCities<EsCity>( min, max ) ) : null;
-            ruCitiesTask = deCities?.Any() == true ? _getCityTask( deCities, ( min, max ) => ctx.GetCities<DeCity>( min, max ) ) : null;
-            ruCitiesTask = frCities?.Any() == true ? _getCityTask( frCities, ( min, max ) => ctx.GetCities<FrCity>( min, max ) ) : null;
-            ruCitiesTask = ruCities?.Any() == true ? _getCityTask( ruCities, ( min, max ) => ctx.GetCities<RuCity>( min, max ) ) : null;
-            ruCitiesTask = jaCities?.Any() == true ? _getCityTask( jaCities, ( min, max ) => ctx.GetCities<JaCity>( min, max ) ) : null;
-            ruCitiesTask = ptBrCities?.Any() == true ? _getCityTask( ptBrCities, ( min, max ) => ctx.GetCities<PtBrCity>( min, max ) ) : null;
-            ruCitiesTask = zhCnCities?.Any() == true ? _getCityTask( zhCnCities, ( min, max ) => ctx.GetCities<ZhCnCity>( min, max ) ) : null;
+            #region second iteration
 
-            if ( cityBlockIpv4s?.Any() == true ) {
-                var dbBlockIpv4s = ctx.GetCityBlockIpv4s( cityBlockIpv4s.Min( c => c.GetNetwork() ), cityBlockIpv4s.Max( c => c.GetNetwork() ) ).Cast<CityBlock>().ToArray();
-                if ( dbBlockIpv4s.Any() )
-                    blockTask = Task.Run( () => _updateCityBlocks( dbBlockIpv4s, cityBlockIpv4s ) );
-            }
+            localeCodesTask = null;
+            var dbLocaleCodes = ctx.LocaleCodes.ToArray();
+            if (dbLocaleCodes.Any())
+                localeCodesTask = Task.Run(() => _updateLocaleCodes(dbLocaleCodes, localeCodes));
 
-            if ( cityBlockIpv6s?.Any() == true ) {
-                var dbBlockIpv6s = ctx.GetCityBlockIpv6s( cityBlockIpv6s.Min( c => c.GetNetwork() ), cityBlockIpv6s.Max( c => c.GetNetwork() ) ).Cast<CityBlock>().ToArray();
-                if ( dbBlockIpv6s.Any() )
-                    blockIpv6Task = Task.Run( () => _updateCityBlocks( dbBlockIpv6s, cityBlockIpv6s ) );
-            }
 
-            #nullable disable
-            Task[] tasks = new [] {
+            enCitiesTask = enCities?.Any() == true ? _getCityTask(enCities, (min, max) => ctx.GetCities<EnCity>(min, max)) : null;
+            esCitiesTask = esCities?.Any() == true ? _getCityTask(esCities, (min, max) => ctx.GetCities<EsCity>(min, max)) : null;
+            deCitiesTask = deCities?.Any() == true ? _getCityTask(deCities, (min, max) => ctx.GetCities<DeCity>(min, max)) : null;
+            frCitiesTask = frCities?.Any() == true ? _getCityTask(frCities, (min, max) => ctx.GetCities<FrCity>(min, max)) : null;
+            ruCitiesTask = ruCities?.Any() == true ? _getCityTask(ruCities, (min, max) => ctx.GetCities<RuCity>(min, max)) : null;
+            jaCitiesTask = jaCities?.Any() == true ? _getCityTask(jaCities, (min, max) => ctx.GetCities<JaCity>(min, max)) : null;
+            ptBrCitiesTask = ptBrCities?.Any() == true ? _getCityTask(ptBrCities, (min, max) => ctx.GetCities<PtBrCity>(min, max)) : null;
+            zhCnCitiesTask = zhCnCities?.Any() == true ? _getCityTask(zhCnCities, (min, max) => ctx.GetCities<ZhCnCity>(min, max)) : null;
+
+            blockTask = null;
+            var dbBlockIpv4s = ctx.GetCityBlockIpv4s(cityBlockIpv4s.Min(c => c.GetNetwork()), cityBlockIpv4s.Max(c => c.GetNetwork())).Cast<CityBlock>().ToArray();
+            if (dbBlockIpv4s.Any())
+                blockTask = Task.Run(() => _updateCityBlocks(dbBlockIpv4s, cityBlockIpv4s));
+
+            Task? blockIpv6Task = null;
+            var dbBlockIpv6s = ctx.GetCityBlockIpv6s(cityBlockIpv6s.Min(c => c.GetNetwork()), cityBlockIpv6s.Max(c => c.GetNetwork())).Cast<CityBlock>().ToArray();
+            if (dbBlockIpv6s.Any())
+                blockIpv6Task = Task.Run(() => _updateCityBlocks(dbBlockIpv6s, cityBlockIpv6s));
+
+
+            Task[] tasks = new[] {
                 localeCodesTask,
                 enCitiesTask,
-            }.Where( t => t != null ).ToArray();
-            #nullable restore
+                esCitiesTask,
+                deCitiesTask,
+                frCitiesTask,
+                ruCitiesTask,
+                jaCitiesTask,
+                ptBrCitiesTask,
+                zhCnCitiesTask,
+                blockTask,
+                blockIpv6Task
+            }.Where(t => t != null).ToArray();
 
-            if ( tasks.Any() == true ) {
-                Task.WhenAll( tasks );
+            if (tasks.Any() == true)
+            {
+                Task.WhenAll(tasks);
             }
 
-            if ( localeCodes.Any() ) { ctx.AddRange( localeCodes ); }
+            #endregion
 
-            throw new NotImplementedException();
+
+            #region add entities to db context
+
+            void counts(int updC)
+            {
+                newCount += updC;
+                updCount -= newCount;
+            }
+
+            counts(localeCodes.Count);
+            ctx.AddRange(localeCodes);
+
+            counts(enCities.Count);
+            ctx.AddRange(enCities);
+
+            counts(esCities.Count);
+            ctx.AddRange(esCities);
+
+            counts(deCities.Count);
+            ctx.AddRange(deCities);
+
+            counts(frCities.Count);
+            ctx.AddRange(frCities);
+
+            counts(ruCities.Count);
+            ctx.AddRange(ruCities);
+
+            counts(jaCities.Count);
+            ctx.AddRange(jaCities);
+
+            counts(ptBrCities.Count);
+            ctx.AddRange(ptBrCities);
+
+            counts(zhCnCities.Count);
+            ctx.AddRange(zhCnCities);
+
+            counts(cityLocations.Count);
+            ctx.AddRange(cityLocations);
+
+            counts(cityBlockIpv4s.Count);
+            ctx.AddRange(cityBlockIpv4s);
+
+            counts(cityBlockIpv6s.Count);
+            ctx.AddRange(cityBlockIpv6s);
+
+            #endregion
+
+#nullable restore
+
+            try {
+                ctx.SaveChanges();
+            }
+            catch ( Exception ex ) {
+                LoggerFactory.Instance.Log( ex.Message );
+                return _GetFailRequest();
+            }
+
+            return _GetDoneRequest( newCount, updCount );
         }
 
         private Task? _getCityTask< T >( List< City > cities, Func<int, int, IQueryable<T>> getDbEntities )
@@ -167,7 +243,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             }
         }
 
-        protected (List< IEntity >, List< IEntity >) _decollateEntities( List<IEntity>[] entities )
+        protected (List< IEntity > blocks, List< IEntity > locations) _decollateEntities( List<IEntity>[] entities )
         {
             List< IEntity > blocks = new List< IEntity >();
             List< IEntity > locations = new List< IEntity >();
@@ -184,9 +260,22 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
             return (blocks, locations);
         }
 
-        protected (List< CityBlock >, List< CityBlock >) _decollateBlocks( List<IEntity> blocks )
+        [ SuppressMessage( "ReSharper", "InconsistentNaming" ) ]
+        protected (List< CityBlock > ipv4s, List< CityBlock > ipv6s) _decollateBlocks( List<IEntity> blocks )
         {
-            throw new NotImplementedException();
+            var ipv4s = new List< CityBlock >();
+            var ipv6s = new List< CityBlock >();
+
+            foreach ( var block in blocks ) {
+                if ( block is CityBlockIpv4 ipv4 ) {
+                    ipv4s.Add( ipv4 );
+                }
+                else if ( block is CityBlockIpv6 ipv6 ) {
+                    ipv6s.Add( ipv6 );
+                }
+            }
+
+            return (ipv4s, ipv6s );
         }
 
         protected IEnumerable< LocaleCode > _distinctLocaleCodes( List< IEntity > cityLocations )
