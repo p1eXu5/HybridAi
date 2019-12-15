@@ -26,7 +26,7 @@ namespace HybridAi.TestTask.DataTests.IntegrationTests
         [ TearDown ]
         public void DeleteDatabase()
         {
-            using var context = new IpDbContext();
+            using var context = new IpDbContext( DbContextOptionsFactory.Instance.DbContextOptions );
 
             context.Database.EnsureDeleted();
         }

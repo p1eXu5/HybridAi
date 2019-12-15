@@ -1,13 +1,9 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
 using HybridAi.TestTask.ConsoleDbUpdater.Models;
 using HybridAi.TestTask.ConsoleDbUpdater.Tests.TestHelpers;
 using HybridAi.TestTask.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests
 {
@@ -55,7 +51,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.Tests.IntegrationTests
         [ TearDown ]
         public void DeleteDatabase()
         {
-            using var context = new IpDbContext();
+            using var context = new IpDbContext( DbContextOptionsFactory.Instance.DbContextOptions );
 
             context.Database.EnsureDeleted();
         }

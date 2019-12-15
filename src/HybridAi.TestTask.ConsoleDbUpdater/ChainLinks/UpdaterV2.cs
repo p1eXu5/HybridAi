@@ -273,7 +273,7 @@ namespace HybridAi.TestTask.ConsoleDbUpdater.ChainLinks
                 #endregion
 
 #nullable restore
-
+                LoggerFactory.Instance.Log( "\tSaving (~15 min)..." );
                 ctx.SaveChanges();
             }
             catch ( Exception ex ) {
